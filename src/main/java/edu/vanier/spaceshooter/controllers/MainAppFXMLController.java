@@ -83,9 +83,7 @@ public class MainAppFXMLController {
     private void generateInvaders() {
         for (int i = 0; i < 5; i++) {
             Sprite invader = new Sprite(
-                    90 + i * 100,
-                    150, 30, 30, "enemy",
-                    Color.RED);
+                    90 + i * 100,150, 30, 30, "enemy",  Color.RED);
             animationPanel.getChildren().add(invader);
         }
     }
