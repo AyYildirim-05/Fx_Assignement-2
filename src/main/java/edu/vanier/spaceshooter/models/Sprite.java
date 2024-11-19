@@ -3,6 +3,7 @@ package edu.vanier.spaceshooter.models;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -17,6 +18,7 @@ public class Sprite extends Rectangle {
     public double height;
     public boolean dead = false;
     public String type;
+    private AudioClip shoot;
 
     public Sprite(int x, int y, int width, int height, String type, Color color) {
         super(width, height, color);
@@ -57,6 +59,9 @@ public class Sprite extends Rectangle {
         positionY += velocityY * time;
     }
 
+    public void makeNoise() {
+        shoot = new AudioClip(getClass().getResource("/sounds/picked-coin.wav").toExternalForm());
+    }
     public void render(GraphicsContext gc) {
         gc.drawImage(image, positionX, positionY);
     }
