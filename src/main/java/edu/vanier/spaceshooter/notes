@@ -1,0 +1,59 @@
+    public Image image;
+    public double positionX;
+    public double positionY;
+    public double velocityX;
+    public double velocityY;
+    public double width;
+    public double height;
+    public boolean dead = false;
+    public String type;
+    private AudioClip shoot;
+
+    public Sprite(int x, int y, int width, int height, String type, Color color) {
+        super(width, height, color);
+
+        this.type = type;
+        setTranslateX(x);
+        setTranslateY(y);
+    }
+
+    public void setImage(Image i) {
+        image = i;
+        width = i.getWidth();
+        height = i.getHeight();
+    }
+
+    public void setImage(String filename) {
+        Image i = new Image(filename);
+        setImage(i);
+    }
+
+
+
+
+
+    public void makeNoise() {
+        shoot = new AudioClip(getClass().getResource("/sounds/picked-coin.wav").toExternalForm());
+    }
+    public void render(GraphicsContext gc) {
+        gc.drawImage(image, positionX, positionY);
+    }
+
+
+
+
+
+    public void moveLeft() { setTranslateX(getTranslateX() - 5); }
+    public void moveRight() {
+        setTranslateX(getTranslateX() + 5);
+    }
+    public void moveUp() {
+        setTranslateY(getTranslateY() - 5);
+    }
+    public void moveDown() {
+        setTranslateY(getTranslateY() + 5);
+    }
+
+
+
+}

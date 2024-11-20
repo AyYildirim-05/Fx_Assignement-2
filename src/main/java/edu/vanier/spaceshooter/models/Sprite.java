@@ -1,47 +1,75 @@
 package edu.vanier.spaceshooter.models;
 
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
-public class Sprite extends Rectangle {
-
-    public Image image;
+public abstract class Sprite extends Rectangle {
+    public ImageView imageView;
     public double positionX;
     public double positionY;
     public double velocityX;
     public double velocityY;
-    public double width;
-    public double height;
     public boolean dead = false;
     public String type;
-    private AudioClip shoot;
 
-    public Sprite(int x, int y, int width, int height, String type, Color color) {
-        super(width, height, color);
-
-        this.type = type;
-        setTranslateX(x);
+    /**
+     * Constructor of all the characters in the application
+     * @param imagePath Gets the object sprite location
+     * @param type Defines the type of the object
+     *             // todo will be useful to avoid collisions between enemy objects
+     * @param x Left-to-right coordinate of the top-left corner of the ImageView
+     * @param y Top-to-bottom coordinate of the top-left corner of the ImageView
+     */
+    public Sprite(String imagePath, String type, double x, double y) {
+        this.type = type; // deciding if the sprite is player, enemy. or other
+        Image image = new Image(imagePath);
+        imageView = new ImageView(image);
+        imageView.setX(x); // set positioning
+        imageView.setY(y);
+        setTranslateX(x); // set incremental changes
         setTranslateY(y);
     }
 
-    public void setImage(Image i) {
-        image = i;
-        width = i.getWidth();
-        height = i.getHeight();
+    // abstract methods to implement in each class
+    public abstract void move();
+    public abstract void shoot();
+    public abstract void makeShootingNoise();
+
+    // some getter and setters
+
+    public ImageView getImageView() {
+        return imageView;
     }
 
-    public void setImage(String filename) {
-        Image i = new Image(filename);
-        setImage(i);
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
-    public void setPosition(double x, double y) {
-        positionX = x;
-        positionY = y;
+    public double getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(double positionX) {
+        this.positionX = positionX;
+    }
+
+    public double getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(double positionY) {
+        this.positionY = positionY;
+    }
+
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public double getVelocityY() {
+        return velocityY;
     }
 
     public void setVelocity(double x, double y) {
@@ -49,6 +77,19 @@ public class Sprite extends Rectangle {
         velocityY = y;
     }
 
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    // other methods
     public void addVelocity(double x, double y) {
         velocityX += x;
         velocityY += y;
@@ -59,42 +100,18 @@ public class Sprite extends Rectangle {
         positionY += velocityY * time;
     }
 
-    public void makeNoise() {
-        shoot = new AudioClip(getClass().getResource("/sounds/picked-coin.wav").toExternalForm());
-    }
-    public void render(GraphicsContext gc) {
-        gc.drawImage(image, positionX, positionY);
-    }
-
-    public Rectangle2D getBoundary() {
-        return new Rectangle2D(positionX, positionY, width, height);
-    }
-
-    public boolean intersects(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
-    }
-
-    public String toString() {
-        return " Position: [" + positionX + "," + positionY + "]" + " Velocity: [" + velocityX + "," + velocityY + "]";
-    }
-
-    public void moveLeft() { setTranslateX(getTranslateX() - 5); }
-    public void moveRight() {
-        setTranslateX(getTranslateX() + 5);
-    }
-    public void moveUp() {
-        setTranslateY(getTranslateY() - 5);
-    }
-    public void moveDown() {
-        setTranslateY(getTranslateY() + 5);
-    }
     public boolean isDead() {
         return dead;
     }
-    public String getType() {
-        return type;
+
+    public boolean intersects(Sprite sprite) {
+        Bounds thisBounds = this.imageView.getBoundsInParent();
+        Bounds otherBounds = sprite.imageView.getBoundsInParent();
+        return thisBounds.intersects(otherBounds);
     }
-    public void setDead(boolean dead) {
-        this.dead = dead;
+
+    public void render(GraphicsContext gc) {
+        gc.drawImage(imageView.getImage(), positionX, positionY);
     }
 }
+
