@@ -1,4 +1,4 @@
-package edu.vanier.spaceshooter.models;
+package edu.vanier.spaceshooter.support;
 
 import java.util.ArrayList;
 
