@@ -14,6 +14,7 @@ public abstract class Sprite extends Rectangle {
     public double velocityY;
     public boolean dead = false;
     public String type;
+    public int health;
 
     /**
      * Constructor of all the characters in the application
@@ -23,8 +24,9 @@ public abstract class Sprite extends Rectangle {
      * @param x Left-to-right coordinate of the top-left corner of the ImageView
      * @param y Top-to-bottom coordinate of the top-left corner of the ImageView
      */
-    public Sprite(String imagePath, String type, double x, double y) {
+    public Sprite(String imagePath, String type, int health, double x, double y, double height, double width) {
         this.type = type; // deciding if the sprite is player, enemy. or other
+        this.health = health;
         Image image = new Image(imagePath);
         imageView = new ImageView(image);
         imageView.setX(x); // set positioning
@@ -34,7 +36,11 @@ public abstract class Sprite extends Rectangle {
     }
 
     // abstract methods to implement in each class
-    public abstract void move();
+    public abstract void moveLeft();
+    public abstract void moveRight();
+    public abstract void moveDown();
+    public abstract void moveUp();
+
     public abstract void shoot();
     public abstract void makeShootingNoise();
 
@@ -76,6 +82,7 @@ public abstract class Sprite extends Rectangle {
         velocityX = x;
         velocityY = y;
     }
+
 
     public void setDead(boolean dead) {
         this.dead = dead;
