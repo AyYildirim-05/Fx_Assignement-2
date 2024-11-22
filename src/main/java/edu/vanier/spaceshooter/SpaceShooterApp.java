@@ -37,7 +37,6 @@ public class SpaceShooterApp extends Application {
 
     }
 
-
     @Override
     public void stop() throws Exception {
         // Stop the animation timer upon closing the main stage.

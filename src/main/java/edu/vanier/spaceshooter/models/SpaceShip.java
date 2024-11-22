@@ -3,7 +3,7 @@ package edu.vanier.spaceshooter.models;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
-public class SpaceShip extends Sprite{
+public class SpaceShip extends Sprite {
 
     /**
      * Constructor of all the characters in the application
@@ -14,15 +14,31 @@ public class SpaceShip extends Sprite{
      * @param x         Left-to-right coordinate of the top-left corner of the ImageView
      * @param y         Top-to-bottom coordinate of the top-left corner of the ImageView
      */
-    public SpaceShip(String imagePath, double height, double width, String type, double x, double y) {
-        super(imagePath,height, width, type, x, y);
-    }
+    public SpaceShip(String imagePath, double height, double width, int health, String type, double x, double y) {
+        super(imagePath, height, width, health, type, x, y);
 
+    }
 
     @Override
-    public void move() {
+    public void moveLeft() {
 
     }
+
+    @Override
+    public void moveRight() {
+
+    }
+
+    @Override
+    public void moveDown() {
+
+    }
+
+    @Override
+    public void moveUp() {
+
+    }
+
 
     @Override
     public void shoot() {

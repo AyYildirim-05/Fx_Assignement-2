@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 public abstract class Sprite extends Rectangle {
+    public int health;
     public ImageView imageView;
     public double positionX;
     public double positionY;
@@ -23,8 +24,9 @@ public abstract class Sprite extends Rectangle {
      * @param x Left-to-right coordinate of the top-left corner of the ImageView
      * @param y Top-to-bottom coordinate of the top-left corner of the ImageView
      */
-    public Sprite(String imagePath, double height, double width, String type, double x, double y) {
+    public Sprite(String imagePath, double height, double width, int health, String type, double x, double y) {
         this.type = type; // deciding if the sprite is player, enemy. or other
+        this.health = health;
         Image image = new Image(imagePath);
         this.imageView = new ImageView(image);
         imageView.setX(x); // set positioning
@@ -37,11 +39,23 @@ public abstract class Sprite extends Rectangle {
     }
 
     // abstract methods to implement in each class
-    public abstract void move();
+    public abstract void moveLeft();
+    public abstract void moveRight();
+    public abstract void moveDown();
+    public abstract void moveUp();
     public abstract void shoot();
     public abstract void makeShootingNoise();
 
     // some getter and setters
+
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
 
     public ImageView getImageView() {
         return imageView;
