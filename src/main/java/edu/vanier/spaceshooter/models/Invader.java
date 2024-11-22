@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 
 public class Invader extends Sprite{
 
-    public Invader(String imagePath, String type, double x, double y) {
-        super(imagePath, type, x, y);
+    public Invader(String imagePath, double height, double width, String type, double x, double y) {
+        super(imagePath, height, width, type, x, y);
     }
 
     @Override

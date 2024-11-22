@@ -14,9 +14,10 @@ public class SpaceShip extends Sprite{
      * @param x         Left-to-right coordinate of the top-left corner of the ImageView
      * @param y         Top-to-bottom coordinate of the top-left corner of the ImageView
      */
-    public SpaceShip(String imagePath, String type, double x, double y) {
-        super(imagePath, type, x, y);
+    public SpaceShip(String imagePath, double height, double width, String type, double x, double y) {
+        super(imagePath,height, width, type, x, y);
     }
+
 
     @Override
     public void move() {

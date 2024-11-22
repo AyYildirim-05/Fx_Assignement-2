@@ -23,14 +23,17 @@ public abstract class Sprite extends Rectangle {
      * @param x Left-to-right coordinate of the top-left corner of the ImageView
      * @param y Top-to-bottom coordinate of the top-left corner of the ImageView
      */
-    public Sprite(String imagePath, String type, double x, double y) {
+    public Sprite(String imagePath, double height, double width, String type, double x, double y) {
         this.type = type; // deciding if the sprite is player, enemy. or other
         Image image = new Image(imagePath);
-        imageView = new ImageView(image);
+        this.imageView = new ImageView(image);
         imageView.setX(x); // set positioning
         imageView.setY(y);
         setTranslateX(x); // set incremental changes
         setTranslateY(y);
+        this.imageView.setFitWidth(width);
+        this.imageView.setFitHeight(height);
+        this.imageView.setPreserveRatio(true);
     }
 
     // abstract methods to implement in each class
@@ -77,6 +80,14 @@ public abstract class Sprite extends Rectangle {
         velocityY = y;
     }
 
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
+    }
+
     public void setDead(boolean dead) {
         this.dead = dead;
     }
@@ -95,6 +106,10 @@ public abstract class Sprite extends Rectangle {
         velocityY += y;
     }
 
+//    public void update(double elapsedTime) {
+//        imageView.setX(imageView.getX() + velocityX * elapsedTime);
+//        imageView.setY(imageView.getY() + velocityY * elapsedTime);
+//    }
     public void update(double time) {
         positionX += velocityX * time;
         positionY += velocityY * time;

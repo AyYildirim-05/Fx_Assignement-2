@@ -5,8 +5,8 @@ import javafx.scene.paint.Color;
 
 public class Missile extends Sprite{
 
-    public Missile(String imagePath, String type, double x, double y) {
-        super(imagePath, type, x, y);
+    public Missile(String imagePath, double height, double width, String type, double x, double y) {
+        super(imagePath, height, width, type, x, y);
     }
 
     @Override
