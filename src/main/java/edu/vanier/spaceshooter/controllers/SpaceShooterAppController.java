@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class SpaceShooterAppController { // go to previous submission: "in class modification done in case missing code"
     @FXML
     Pane animationPanel;
