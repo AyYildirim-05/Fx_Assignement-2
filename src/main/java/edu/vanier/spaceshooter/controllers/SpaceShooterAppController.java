@@ -14,7 +14,6 @@ import java.util.List;
 public class SpaceShooterAppController { // go to previous submission: "in class modification done in case missing code"
     @FXML
     Pane animationPanel;
-
     private Scene scene;
     private long lastNanoTime = System.nanoTime();
     private AnimationTimer animation;
@@ -27,7 +26,7 @@ public class SpaceShooterAppController { // go to previous submission: "in class
 
         animationPanel.getChildren().add(spaceShip.getImageView());
 
-
+// tryinng fixing errtr
         animation = new AnimationTimer() {
             @Override
             public void handle(long currentNanoTime) {
