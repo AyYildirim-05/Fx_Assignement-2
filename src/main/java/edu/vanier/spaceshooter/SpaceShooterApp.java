@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -14,12 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class SpaceShooterApp extends Application {
-
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterApp.class);
     private final static String mainApp = "MainApp_layout";
-
-    public static Scene scene;
-
+    public Scene scene;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -27,14 +23,14 @@ public class SpaceShooterApp extends Application {
         SpaceShooterAppController controller = new SpaceShooterAppController();
         Pane root = (Pane) loadFXML(mainApp, controller);
         scene = new Scene(root, 600, 1000);
+        controller.setScene(scene);
         primaryStage.setScene(scene);
 
         primaryStage.sizeToScene();
-
+        primaryStage.setTitle("Space Shooter");
         primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
         primaryStage.setAlwaysOnTop(false);
-
     }
 
     @Override
@@ -51,13 +47,5 @@ public class SpaceShooterApp extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(SpaceShooterApp.class.getResource("/fxml/" + fxmlFile + ".fxml"));
         fxmlLoader.setController(fxmlController);
         return fxmlLoader.load();
-    }
-
-    public static Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
     }
 }

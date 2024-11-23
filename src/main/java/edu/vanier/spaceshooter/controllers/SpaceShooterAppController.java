@@ -6,20 +6,26 @@ import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class SpaceShooterAppController { // go to previous submission: "in class modification done in case missing code"
+    private final static Logger logger = LoggerFactory.getLogger(SpaceShooterAppController.class);
     @FXML
     Pane animationPanel;
-    private Scene scene;
+    private Scene sceneActual;
     private long lastNanoTime = System.nanoTime();
-    private AnimationTimer animation;
+    private AnimationTimer gameLoop;
     public int health_player = 3;
     public int small_obstacle = 1;
     public int medium_obstacle = 2;
@@ -30,63 +36,77 @@ public class SpaceShooterAppController { // go to previous submission: "in class
     Sprite spaceShip;
     int health_missile = 1;
     private double elapsedTime = 0;
-
+    private List<KeyCode> input = new ArrayList<>();
+    private int score = 0;
     public static final String BACKGROUND_IMAGE_1 = "/images/background/blue.png";
     public static final String BACKGROUND_IMAGE_2 = "/images/background/purple.png";
     public static final String BACKGROUND_IMAGE_3 = "/images/background/darkPurple.png";
     public static final String BACKGROUND_IMAGE_4 = "/images/background/black.png";
+    public Canvas canvas;
+    public GraphicsContext gc;
 
     public void initialize() {
-        settingBackground(BACKGROUND_IMAGE_1);
+        System.out.println("is it being done?");
+        canvas = new Canvas(600,1000);
+        gc = canvas.getGraphicsContext2D();
+        logger.info("Initializing MainAppController...");
+        settingBackground(BACKGROUND_IMAGE_2);
         spaceShip = new SpaceShip("/images/playerShip1_red.png", 20, 20, 1, "player", 300, 400);
 
         animationPanel.getChildren().add(spaceShip.getImageView());
 
+        initializeGameLoop();
+    }
 
-        animation = new AnimationTimer() {
+    private void initializeGameLoop() {
+        gameLoop = new AnimationTimer() {
+
             @Override
             public void handle(long currentNanoTime) {
                 double elapsedTime = (currentNanoTime - lastNanoTime) / 1000000000.0;
                 lastNanoTime = currentNanoTime;
 
-                List<String> input = new ArrayList<>();
                 spaceShip.setVelocity(0, 0);
 
-                if (input.contains("LEFT")) {
+                // Handle movement based on key inputs
+                if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
                     spaceShip.addVelocity(-250, 0);
                 }
-                if (input.contains("RIGHT")) {
+                if (input.contains(KeyCode.D) || input.contains(KeyCode.RIGHT)) {
                     spaceShip.addVelocity(250, 0);
                 }
-                if (input.contains("UP")) {
+                if (input.contains(KeyCode.W) || input.contains(KeyCode.UP)) {
                     spaceShip.addVelocity(0, -250);
                 }
-                if (input.contains("DOWN")) {
+                if (input.contains(KeyCode.S) || input.contains(KeyCode.DOWN)) {
                     spaceShip.addVelocity(0, 250);
                 }
 
                 spaceShip.update(elapsedTime);
+
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                spaceShip.render(gc);
             }
         };
-        animation.start();
+        gameLoop.start();
     }
 
     public void setScene(Scene scene) {
-        this.scene = scene;
+        this.sceneActual = scene;
         initializeKeyListeners();
     }
 
     private void initializeKeyListeners() {
         List<String> input = new ArrayList<>();
 
-        scene.setOnKeyPressed((KeyEvent e) -> {
+        sceneActual.setOnKeyPressed((KeyEvent e) -> {
             String code = e.getCode().toString();
             if (!input.contains(code)) {
                 input.add(code);
             }
         });
 
-        scene.setOnKeyReleased((KeyEvent e) -> {
+        sceneActual.setOnKeyReleased((KeyEvent e) -> {
             String code = e.getCode().toString();
             input.remove(code);
         });
