@@ -1,20 +1,15 @@
 package edu.vanier.spaceshooter.controllers;
 
-import edu.vanier.spaceshooter.models.SpaceShip;
 import edu.vanier.spaceshooter.models.Sprite;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,36 +21,17 @@ public class SpaceShooterAppController { // go to previous submission: "in class
     private Scene sceneActual;
     private long lastNanoTime = System.nanoTime();
     private AnimationTimer gameLoop;
-    public int health_player = 3;
-    public int small_obstacle = 1;
-    public int medium_obstacle = 2;
-    public int big_obstacle = 3;
-    public int small_invader = 1;
-    public int medium_invader = 2;
-    public int big_invader = 3;
     Sprite spaceShip;
-    int health_missile = 1;
     private double elapsedTime = 0;
     private List<KeyCode> input = new ArrayList<>();
     private int score = 0;
-    public static final String BACKGROUND_IMAGE_1 = "/images/background/blue.png";
-    public static final String BACKGROUND_IMAGE_2 = "/images/background/purple.png";
-    public static final String BACKGROUND_IMAGE_3 = "/images/background/darkPurple.png";
-    public static final String BACKGROUND_IMAGE_4 = "/images/background/black.png";
-    public Canvas canvas;
-    public GraphicsContext gc;
+
 
     public void initialize() {
-        System.out.println("is it being done?");
-        canvas = new Canvas(600,1000);
-        gc = canvas.getGraphicsContext2D();
         logger.info("Initializing MainAppController...");
-        settingBackground(BACKGROUND_IMAGE_2);
-        spaceShip = new SpaceShip("/images/playerShip1_red.png", 20, 20, 1, "player", 300, 400);
-
-        animationPanel.getChildren().add(spaceShip.getImageView());
-
-        initializeGameLoop();
+//        spaceShip = new SpaceShip("/player/playerShip1_red.png", 20, 20, 1, "player", 300, 400);
+        animationPanel.setPrefSize(600, 1000);
+        animationPanel.getChildren().add(spaceShip);
     }
 
     private void initializeGameLoop() {
@@ -68,27 +44,25 @@ public class SpaceShooterAppController { // go to previous submission: "in class
 
                 spaceShip.setVelocity(0, 0);
 
-                // Handle movement based on key inputs
-                if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
-                    spaceShip.addVelocity(-250, 0);
-                }
-                if (input.contains(KeyCode.D) || input.contains(KeyCode.RIGHT)) {
-                    spaceShip.addVelocity(250, 0);
-                }
-                if (input.contains(KeyCode.W) || input.contains(KeyCode.UP)) {
-                    spaceShip.addVelocity(0, -250);
-                }
-                if (input.contains(KeyCode.S) || input.contains(KeyCode.DOWN)) {
-                    spaceShip.addVelocity(0, 250);
-                }
+                setupKeyPressHandlers();
 
                 spaceShip.update(elapsedTime);
-
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                spaceShip.render(gc);
             }
         };
         gameLoop.start();
+    }
+
+    private void setupKeyPressHandlers() {
+        // e the key event containing information about the key pressed.
+        sceneActual.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case W -> spaceShip.moveUp();
+                case A -> spaceShip.moveLeft();
+                case S -> spaceShip.moveDown();
+                case D -> spaceShip.moveRight();
+            }
+        });
+
     }
 
     public void setScene(Scene scene) {
@@ -97,41 +71,22 @@ public class SpaceShooterAppController { // go to previous submission: "in class
     }
 
     private void initializeKeyListeners() {
-        List<String> input = new ArrayList<>();
+        input = new ArrayList<>();
 
         sceneActual.setOnKeyPressed((KeyEvent e) -> {
-            String code = e.getCode().toString();
+            KeyCode code = e.getCode();
             if (!input.contains(code)) {
                 input.add(code);
             }
         });
 
         sceneActual.setOnKeyReleased((KeyEvent e) -> {
-            String code = e.getCode().toString();
+            KeyCode code = e.getCode();
             input.remove(code);
         });
     }
 
-    public void settingBackground(String backgroundColor) {
-        Image backgroundImage = new Image(getClass().getResource(backgroundColor).toExternalForm());
 
-        BackgroundSize backgroundSize = new BackgroundSize(
-                animationPanel.getWidth(),
-                animationPanel.getHeight(),
-                false,
-                false,
-                true,
-                true);
-
-        BackgroundImage bgImage = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                backgroundSize
-        );
-        animationPanel.setBackground(new Background(bgImage));
-    }
 
     private List<Sprite> getSprites() {
         List<Sprite> spriteList = new ArrayList<>();
@@ -144,16 +99,16 @@ public class SpaceShooterAppController { // go to previous submission: "in class
         return spriteList;
     }
 
-//    private void initGameLoop() {
-//        // Create the game loop.
-//        gameLoop = new AnimationTimer() {
-//            @Override
-//            public void handle(long now) {
-//                update();
-//            }
-//        };
-//        gameLoop.start();
-//    }
+    private void initGameLoop() {
+        // Create the game loop.
+        gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+            }
+        };
+        gameLoop.start();
+    }
 
     private void update() {
         elapsedTime = 0.016;
@@ -195,19 +150,19 @@ public class SpaceShooterAppController { // go to previous submission: "in class
         }
     }
 
-    private void handleEnemyFiring(Sprite sprite) {
-        if (elapsedTime > 2) {
-            if (Math.random() < 0.3) {
-                sprite.shoot();
-            }
-        }
-    }
+//    private void handleEnemyFiring(Sprite sprite) {
+//        if (elapsedTime > 2) {
+//            if (Math.random() < 0.3) {
+//                sprite.shoot();
+//            }
+//        }
+//    }
 
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
             case "enemybullet" -> handleEnemyBullet(sprite);
             case "playerbullet" -> handlePlayerBullet(sprite);
-            case "enemy" -> handleEnemyFiring(sprite);
+//            case "enemy" -> handleEnemyFiring(sprite);
         }
     }
 

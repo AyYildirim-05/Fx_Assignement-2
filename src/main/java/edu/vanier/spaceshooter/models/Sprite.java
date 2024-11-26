@@ -1,105 +1,69 @@
 package edu.vanier.spaceshooter.models;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
-public abstract class Sprite extends Rectangle {
+public abstract class Sprite extends ImageView {
+    public int speedValue = 5;
+
     public int health;
     public ImageView imageView;
     public double positionX;
     public double positionY;
     public double velocityX;
     public double velocityY;
+    public double height;
+    public double width;
     public boolean dead = false;
     public String type;
 
-    /**
-     * Constructor of all the characters in the application
-     * @param imagePath Gets the object sprite location
-     * @param type Defines the type of the object
-     *             // todo will be useful to avoid collisions between enemy objects
-     * @param x Left-to-right coordinate of the top-left corner of the ImageView
-     * @param y Top-to-bottom coordinate of the top-left corner of the ImageView
-     */
-    public Sprite(String imagePath, double height, double width, int health, String type, double x, double y) {
+    public Sprite(String imagePath, double size, int health, String type, double x, double y) {
         this.type = type; // deciding if the sprite is player, enemy. or other
         this.health = health;
-        Image image = new Image(imagePath);
-        this.imageView = new ImageView(image);
-        imageView.setX(x); // set positioning
-        imageView.setY(y);
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.width = size;
+        this.height = size;
+        Image image = new Image(getClass().getResource(imagePath).toExternalForm());
+        setImage(image);
+        setX(x); // set positioning
+        setY(y);
         setTranslateX(x); // set incremental changes
         setTranslateY(y);
-        this.imageView.setFitWidth(width);
-        this.imageView.setFitHeight(height);
-        this.imageView.setPreserveRatio(true);
+        setFitWidth(size);
+        setFitHeight(size);
+        setPreserveRatio(true);
     }
 
-    // abstract methods to implement in each class
-    public abstract void moveLeft();
-    public abstract void moveRight();
-    public abstract void moveDown();
-    public abstract void moveUp();
-    public abstract void shoot();
-    public abstract void makeShootingNoise();
-
-    // some getter and setters
-
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
-    }
-
-    public double getPositionX() {
-        return positionX;
-    }
-
-    public void setPositionX(double positionX) {
-        this.positionX = positionX;
-    }
-
-    public double getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionY(double positionY) {
-        this.positionY = positionY;
-    }
-
-    public double getVelocityX() {
-        return velocityX;
-    }
-
-    public double getVelocityY() {
-        return velocityY;
-    }
+    // todo might not use it at all
+//    public void moveLeft() { setTranslateX(getTranslateX() - speedValue); }
+//    public void moveRight() {
+//        setTranslateX(getTranslateX() + speedValue);
+//    }
+//    public void moveUp() {
+//        setTranslateY(getTranslateY() - speedValue);
+//    }
+//    public void moveDown() {
+//        setTranslateY(getTranslateY() + speedValue);
+//    }
 
     public void setVelocity(double x, double y) {
         velocityX = x;
         velocityY = y;
     }
 
-    public void setVelocityX(double velocityX) {
-        this.velocityX = velocityX;
+    public void addVelocity(double x, double y) {
+        velocityX += x;
+        velocityY += y;
     }
 
-    public void setVelocityY(double velocityY) {
-        this.velocityY = velocityY;
+    public void update(double time) {
+        positionX += velocityX * time;
+        positionY += velocityY * time;
     }
 
     public void setDead(boolean dead) {
@@ -110,37 +74,39 @@ public abstract class Sprite extends Rectangle {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    // other methods
-    public void addVelocity(double x, double y) {
-        velocityX += x;
-        velocityY += y;
-    }
-
-//    public void update(double elapsedTime) {
-//        imageView.setX(imageView.getX() + velocityX * elapsedTime);
-//        imageView.setY(imageView.getY() + velocityY * elapsedTime);
-//    }
-    public void update(double time) {
-        positionX += velocityX * time;
-        positionY += velocityY * time;
-    }
-
     public boolean isDead() {
         return dead;
     }
 
-    public boolean intersects(Sprite sprite) {
-        Bounds thisBounds = this.imageView.getBoundsInParent();
-        Bounds otherBounds = sprite.imageView.getBoundsInParent();
-        return thisBounds.intersects(otherBounds);
+
+    public Rectangle2D getBoundary() {
+        return new Rectangle2D(positionX, positionY, width, height);
+    }
+
+    public boolean intersects(Sprite s) {
+        return s.getBoundary().intersects(this.getBoundary());
     }
 
     public void render(GraphicsContext gc) {
         gc.drawImage(imageView.getImage(), positionX, positionY);
+    }
+
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void decreaseHealth() {
+        if (health > 0) {
+            health--;
+        }
+        if (health <= 0) {
+            setDead(true);
+        }
     }
 }
 

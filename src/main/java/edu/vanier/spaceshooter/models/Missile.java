@@ -5,44 +5,24 @@ import javafx.scene.paint.Color;
 
 public class Missile extends Sprite{
 
+    public final String redMissile_1 = "missile/laserRed06.png";
+    public final String redMissile_2 = "missile/laserRed16.png";
+    public final String blueMissile_1 = "missile/laserBlue06.png";
+    public final String blueMissile_2 = "missile/laserBlue16.png";
+    public final String greenMissile_1 = "missile/laserGreen12.png";
+    public final String greenMissile_2 = "missile/laserGreen13.png";
 
-    public Missile(String imagePath, double height, double width, int health, String type, double x, double y) {
-        super(imagePath, height, width, health, type, x, y);
+    int health_missile = 1;
+
+    public Missile(String imagePath, double size, int health, String type, double x, double y) {
+        super(imagePath, size, health, type, x, y);
     }
 
-    //todo create at lest 3 different missile types
-    @Override
-    public void moveLeft() {
-
+    public int getHealth_missile() {
+        return health_missile;
     }
 
-    @Override
-    public void moveRight() {
-
-    }
-
-    @Override
-    public void moveDown() {
-
-    }
-
-    @Override
-    public void moveUp() {
-
-    }
-
-    @Override
-    public void shoot() {
-
-    }
-
-    @Override
-    public void makeShootingNoise() {
-
-    }
-
-    @Override
-    public Node getStyleableNode() {
-        return super.getStyleableNode();
+    public void setHealth_missile(int health_missile) {
+        this.health_missile = health_missile;
     }
 }

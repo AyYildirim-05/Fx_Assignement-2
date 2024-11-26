@@ -3,55 +3,33 @@ package edu.vanier.spaceshooter.models;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
-public class SpaceShip extends Sprite {
+public class SpaceShip extends FiringSprites {
 
-    /**
-     * Constructor of all the characters in the application
-     *
-     * @param imagePath Gets the object sprite location
-     * @param type      Defines the type of the object
-     *                  // todo will be useful to avoid collisions between enemy objects
-     * @param x         Left-to-right coordinate of the top-left corner of the ImageView
-     * @param y         Top-to-bottom coordinate of the top-left corner of the ImageView
-     */
-    public SpaceShip(String imagePath, double height, double width, int health, String type, double x, double y) {
-        super(imagePath, height, width, health, type, x, y);
+    public final String player_spaceShip = "player/playerShip1_red.png";
 
+    public int health_player = 3;
+
+    public SpaceShip(String imagePath, double size, int health, String type, double x, double y) {
+        super(imagePath, size, health, type, x, y);
     }
 
-    @Override
-    public void moveLeft() {
-
+    public String getPlayer_spaceShip() {
+        return player_spaceShip;
     }
 
-    @Override
-    public void moveRight() {
-
+    public int getHealth_player() {
+        return health_player;
     }
 
-    @Override
-    public void moveDown() {
-
+    public void setHealth_player(int health_player) {
+        this.health_player = health_player;
     }
 
-    @Override
-    public void moveUp() {
-
+    public void lose_health() {
+        health_player--;
     }
 
-
-    @Override
-    public void shoot() {
-
-    }
-
-    @Override
-    public void makeShootingNoise() {
-
-    }
-
-    @Override
-    public Node getStyleableNode() {
-        return super.getStyleableNode();
+    public void gain_health() {
+        health_player++;
     }
 }
