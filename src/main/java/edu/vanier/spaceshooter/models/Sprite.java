@@ -56,6 +56,11 @@ public abstract class Sprite extends ImageView {
         velocityY = y;
     }
 
+    public void stop() {
+        velocityX = 0;
+        velocityY = 0;
+    }
+
     public void addVelocity(double x, double y) {
         velocityX += x;
         velocityY += y;
@@ -78,13 +83,9 @@ public abstract class Sprite extends ImageView {
         return dead;
     }
 
-
-    public Rectangle2D getBoundary() {
-        return new Rectangle2D(positionX, positionY, width, height);
-    }
-
-    public boolean intersects(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
+    public boolean isColliding(Sprite other) {
+        return this.getBoundsInParent().intersects(other.getBoundsInParent());
+        // or getBoundsInLocal()
     }
 
     public void render(GraphicsContext gc) {
@@ -100,13 +101,12 @@ public abstract class Sprite extends ImageView {
         this.health = health;
     }
 
-    public void decreaseHealth() {
-        if (health > 0) {
-            health--;
-        }
-        if (health <= 0) {
-            setDead(true);
-        }
+    public void moveUp() {
+
+    }
+
+    public void moveDown() {
+
     }
 }
 

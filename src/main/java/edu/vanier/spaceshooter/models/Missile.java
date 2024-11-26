@@ -22,7 +22,12 @@ public class Missile extends Sprite{
         return health_missile;
     }
 
-    public void setHealth_missile(int health_missile) {
-        this.health_missile = health_missile;
+    public void decreaseMissileHealth() {
+        if (this.getHealth() > 0) {
+            this.setHealth(this.getHealth() - 1);
+        } else {
+            this.setDead(true);
+        }
     }
+
 }

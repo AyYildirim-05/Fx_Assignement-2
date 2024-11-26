@@ -1,6 +1,6 @@
 package edu.vanier.spaceshooter.controllers;
 
-import edu.vanier.spaceshooter.models.Sprite;
+import edu.vanier.spaceshooter.models.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,18 +14,24 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpaceShooterAppController { // go to previous submission: "in class modification done in case missing code"
+public class SpaceShooterAppController {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterAppController.class);
     @FXML
     Pane animationPanel;
     private Scene sceneActual;
+
     private long lastNanoTime = System.nanoTime();
-    private AnimationTimer gameLoop;
-    Sprite spaceShip;
     private double elapsedTime = 0;
+    private AnimationTimer gameLoop;
+
     private List<KeyCode> input = new ArrayList<>();
     private int score = 0;
 
+    public SpaceShip spaceShip;
+    public Invader invader;
+    public Obstacles obstacles;
+    public Missile missile;
+    public LevelController levelController;
 
     public void initialize() {
         logger.info("Initializing MainAppController...");
@@ -56,10 +62,10 @@ public class SpaceShooterAppController { // go to previous submission: "in class
         // e the key event containing information about the key pressed.
         sceneActual.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case W -> spaceShip.moveUp();
-                case A -> spaceShip.moveLeft();
-                case S -> spaceShip.moveDown();
-                case D -> spaceShip.moveRight();
+                case W -> spaceShip.addVelocity(-250, 0);
+                case A -> spaceShip.addVelocity(250, 0);
+                case S -> spaceShip.addVelocity(0, -250);
+                case D -> spaceShip.addVelocity(0, 250);
             }
         });
 
@@ -132,7 +138,7 @@ public class SpaceShooterAppController { // go to previous submission: "in class
         sprite.moveDown();
         // Check for collision with the spaceship
         if (sprite.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-            spaceShip.setDead(true);
+            spaceShip.lose_health();
             sprite.setDead(true);
         }
     }

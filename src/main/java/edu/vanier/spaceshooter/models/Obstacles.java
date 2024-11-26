@@ -11,4 +11,36 @@ public class Obstacles extends Sprite {
     public Obstacles(String imagePath, double size, int health, String type, double x, double y) {
         super(imagePath, size, health, type, x, y);
     }
+
+    public String getObstacle_1() {
+        return obstacle_1;
+    }
+
+    public String getObstacle_2() {
+        return obstacle_2;
+    }
+
+    public String getObstacle_3() {
+        return obstacle_3;
+    }
+
+    public String getObstacle_4() {
+        return obstacle_4;
+    }
+
+    public int getObstacle_health() {
+        return obstacle_health;
+    }
+
+    public void setObstacle_health(int obstacle_health) {
+        this.obstacle_health = obstacle_health;
+    }
+
+    public void decreaseObstacleHealth() {
+        if (this.getHealth() > 0) {
+            this.setHealth(this.getHealth() - 1);
+        } else {
+            this.setDead(true);
+        }
+    }
 }

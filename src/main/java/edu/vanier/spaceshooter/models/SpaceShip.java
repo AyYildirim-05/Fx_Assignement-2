@@ -21,12 +21,12 @@ public class SpaceShip extends FiringSprites {
         return health_player;
     }
 
-    public void setHealth_player(int health_player) {
-        this.health_player = health_player;
-    }
-
     public void lose_health() {
-        health_player--;
+        if (this.health > 0) {
+            this.setHealth(this.getHealth() - 1);
+        } else {
+            this.setDead(true);
+        }
     }
 
     public void gain_health() {

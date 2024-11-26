@@ -11,4 +11,12 @@ public class Invader extends FiringSprites {
     public Invader(String imagePath, double size, int health, String type, double x, double y) {
         super(imagePath, size, health, type, x, y);
     }
+
+    public void decreaseInvaderHealth() {
+        if (this.getHealth() > 0) {
+            this.setHealth(this.getHealth() - 1);
+        } else {
+            this.setDead(true);
+        }
+    }
 }
