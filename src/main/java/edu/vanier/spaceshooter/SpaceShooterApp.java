@@ -3,7 +3,6 @@ package edu.vanier.spaceshooter;
 import edu.vanier.spaceshooter.controllers.SpaceShooterAppController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -15,37 +14,37 @@ import java.io.IOException;
 public class SpaceShooterApp extends Application {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterApp.class);
     private final static String mainApp = "MainApp_layout";
+    private SpaceShooterAppController controller;
     public Scene scene;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        logger.info("Bootstrapping the application...");
-        SpaceShooterAppController controller = new SpaceShooterAppController();
-        Pane root = (Pane) loadFXML(mainApp, controller);
-        scene = new Scene(root, 600, 1000);
-        controller.setScene(scene);
-        primaryStage.setScene(scene);
-
-        primaryStage.sizeToScene();
-        primaryStage.setTitle("Space Shooter");
-        primaryStage.setAlwaysOnTop(true);
-        primaryStage.show();
-        primaryStage.setAlwaysOnTop(false);
+        try {
+            logger.info("Bootstrapping the application...");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(mainApp));
+            controller = new SpaceShooterAppController();
+            Pane root = loader.load();
+            scene = new Scene(root, 1000, 1000);
+            controller.setScene(scene);
+            controller.setupGameWorld();
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Space Invaders!");
+            primaryStage.sizeToScene();
+            primaryStage.setAlwaysOnTop(true);
+            primaryStage.show();
+            primaryStage.setAlwaysOnTop(false);
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
     }
 
     @Override
     public void stop() throws Exception {
-        // Stop the animation timer upon closing the main stage.
-//        controller.stopAnimation();
+        controller.stopAnimation();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public static Parent loadFXML(String fxmlFile, Object fxmlController) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(SpaceShooterApp.class.getResource("/fxml/" + fxmlFile + ".fxml"));
-        fxmlLoader.setController(fxmlController);
-        return fxmlLoader.load();
-    }
 }

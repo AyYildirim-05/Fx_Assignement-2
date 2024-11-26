@@ -39,6 +39,12 @@ public class SpaceShooterAppController {
         animationPanel.setPrefSize(600, 1000);
         animationPanel.getChildren().add(spaceShip);
     }
+    public void setupGameWorld() {
+        initGameLoop();
+        setupKeyPressHandlers();
+//        generateInvaders();
+    }
+
 
     private void initializeGameLoop() {
         gameLoop = new AnimationTimer() {
@@ -173,9 +179,9 @@ public class SpaceShooterAppController {
     }
 
 
-//    public void stopAnimation() {
-//        if (gameLoop != null) {
-//            gameLoop.stop();
-//        }
-//    }
+    public void stopAnimation() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+    }
 }
