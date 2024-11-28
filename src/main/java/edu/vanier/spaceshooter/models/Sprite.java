@@ -21,21 +21,21 @@ public abstract class Sprite extends ImageView {
     public boolean dead = false;
     public String type;
 
-    public Sprite(String imagePath, double size, int health, String type, double x, double y) {
+    public Sprite(String imagePath, double width, double height, int health, String type, double x, double y) {
         this.type = type; // deciding if the sprite is player, enemy. or other
         this.health = health;
         this.velocityX = 0;
         this.velocityY = 0;
-        this.width = size;
-        this.height = size;
+        this.width = width;
+        this.height = height;
         Image image = new Image(getClass().getResource(imagePath).toExternalForm());
         setImage(image);
         setX(x); // set positioning
         setY(y);
         setTranslateX(x); // set incremental changes
         setTranslateY(y);
-        setFitWidth(size);
-        setFitHeight(size);
+        setFitWidth(width);
+        setFitHeight(height);
         setPreserveRatio(true);
     }
 

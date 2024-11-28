@@ -24,6 +24,7 @@ public class SpaceShooterApp extends Application {
             logger.info("Bootstrapping the application...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource(mainApp));
             controller = new SpaceShooterAppController();
+            loader.setController(controller);
             Pane root = loader.load();
             scene = new Scene(root, 1000, 1000);
             controller.setScene(scene);

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +34,12 @@ public class SpaceShooterAppController {
     public Missile missile;
     public LevelController levelController;
 
-    @FXML
     public void initialize() {
         logger.info("Initializing MainAppController...");
-        spaceShip = new SpaceShip("player/playerShip1_red.png", 20, 3, "player", 300, 400);
+        spaceShip = new SpaceShip("/player/playerShip1_red.png", 20, 20, 3, "player", 300, 400);
         animationPanel.setPrefSize(600, 1000);
         animationPanel.getChildren().add(spaceShip);
+        System.out.println("looool");
     }
     public void setupGameWorld() {
         initGameLoop();
@@ -73,6 +74,7 @@ public class SpaceShooterAppController {
                 case A -> spaceShip.addVelocity(250, 0);
                 case S -> spaceShip.addVelocity(0, -250);
                 case D -> spaceShip.addVelocity(0, 250);
+                case F -> ((Stage)sceneActual.getWindow()).setFullScreen(true);
             }
         });
 

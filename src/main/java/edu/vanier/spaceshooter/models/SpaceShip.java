@@ -5,12 +5,12 @@ import javafx.scene.paint.Color;
 
 public class SpaceShip extends FiringSprites {
 
-    public final String player_spaceShip = "player/playerShip1_red.png";
+    public final String player_spaceShip = "/player/playerShip1_red.png";
 
     public int health_player = 3;
 
-    public SpaceShip(String imagePath, double size, int health, String type, double x, double y) {
-        super(imagePath, size, health, type, x, y);
+    public SpaceShip(String imagePath, double width, double height, int health, String type, double x, double y) {
+        super(imagePath, width, height, health, type, x, y);
     }
 
     public String getPlayer_spaceShip() {

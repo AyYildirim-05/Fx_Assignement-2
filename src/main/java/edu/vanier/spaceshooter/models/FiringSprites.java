@@ -2,9 +2,12 @@ package edu.vanier.spaceshooter.models;
 
 public abstract class FiringSprites extends Sprite {
 
-    public FiringSprites(String imagePath, double size, int health, String type, double x, double y) {
-        super(imagePath, size, health, type, x, y);
+    public double missileSpeed;
+
+    public FiringSprites(String imagePath, double width, double height, int health, String type, double x, double y) {
+        super(imagePath, width, height, health, type, x, y);
     }
+
 
     public  void singleShot() {
 
@@ -20,6 +23,10 @@ public abstract class FiringSprites extends Sprite {
 
     }
     public void machineGun() {
+
+    }
+
+    public void homing() {
 
     }
 }
