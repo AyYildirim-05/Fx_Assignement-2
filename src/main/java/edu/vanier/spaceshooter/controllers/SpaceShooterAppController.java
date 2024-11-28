@@ -33,9 +33,10 @@ public class SpaceShooterAppController {
     public Missile missile;
     public LevelController levelController;
 
+    @FXML
     public void initialize() {
         logger.info("Initializing MainAppController...");
-//        spaceShip = new SpaceShip("/player/playerShip1_red.png", 20, 20, 1, "player", 300, 400);
+        spaceShip = new SpaceShip("player/playerShip1_red.png", 20, 3, "player", 300, 400);
         animationPanel.setPrefSize(600, 1000);
         animationPanel.getChildren().add(spaceShip);
     }

@@ -9,11 +9,12 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class SpaceShooterApp extends Application {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterApp.class);
-    private final static String mainApp = "MainApp_layout";
+    private final static String mainApp = "/fxml/MainApp_layout.fxml";
     private SpaceShooterAppController controller;
     public Scene scene;
 
@@ -26,7 +27,7 @@ public class SpaceShooterApp extends Application {
             Pane root = loader.load();
             scene = new Scene(root, 1000, 1000);
             controller.setScene(scene);
-            controller.setupGameWorld();
+//            controller.setupGameWorld();
             primaryStage.setScene(scene);
             primaryStage.setTitle("Space Invaders!");
             primaryStage.sizeToScene();
