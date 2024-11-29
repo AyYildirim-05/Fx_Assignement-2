@@ -151,7 +151,14 @@ public class SpaceShooterAppController {
     private void handleEnemyBullet(Sprite sprite) {
         sprite.moveDown(levelController.getSpeedValue());
         if (sprite.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-            spaceShip.setDead(true);
+            System.out.println("Collision detected!");
+            spaceShip.lose_health();
+            System.out.println("SpaceShip health: " + spaceShip.getHealth());
+            if (spaceShip.checkHealth()) {
+                spaceShip.setDead(true);
+                System.out.println("Sprite marked as dead.");
+
+            }
             sprite.setDead(true);
         }
     }
@@ -186,7 +193,7 @@ public class SpaceShooterAppController {
     }
 
 
-    // todo fix the shooting position of the entity
+//todo as a input field put firing type. then a switch case that determines which tyep
     private void shoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {

@@ -1,11 +1,8 @@
 package edu.vanier.spaceshooter.models;
 
-import javafx.geometry.Bounds;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
 
 public abstract class Sprite extends ImageView {
 
@@ -21,7 +18,6 @@ public abstract class Sprite extends ImageView {
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y) {
         this.type = type; // deciding if the sprite is player, enemy. or other
         this.health = health;
-
         this.width = width;
         this.height = height;
         Image image = new Image(getClass().getResource(imagePath).toExternalForm());
@@ -46,8 +42,6 @@ public abstract class Sprite extends ImageView {
     public void lose_health() {
         if (this.health > 0) {
             this.setHealth(this.getHealth() - 1);
-        } else {
-            this.setDead(true);
         }
     }
 
@@ -87,6 +81,10 @@ public abstract class Sprite extends ImageView {
 
     public boolean isDead() {
         return dead;
+    }
+
+    public boolean checkHealth() {
+        return health <= 0;
     }
 
     public boolean isColliding(Sprite other) {
