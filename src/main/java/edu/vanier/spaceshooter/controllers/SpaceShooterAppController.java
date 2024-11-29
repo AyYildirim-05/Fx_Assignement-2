@@ -1,19 +1,21 @@
 package edu.vanier.spaceshooter.controllers;
 
 import edu.vanier.spaceshooter.models.*;
+import edu.vanier.spaceshooter.support.Background;
 import edu.vanier.spaceshooter.support.LevelController;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 public class SpaceShooterAppController {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterAppController.class);
@@ -30,15 +32,17 @@ public class SpaceShooterAppController {
     public Obstacles obstacles;
     public Missile missile;
     public LevelController levelController;
+    public Background background;
 
 
     public void initialize() {
         levelController = new LevelController();
+        background = new Background();
         logger.info("Initializing MainAppController...");
         spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 20, 20, 3, "player", 300, 400);
         animationPanel.setPrefSize(600, 1000);
         animationPanel.getChildren().add(spaceShip);
-        System.out.println("looool");
+        background.settingBackground(background.getBACKGROUND_IMAGE_1(), animationPanel);
     }
 
     public void setupGameWorld() {
@@ -48,7 +52,6 @@ public class SpaceShooterAppController {
     }
 
     private void initGameLoop() {
-        // Create the game loop.
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -72,38 +75,16 @@ public class SpaceShooterAppController {
             update();
         });
 
-
-
     }
-
-    private void generateInvaders() {
-        for (int i = 0; i < 5; i++) {
-            Invader invader = new Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
-                    90 + i * 100, 500);
-            animationPanel.getChildren().add(invader);
-        }
-    }
-
-
-    private List<Sprite> getSprites() {
-        List<Sprite> spriteList = new ArrayList<>();
-        for (Node n : animationPanel.getChildren()) {
-            if (n instanceof Sprite sprite) {
-                // We should add to the list any node that is a Sprite object.
-                spriteList.add(sprite);
-            }
-        }
-        return spriteList;
-    }
-
 
     private void update() {
         elapsedTime += 0.016;
-        // Actions to be performed during each frame of the animation.
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
 
-        // game logic
+        if (input.contains("F")) {
+            ((Stage) sceneActual.getWindow()).setFullScreen(true);
+        }
         if (input.contains("LEFT") || input.contains("A")) {
             spaceShip.moveLeft(levelController.getSpeedValue());
         }
@@ -128,11 +109,33 @@ public class SpaceShooterAppController {
 //            }
         }
 
-        if (elapsedTime > 2) {
+        if (elapsedTime > 0.5) {
             elapsedTime = 0;
         }
 
     }
+
+    private void generateInvaders() {
+        for (int i = 0; i < 5; i++) {
+            invader = new Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
+                    90 + i * 100, 500);
+            animationPanel.getChildren().add(invader);
+        }
+    }
+
+
+    private List<Sprite> getSprites() {
+        List<Sprite> spriteList = new ArrayList<>();
+        for (Node n : animationPanel.getChildren()) {
+            if (n instanceof Sprite sprite) {
+                spriteList.add(sprite);
+            }
+        }
+        return spriteList;
+    }
+
+
+
 
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
@@ -157,7 +160,6 @@ public class SpaceShooterAppController {
         sprite.moveUp();
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
-                // Check for collision with an enemy
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
                     enemy.setDead(true);
                     sprite.setDead(true);
@@ -185,10 +187,15 @@ public class SpaceShooterAppController {
 
 
     private void shoot(Sprite firingEntity) {
-        missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
-                firingEntity.getType() + "bullet",(int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
-                (int) (firingEntity.getTranslateY() - 10));
-        animationPanel.getChildren().add(missile);
+        long now = System.currentTimeMillis();
+        if (now - levelController.lastShot > 500) {
+            missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet",(int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
+                    (int) (firingEntity.getTranslateY() - 10));
+            animationPanel.getChildren().add(missile);
+            levelController.setLastShot(now);
+        }
+
     }
 
     public void setScene(Scene scene) {
