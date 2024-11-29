@@ -8,7 +8,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 public abstract class Sprite extends ImageView {
-    public int speedValue = 5;
 
     public int health;
     public ImageView imageView;
@@ -39,17 +38,29 @@ public abstract class Sprite extends ImageView {
         setPreserveRatio(true);
     }
 
-    // todo might not use it at all
-//    public void moveLeft() { setTranslateX(getTranslateX() - speedValue); }
-//    public void moveRight() {
-//        setTranslateX(getTranslateX() + speedValue);
-//    }
-//    public void moveUp() {
-//        setTranslateY(getTranslateY() - speedValue);
-//    }
-//    public void moveDown() {
-//        setTranslateY(getTranslateY() + speedValue);
-//    }
+    public void moveLeft(int speed) { setTranslateX(getTranslateX() - speed); }
+    public void moveRight(int speed) {
+        setTranslateX(getTranslateX() + speed);
+    }
+    public void moveUp(int speed) {
+        setTranslateY(getTranslateY() - speed);
+    }
+    public void moveDown(int speed) {
+        setTranslateY(getTranslateY() + speed);
+    }
+
+    public void lose_health() {
+        if (this.health > 0) {
+            this.setHealth(this.getHealth() - 1);
+        } else {
+            this.setDead(true);
+        }
+    }
+
+    public void gain_health() {
+        this.health++;
+    }
+
 
     public void setVelocity(double x, double y) {
         velocityX = x;

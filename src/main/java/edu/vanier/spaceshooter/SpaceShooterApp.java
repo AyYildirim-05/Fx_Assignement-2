@@ -28,7 +28,7 @@ public class SpaceShooterApp extends Application {
             Pane root = loader.load();
             scene = new Scene(root, 1000, 1000);
             controller.setScene(scene);
-//            controller.setupGameWorld();
+            controller.setupGameWorld();
             primaryStage.setScene(scene);
             primaryStage.setTitle("Space Invaders!");
             primaryStage.sizeToScene();
