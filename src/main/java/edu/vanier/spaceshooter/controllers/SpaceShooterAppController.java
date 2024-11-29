@@ -109,7 +109,7 @@ public class SpaceShooterAppController {
 //            }
         }
 
-        if (elapsedTime > 0.5) {
+        if (elapsedTime > 2) {
             elapsedTime = 0;
         }
 
@@ -119,7 +119,7 @@ public class SpaceShooterAppController {
         for (int i = 0; i < 5; i++) {
             invader = new Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
                     90 + i * 100, 500);
-            animationPanel.getChildren().add(invader);
+            animationPanel.getChildren().addAll(invader);
         }
     }
 
@@ -149,7 +149,7 @@ public class SpaceShooterAppController {
     }
 
     private void handleEnemyBullet(Sprite sprite) {
-        sprite.moveDown();
+        sprite.moveDown(levelController.getSpeedValue());
         if (sprite.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
             spaceShip.setDead(true);
             sprite.setDead(true);
@@ -157,7 +157,7 @@ public class SpaceShooterAppController {
     }
 
     private void handlePlayerBullet(Sprite sprite) {
-        sprite.moveUp();
+        sprite.moveUp(levelController.getSpeedValue());
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {

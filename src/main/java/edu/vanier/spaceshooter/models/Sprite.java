@@ -62,25 +62,26 @@ public abstract class Sprite extends ImageView {
     }
 
 
-    public void setVelocity(double x, double y) {
-        velocityX = x;
-        velocityY = y;
-    }
-
-    public void stop() {
-        velocityX = 0;
-        velocityY = 0;
-    }
-
-    public void addVelocity(double x, double y) {
-        velocityX += x;
-        velocityY += y;
-    }
-
-    public void update(double time) {
-        positionX += velocityX * time;
-        positionY += velocityY * time;
-    }
+    // todo decide whether i am going to use vectors or not
+//    public void setVelocity(double x, double y) {
+//        velocityX = x;
+//        velocityY = y;
+//    }
+//
+//    public void stop() {
+//        velocityX = 0;
+//        velocityY = 0;
+//    }
+//
+//    public void addVelocity(double x, double y) {
+//        velocityX += x;
+//        velocityY += y;
+//    }
+//
+//    public void update(double time) {
+//        positionX += velocityX * time;
+//        positionY += velocityY * time;
+//    }
 
     public void setDead(boolean dead) {
         this.dead = dead;
@@ -112,12 +113,5 @@ public abstract class Sprite extends ImageView {
         this.health = health;
     }
 
-    public void moveUp() {
-
-    }
-
-    public void moveDown() {
-
-    }
 }
 
