@@ -13,8 +13,6 @@ public abstract class Sprite extends ImageView {
     public ImageView imageView;
     public double positionX;
     public double positionY;
-    public double velocityX;
-    public double velocityY;
     public double height;
     public double width;
     public boolean dead = false;
@@ -23,19 +21,15 @@ public abstract class Sprite extends ImageView {
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y) {
         this.type = type; // deciding if the sprite is player, enemy. or other
         this.health = health;
-        this.velocityX = 0;
-        this.velocityY = 0;
+
         this.width = width;
         this.height = height;
         Image image = new Image(getClass().getResource(imagePath).toExternalForm());
         setImage(image);
-        setX(x); // set positioning
-        setY(y);
         setTranslateX(x); // set incremental changes
         setTranslateY(y);
         setFitWidth(width);
         setFitHeight(height);
-        setPreserveRatio(true);
     }
 
     public void moveLeft(int speed) { setTranslateX(getTranslateX() - speed); }

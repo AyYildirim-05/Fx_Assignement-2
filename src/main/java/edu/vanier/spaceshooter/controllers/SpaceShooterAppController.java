@@ -186,16 +186,16 @@ public class SpaceShooterAppController {
     }
 
 
+    // todo fix the shooting position of the entity
     private void shoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {
             missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
-                    firingEntity.getType() + "bullet",(int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
-                    (int) (firingEntity.getTranslateY() - 10));
+                    firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
+                    (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
             animationPanel.getChildren().add(missile);
             levelController.setLastShot(now);
         }
-
     }
 
     public void setScene(Scene scene) {
