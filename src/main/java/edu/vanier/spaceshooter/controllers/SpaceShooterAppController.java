@@ -87,9 +87,10 @@ public class SpaceShooterAppController {
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
 
-        // todo escape does not close the window
         if (input.contains("F")) {
-            ((Stage) sceneActual.getWindow()).setFullScreen(true);
+            Stage stage = (Stage) sceneActual.getWindow();
+            stage.setFullScreen(!stage.isFullScreen());
+            input.remove("F");
         }
         if (input.contains("LEFT") || input.contains("A")) {
             spaceShip.moveLeft(levelController.getSpeedValue());
@@ -103,26 +104,16 @@ public class SpaceShooterAppController {
         if (input.contains("DOWN") || input.contains("S")) {
             spaceShip.moveDown(levelController.getSpeedValue());
         }
-        sceneActual.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.C) {
-                if (used_gun < levelController.numberOfGuns) {
-                    used_gun++;
-                    System.out.println("Used Gun: " + used_gun);
-                } else {
-                    used_gun = 0;
-                }
+        if (input.contains("C")) {
+            // number of allowed guns
+            // todo since runtime, constantly increasing the value. i need it to do it once
+            if (used_gun < levelController.numberOfGuns) {
+                used_gun += 1;
+                System.out.println("gun: " + used_gun);
+            } else {
+                used_gun = 0;
             }
-        });
-//        if (input.contains("C")) {
-//            // number of allowed guns
-//            // todo since runtime, constantly increasing the value. i need it to do it once
-//            if (used_gun < levelController.numberOfGuns) {
-//                used_gun += 1;
-//                System.out.println("gun: " + used_gun);
-//            } else {
-//                used_gun = 0;
-//            }
-//        }
+        }
         if(input.contains("SPACE")) {
             shoot(spaceShip);
         }
@@ -215,7 +206,7 @@ public class SpaceShooterAppController {
     private void shoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {
-            missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
                     (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
             animationPanel.getChildren().add(missile);
