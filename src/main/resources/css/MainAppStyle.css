@@ -1,0 +1,7 @@
+.label {
+    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+    /*-fx-font: ; todo have to look into have to import custom font*/
+    -fx-text-fill: linear-gradient(to bottom, #00ffcc, #009999);
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 204, 0.8), 10, 0.5, 2, 2); /
+}

@@ -1,20 +1,19 @@
 package edu.vanier.spaceshooter.controllers;
 
 import edu.vanier.spaceshooter.models.*;
-import edu.vanier.spaceshooter.support.Background;
+import edu.vanier.spaceshooter.support.Util;
 import edu.vanier.spaceshooter.support.LevelController;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,16 @@ public class SpaceShooterAppController {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterAppController.class);
     @FXML
     Pane animationPanel;
+
+    @FXML
+    HBox uiContainer;
+
+    @FXML
+    Label scoreLabel;
+
+    @FXML
+    Label stageLabel;
+
     private Scene sceneActual;
 
     private long lastNanoTime = System.nanoTime();
@@ -33,7 +42,7 @@ public class SpaceShooterAppController {
     public Obstacles obstacles;
     public Missile missile;
     public LevelController levelController;
-    public Background background;
+    public Util util;
 
     public int used_gun = 0;
 
@@ -41,15 +50,16 @@ public class SpaceShooterAppController {
 
     public void initialize() {
         levelController = new LevelController();
-        background = new Background();
+        util = new Util();
         logger.info("Initializing MainAppController...");
         spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 20, 20, 3, "player", 300, 400);
         animationPanel.setPrefSize(600, 1000);
         animationPanel.getChildren().add(spaceShip);
-        background.settingBackground(background.getBACKGROUND_IMAGE_1(), animationPanel);
+        util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
     }
 
     public void setupGameWorld() {
+        sceneActual.getStylesheets().add("/resources/css/MainAppStyle.css");
         initGameLoop();
         setupKeyPressHandlers();
         generateInvaders();
@@ -105,14 +115,14 @@ public class SpaceShooterAppController {
             spaceShip.moveDown(levelController.getSpeedValue());
         }
         if (input.contains("C")) {
-            // number of allowed guns
-            // todo since runtime, constantly increasing the value. i need it to do it once
+            // todo needs to reset to 0
             if (used_gun < levelController.numberOfGuns) {
                 used_gun += 1;
                 System.out.println("gun: " + used_gun);
             } else {
                 used_gun = 0;
             }
+            input.remove("C");
         }
         if(input.contains("SPACE")) {
             shoot(spaceShip);
@@ -178,9 +188,12 @@ public class SpaceShooterAppController {
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    enemy.setDead(true);
-                    sprite.setDead(true);
-
+                    enemy.lose_health();
+                    if (enemy.checkHealth()) {
+                        enemy.setDead(true);
+                        levelController.score += 1;
+                        System.out.println(levelController.score);
+                    }
                 }
             }
         }
@@ -222,7 +235,6 @@ public class SpaceShooterAppController {
             case 2:
                 doubleShot(firingEntity);
                 System.out.println("weapon 2");
-
         }
     }
 

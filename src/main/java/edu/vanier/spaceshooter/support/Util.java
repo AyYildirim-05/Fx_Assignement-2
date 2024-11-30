@@ -3,7 +3,7 @@ package edu.vanier.spaceshooter.support;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
-public class Background {
+public class Util {
     public final String BACKGROUND_IMAGE_1 = "/background/blue.png";
     public final String BACKGROUND_IMAGE_2 = "/background/purple.png";
     public final String BACKGROUND_IMAGE_3 = "/background/darkPurple.png";
