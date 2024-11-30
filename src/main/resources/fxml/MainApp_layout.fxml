@@ -4,3 +4,24 @@
 
 
 <Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"/>
+
+
+<!-- version of the code that is supposed to work with score
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fx:id="uiContainer" prefHeight="25.0" prefWidth="1000.0" spacing="450.0">
+         <children>
+            <Label fx:id="scoreLabel" />
+            <Label fx:id="stageLabel" />
+         </children>
+      </HBox>
+   </children>
+</Pane>
+
+-->

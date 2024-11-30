@@ -49,6 +49,9 @@ public class SpaceShooterAppController {
 
 
     public void initialize() {
+        // todo how to set up the score
+//        stageLabel.setText("Stage: 1");
+//        scoreLabel.setText("Score: 0");
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
@@ -59,7 +62,6 @@ public class SpaceShooterAppController {
     }
 
     public void setupGameWorld() {
-        sceneActual.getStylesheets().add("/resources/css/MainAppStyle.css");
         initGameLoop();
         setupKeyPressHandlers();
         generateInvaders();
