@@ -139,7 +139,7 @@ public class SpaceShooterAppController {
 
     private void generateInvaders() {
         for (int i = 0; i < 5; i++) {
-            invader = new Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
+            invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
                     90 + i * 100, 500);
             animationPanel.getChildren().addAll(invader);
         }
@@ -191,8 +191,16 @@ public class SpaceShooterAppController {
                     enemy.lose_health();
                     if (enemy.checkHealth()) {
                         enemy.setDead(true);
-                        levelController.score += 1;
-                        System.out.println(levelController.score);
+                        if (enemy instanceof Small_Invader) {
+                            levelController.score += 1;
+                            System.out.println(levelController.score);
+                        } else if (enemy instanceof Medium_Invader) {
+                            levelController.score += 3;
+                            System.out.println(levelController.score);
+                        } else if (enemy instanceof Big_Invader) {
+                            levelController.score += 5;
+                            System.out.println(levelController.score);
+                        }
                     }
                 }
             }
