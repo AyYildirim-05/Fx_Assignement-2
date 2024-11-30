@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -33,6 +34,9 @@ public class SpaceShooterAppController {
     public Missile missile;
     public LevelController levelController;
     public Background background;
+
+    public int used_gun = 0;
+
 
 
     public void initialize() {
@@ -77,11 +81,13 @@ public class SpaceShooterAppController {
 
     }
 
+    // todo how to implement a level progression
     private void update() {
         elapsedTime += 0.016;
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
 
+        // todo escape does not close the window
         if (input.contains("F")) {
             ((Stage) sceneActual.getWindow()).setFullScreen(true);
         }
@@ -97,17 +103,32 @@ public class SpaceShooterAppController {
         if (input.contains("DOWN") || input.contains("S")) {
             spaceShip.moveDown(levelController.getSpeedValue());
         }
-        if(input.contains("SPACE")){
-            shoot(spaceShip);
-
-//            long currentTime = System.currentTimeMillis();
-//            if (currentTime - levelController.lastShot >= levelController.getCOOLDOWN()) {
-//                if(!spaceShip.isDead()){
-//                    shoot(spaceShip);
-//                }
-//                levelController.lastShot = currentTime;
+        sceneActual.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.C) {
+                if (used_gun < levelController.numberOfGuns) {
+                    used_gun++;
+                    System.out.println("Used Gun: " + used_gun);
+                } else {
+                    used_gun = 0;
+                }
+            }
+        });
+//        if (input.contains("C")) {
+//            // number of allowed guns
+//            // todo since runtime, constantly increasing the value. i need it to do it once
+//            if (used_gun < levelController.numberOfGuns) {
+//                used_gun += 1;
+//                System.out.println("gun: " + used_gun);
+//            } else {
+//                used_gun = 0;
 //            }
+//        }
+        if(input.contains("SPACE")) {
+            shoot(spaceShip);
         }
+//        if(input.contains("SPACE")){
+//            shooting(spaceShip, used_gun);
+//        }
 
         if (elapsedTime > 2) {
             elapsedTime = 0;
@@ -133,8 +154,6 @@ public class SpaceShooterAppController {
         }
         return spriteList;
     }
-
-
 
 
     private void processSprite(Sprite sprite) {
@@ -193,7 +212,6 @@ public class SpaceShooterAppController {
     }
 
 
-//todo as a input field put firing type. then a switch case that determines which tyep
     private void shoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {
@@ -204,6 +222,58 @@ public class SpaceShooterAppController {
             levelController.setLastShot(now);
         }
     }
+
+    private void shooting(Sprite firingEntity, int weapon) {
+        switch (weapon) {
+            case 1:
+                singleShot(firingEntity);
+                System.out.println("weapon 1");
+            case 2:
+                doubleShot(firingEntity);
+                System.out.println("weapon 2");
+
+        }
+    }
+
+    public  void singleShot(Sprite firingEntity) {
+        long now = System.currentTimeMillis();
+        if (now - levelController.lastShot > 500) {
+            missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
+                    (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
+            animationPanel.getChildren().add(missile);
+            levelController.setLastShot(now);
+        }
+    }
+
+    public void doubleShot(Sprite firingEntity) {
+        missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+                firingEntity.getType() + "bullet",
+                (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 3),
+                (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+        animationPanel.getChildren().add(missile);
+
+        missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+                firingEntity.getType() + "bullet",
+                (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
+                (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+        animationPanel.getChildren().add(missile);
+
+        levelController.setLastShot(System.currentTimeMillis());
+    }
+
+    public void tripleShot(Sprite firingEntity) {
+        singleShot(firingEntity);
+
+        Missile leftMissile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+                firingEntity.getType() + "bullet",
+                (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
+                (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+        // todo how to angle the sprite
+
+
+    }
+
 
     public void setScene(Scene scene) {
         sceneActual = scene;

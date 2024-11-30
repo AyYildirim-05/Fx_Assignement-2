@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class LevelController {
     /* Speed controller */
     public int speedValue = 5;
-
     public long lastShot = 0;
     public int COOLDOWN = 150;
 
@@ -125,6 +124,7 @@ public class LevelController {
     public final String greenMissile_1 = "/missile/laserGreen12.png";
     public final String greenMissile_2 = "/missile/laserGreen13.png";
     public int health_missile = 1;
+    public int numberOfGuns = 2;
 
 
     public String getRedMissile_1() {
