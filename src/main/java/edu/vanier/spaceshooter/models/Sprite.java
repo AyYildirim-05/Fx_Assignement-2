@@ -16,7 +16,7 @@ public abstract class Sprite extends ImageView {
     public String type;
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y) {
-        this.type = type; // deciding if the sprite is player, enemy. or other
+        this.type = type;
         this.health = health;
         this.width = width;
         this.height = height;
@@ -49,27 +49,6 @@ public abstract class Sprite extends ImageView {
         this.health++;
     }
 
-
-    // todo decide whether i am going to use vectors or not
-//    public void setVelocity(double x, double y) {
-//        velocityX = x;
-//        velocityY = y;
-//    }
-//
-//    public void stop() {
-//        velocityX = 0;
-//        velocityY = 0;
-//    }
-//
-//    public void addVelocity(double x, double y) {
-//        velocityX += x;
-//        velocityY += y;
-//    }
-//
-//    public void update(double time) {
-//        positionX += velocityX * time;
-//        positionY += velocityY * time;
-//    }
 
     public void setDead(boolean dead) {
         this.dead = dead;

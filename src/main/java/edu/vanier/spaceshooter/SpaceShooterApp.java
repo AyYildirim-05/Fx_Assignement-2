@@ -18,6 +18,8 @@ public class SpaceShooterApp extends Application {
     private SpaceShooterAppController controller;
     public Scene scene;
 
+    public static int sceneSize = 1000;
+
     @Override
     public void start(Stage primaryStage) throws IOException {
         try {
@@ -27,7 +29,7 @@ public class SpaceShooterApp extends Application {
             loader.setController(controller);
             Pane root = loader.load();
 
-            scene = new Scene(root, 1000, 1000);
+            scene = new Scene(root, sceneSize, sceneSize);
             controller.setScene(scene);
             controller.setupGameWorld();
             primaryStage.setScene(scene);
@@ -50,4 +52,8 @@ public class SpaceShooterApp extends Application {
         launch(args);
     }
 
+
+    public static int getSceneSize() {
+        return sceneSize;
+    }
 }
