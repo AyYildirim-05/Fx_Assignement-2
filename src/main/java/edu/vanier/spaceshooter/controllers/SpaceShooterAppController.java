@@ -99,6 +99,11 @@ public class SpaceShooterAppController {
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
 
+        if (!areEnemiesRemaining()) {
+            System.out.println("No enemies remaining. Level cleared!");
+            // todo how to make so that this doesnt run infinitely
+        }
+
         if (input.contains("F")) {
             Stage stage = (Stage) sceneActual.getWindow();
             stage.setFullScreen(!stage.isFullScreen());
@@ -296,6 +301,15 @@ public class SpaceShooterAppController {
         if (gameLoop != null) {
             gameLoop.stop();
         }
+    }
+
+    private boolean areEnemiesRemaining() {
+        for (Sprite sprite : getSprites()) {
+            if (sprite.getType().equals("enemy")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
