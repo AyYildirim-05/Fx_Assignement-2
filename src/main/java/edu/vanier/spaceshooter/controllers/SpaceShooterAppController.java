@@ -43,10 +43,10 @@ public class SpaceShooterAppController {
     public Missile missile;
     public LevelController levelController;
     public Util util;
-
     public int used_gun = 0;
-
     int randomNumber;
+
+    private long lastEnemyMoveTime = 0;
 
 
 
@@ -155,16 +155,20 @@ public class SpaceShooterAppController {
         }
     }
 
+    // todo not firing when moving
     private void moveInvaders() {
-        for (Node n : animationPanel.getChildren()) {
-            if (n instanceof Small_Invader smallInvader) {
-                randomNumber = (int)(Math.random() * 2);
-                switch (randomNumber) {
-                    case 0: smallInvader.movement_1();
-                    case 1: smallInvader.movement_2();
+        long now = System.currentTimeMillis();
+        if (now - lastEnemyMoveTime > 200) {
+            for (Node n : animationPanel.getChildren()) {
+                if (n instanceof Small_Invader smallInvader) {
+                    randomNumber = (int) (Math.random() * 2);
+                    switch (randomNumber) {
+                        case 0 -> smallInvader.movement_1();
+                        case 1 -> smallInvader.movement_2();
+                    }
                 }
             }
-
+            lastEnemyMoveTime = now;
         }
     }
 
@@ -233,7 +237,7 @@ public class SpaceShooterAppController {
 
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
-            if (Math.random() < 0.3) {
+            if (Math.random() < 0.01) {
                 shoot(sprite);
             }
         }
