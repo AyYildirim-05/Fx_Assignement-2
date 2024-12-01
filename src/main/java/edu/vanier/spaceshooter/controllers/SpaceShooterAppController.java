@@ -46,6 +46,8 @@ public class SpaceShooterAppController {
 
     public int used_gun = 0;
 
+    int randomNumber;
+
 
 
     public void initialize() {
@@ -98,6 +100,7 @@ public class SpaceShooterAppController {
         elapsedTime += 0.016;
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
+        moveInvaders();
 
         if (!areEnemiesRemaining()) {
             System.out.println("No enemies remaining. Level cleared!");
@@ -149,6 +152,19 @@ public class SpaceShooterAppController {
             invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
                     90 + i * 100, 500);
             animationPanel.getChildren().addAll(invader);
+        }
+    }
+
+    private void moveInvaders() {
+        for (Node n : animationPanel.getChildren()) {
+            if (n instanceof Small_Invader smallInvader) {
+                randomNumber = (int)(Math.random() * 2);
+                switch (randomNumber) {
+                    case 0: smallInvader.movement_1();
+                    case 1: smallInvader.movement_2();
+                }
+            }
+
         }
     }
 
