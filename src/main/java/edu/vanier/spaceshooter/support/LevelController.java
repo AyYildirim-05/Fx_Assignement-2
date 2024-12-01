@@ -4,12 +4,22 @@ import java.util.ArrayList;
 
 public class LevelController {
     /* Speed controller */
-    public int speedValue = 5;
-    public long lastShot = 0;
-    public int COOLDOWN = 150;
+    public int speedSpaceShip = 2;
 
-    public int getSpeedValue() {
-        return speedValue;
+    public int speedInvader = 10;
+
+    public int getSpeedInvader() {
+        return speedInvader;
+    }
+
+    public void setSpeedInvader(int speedInvader) {
+        this.speedInvader = speedInvader;
+    }
+
+    public long lastShot = 0;
+
+    public int getSpeedSpaceShip() {
+        return speedSpaceShip;
     }
 
     public long getLastShot() {
@@ -20,16 +30,9 @@ public class LevelController {
         this.lastShot = lastShot;
     }
 
-    public int getCOOLDOWN() {
-        return COOLDOWN;
-    }
 
-    public void setCOOLDOWN(int COOLDOWN) {
-        this.COOLDOWN = COOLDOWN;
-    }
-
-    public void setSpeedValue(int speedValue) {
-        this.speedValue = speedValue;
+    public void setSpeedSpaceShip(int speedSpaceShip) {
+        this.speedSpaceShip = speedSpaceShip;
     }
 
     /* Score */
@@ -126,6 +129,13 @@ public class LevelController {
     public int health_missile = 1;
     public int numberOfGuns = 2;
 
+    public int getNumberOfGuns() {
+        return numberOfGuns;
+    }
+
+    public void setNumberOfGuns(int numberOfGuns) {
+        this.numberOfGuns = numberOfGuns;
+    }
 
     public String getRedMissile_1() {
         return redMissile_1;

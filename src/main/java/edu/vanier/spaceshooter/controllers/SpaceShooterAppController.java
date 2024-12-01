@@ -4,18 +4,21 @@ import edu.vanier.spaceshooter.models.*;
 import edu.vanier.spaceshooter.support.Util;
 import edu.vanier.spaceshooter.support.LevelController;
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SpaceShooterAppController {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterAppController.class);
@@ -45,9 +48,8 @@ public class SpaceShooterAppController {
     public Util util;
     public int used_gun = 0;
     int randomNumber;
-
+    Random random = new Random();
     private long lastEnemyMoveTime = 0;
-
 
 
     public void initialize() {
@@ -95,7 +97,7 @@ public class SpaceShooterAppController {
 
     }
 
-    // todo how to implement a level progression
+    // todo how to limit the movement of invaders and spaceship within the animationPanel
     private void update() {
         elapsedTime += 0.016;
         getSprites().forEach(this::processSprite);
@@ -113,16 +115,16 @@ public class SpaceShooterAppController {
             input.remove("F");
         }
         if (input.contains("LEFT") || input.contains("A")) {
-            spaceShip.moveLeft(levelController.getSpeedValue());
+            spaceShip.moveLeft(levelController.getSpeedSpaceShip());
         }
         if (input.contains("RIGHT") || input.contains("D")) {
-            spaceShip.moveRight(levelController.getSpeedValue());
+            spaceShip.moveRight(levelController.getSpeedSpaceShip());
         }
         if (input.contains("UP") || input.contains("W")) {
-            spaceShip.moveUp(levelController.getSpeedValue());
+            spaceShip.moveUp(levelController.getSpeedSpaceShip());
         }
         if (input.contains("DOWN") || input.contains("S")) {
-            spaceShip.moveDown(levelController.getSpeedValue());
+            spaceShip.moveDown(levelController.getSpeedSpaceShip());
         }
         if (input.contains("C")) {
             if (used_gun < levelController.numberOfGuns) {
@@ -155,15 +157,30 @@ public class SpaceShooterAppController {
         }
     }
 
+    private void moveInvaderSmoothly(Small_Invader invader, double x, double y) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), invader);
+        transition.setByX(x);
+        transition.setByY(y);
+        transition.setCycleCount(1);
+        transition.play();
+    }
+
+    // Example usage in moveInvaders():
     private void moveInvaders() {
         long now = System.currentTimeMillis();
         if (now - lastEnemyMoveTime > 200) {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
-                    randomNumber = (int) (Math.random() * 2);
+                    randomNumber = random.nextInt(8);
                     switch (randomNumber) {
-                        case 0 -> smallInvader.movement_1();
-                        case 1 -> smallInvader.movement_2();
+                        case 0 -> moveInvaderSmoothly(smallInvader, levelController.getSpeedInvader(), 0);
+                        case 1 -> moveInvaderSmoothly(smallInvader, -levelController.getSpeedInvader(), 0);
+                        case 2 -> moveInvaderSmoothly(smallInvader, 0, levelController.getSpeedInvader());
+                        case 3 -> moveInvaderSmoothly(smallInvader, 0, -levelController.getSpeedInvader());
+                        case 4 -> moveInvaderSmoothly(smallInvader, levelController.getSpeedInvader(), levelController.getSpeedInvader());
+                        case 5 -> moveInvaderSmoothly(smallInvader, -levelController.getSpeedInvader(), levelController.getSpeedInvader());
+                        case 6 -> moveInvaderSmoothly(smallInvader, levelController.getSpeedInvader(), -levelController.getSpeedInvader());
+                        case 7 -> moveInvaderSmoothly(smallInvader, -levelController.getSpeedInvader(), -levelController.getSpeedInvader());
                     }
                 }
             }
@@ -195,7 +212,7 @@ public class SpaceShooterAppController {
     }
 
     private void handleEnemyBullet(Sprite sprite) {
-        sprite.moveDown(levelController.getSpeedValue());
+        sprite.moveDown(levelController.getSpeedSpaceShip());
         if (sprite.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
             System.out.println("Collision detected!");
             spaceShip.lose_health();
@@ -210,7 +227,7 @@ public class SpaceShooterAppController {
     }
 
     private void handlePlayerBullet(Sprite sprite) {
-        sprite.moveUp(levelController.getSpeedValue());
+        sprite.moveUp(levelController.getSpeedSpaceShip());
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
@@ -309,9 +326,7 @@ public class SpaceShooterAppController {
                 (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
         // todo how to angle the sprite
 
-
     }
-
 
     public void setScene(Scene scene) {
         sceneActual = scene;
