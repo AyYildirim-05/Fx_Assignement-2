@@ -60,7 +60,7 @@ public class SpaceShooterAppController {
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
-        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 20, 20, 3, "player", 300, 400);
+        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 30, 30, 3, "player", 10, 400);
         animationPanel.setPrefSize(SpaceShooterApp.getSceneSize(), SpaceShooterApp.getSceneSize());
         animationPanel.getChildren().add(spaceShip);
         util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
@@ -118,23 +118,25 @@ public class SpaceShooterAppController {
             stage.setFullScreen(!stage.isFullScreen());
             input.remove("F");
         }
+        // 2 allows the fins to show without going out
         if (input.contains("LEFT") || input.contains("A")) {
-            if (spaceShip.getLayoutX() >= 0 && spaceShip.getLayoutX() < sceneActual.getWidth()) {
+            if (spaceShip.getTranslateX() >= 2 && spaceShip.getTranslateX() < sceneActual.getWidth()) {
                 spaceShip.moveLeft(levelController.getSpeedSpaceShip());
             }
         }
+        // -2 i dont know why & -30 allows the wing to show
         if (input.contains("RIGHT") || input.contains("D")) {
-            if (spaceShip.getLayoutX() >= 0 && spaceShip.getLayoutX() < sceneActual.getWidth()) {
+            if (spaceShip.getTranslateX() >= -2 && spaceShip.getTranslateX() < sceneActual.getWidth() - 30) {
                 spaceShip.moveRight(levelController.getSpeedSpaceShip());
             }
         }
         if (input.contains("UP") || input.contains("W")) {
-            if (spaceShip.getLayoutY() >= 0 && spaceShip.getLayoutY() < sceneActual.getHeight()) {
+            if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
                 spaceShip.moveUp(levelController.getSpeedSpaceShip());
             }
         }
         if (input.contains("DOWN") || input.contains("S")) {
-            if (spaceShip.getLayoutY() >= 0 && spaceShip.getLayoutY() < sceneActual.getHeight()) {
+            if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
@@ -169,13 +171,7 @@ public class SpaceShooterAppController {
         }
     }
 
-    private void moveInvader(Invader invader, double xAxis, double yAxis) {
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), invader);
-        transition.setByX(xAxis);
-        transition.setByY(yAxis);
-        transition.setCycleCount(1);
-        transition.play();
-    }
+
 
     private void moveInvaders() {
         long now = System.currentTimeMillis();
@@ -184,14 +180,14 @@ public class SpaceShooterAppController {
                 if (n instanceof Small_Invader smallInvader) {
                     randomNumber = random.nextInt(8);
                     switch (randomNumber) {
-                        case 0 -> moveInvader(smallInvader, levelController.getSpeedInvader(), 0); // move right
-                        case 1 -> moveInvader(smallInvader, -levelController.getSpeedInvader(), 0); // move left
-                        case 2 -> moveInvader(smallInvader, 0, levelController.getSpeedInvader()); // move down
-                        case 3 -> moveInvader(smallInvader, 0, -levelController.getSpeedInvader()); // move up
-                        case 4 -> moveInvader(smallInvader, levelController.getSpeedInvader(), levelController.getSpeedInvader()); // right down
-                        case 5 -> moveInvader(smallInvader, -levelController.getSpeedInvader(), levelController.getSpeedInvader()); // left down
-                        case 6 -> moveInvader(smallInvader, levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // right up
-                        case 7 -> moveInvader(smallInvader, -levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
+                        case 0 -> smallInvader.moveInvader( levelController.getSpeedInvader(), 0); // move right
+                        case 1 -> smallInvader.moveInvader( -levelController.getSpeedInvader(), 0); // move left
+                        case 2 -> smallInvader.moveInvader( 0, levelController.getSpeedInvader()); // move down
+                        case 3 -> smallInvader.moveInvader( 0, -levelController.getSpeedInvader()); // move up
+                        case 4 -> smallInvader.moveInvader( levelController.getSpeedInvader(), levelController.getSpeedInvader()); // right down
+                        case 5 -> smallInvader.moveInvader( -levelController.getSpeedInvader(), levelController.getSpeedInvader()); // left down
+                        case 6 -> smallInvader.moveInvader( levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // right up
+                        case 7 -> smallInvader.moveInvader( -levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
                     }
                 }
             }
