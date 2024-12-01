@@ -125,7 +125,6 @@ public class SpaceShooterAppController {
             spaceShip.moveDown(levelController.getSpeedValue());
         }
         if (input.contains("C")) {
-            // todo needs to reset to 0
             if (used_gun < levelController.numberOfGuns) {
                 used_gun += 1;
                 System.out.println("gun: " + used_gun);
@@ -137,6 +136,7 @@ public class SpaceShooterAppController {
         if(input.contains("SPACE")) {
             shoot(spaceShip);
         }
+        // todo this needs to be worked on
 //        if(input.contains("SPACE")){
 //            shooting(spaceShip, used_gun);
 //        }
@@ -155,7 +155,6 @@ public class SpaceShooterAppController {
         }
     }
 
-    // todo not firing when moving
     private void moveInvaders() {
         long now = System.currentTimeMillis();
         if (now - lastEnemyMoveTime > 200) {
@@ -236,8 +235,9 @@ public class SpaceShooterAppController {
 
 
     private void handleEnemyFiring(Sprite sprite) {
+        // if i decrease the value of 2, they fire more frequently
         if (elapsedTime > 2) {
-            if (Math.random() < 0.01) {
+            if (Math.random() < 0.9) {
                 shoot(sprite);
             }
         }

@@ -1,165 +1,24 @@
-private void initGameLoop() {
-        // Create the game loop.
-        gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                update();
-            }
-        };
-        gameLoop.start();
+private void moveInvaderSmoothly(Small_Invader invader, double x, double y) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), invader);
+        transition.setByX(x);
+        transition.setByY(y);
+        transition.setCycleCount(1);
+        transition.play();
     }
 
-
-    private void setupKeyPressHandlers() {
-        // e the key event containing information about the key pressed.
-        mainScene.setOnKeyPressed((KeyEvent e) -> {
-            String code = e.getCode().toString();
-            if (!input.contains(code)) {
-                input.add(code);
-            }
-        });
-
-        mainScene.setOnKeyReleased((KeyEvent e) -> {
-            String code = e.getCode().toString();
-            input.remove(code);
-            update();
-        });
-
-
-
-    }
-
-    private void generateInvaders() {
-        for (int i = 0; i < 5; i++) {
-            MinorInvader invader = new MinorInvader(
-                    90 + i * 100,
-                    150, 30, 30, "enemy",
-                    Color.RED, 20,"/icons/PNG/Sprites/Ships/spaceShips_009.png");
-            animationPanel.getChildren().add(invader);
-        }
-    }
-
-
-    private List<Sprite> getSprites() {
-        List<Sprite> spriteList = new ArrayList<>();
-        for (Node n : animationPanel.getChildren()) {
-            if (n instanceof Sprite sprite) {
-                // We should add to the list any node that is a Sprite object.
-                spriteList.add(sprite);
-            }
-        }
-        return spriteList;
-    }
-
-
-    private void update() {
-        elapsedTime += 0.016;
-        // Actions to be performed during each frame of the animation.
-        getSprites().forEach(this::processSprite);
-        removeDeadSprites();
-
-        // game logic
-        if (input.contains("LEFT") || input.contains("A")) {
-            spaceShip.moveLeft();
-        }
-        if (input.contains("RIGHT") || input.contains("D")) {
-            spaceShip.moveRight();
-                }
-        if (input.contains("UP") || input.contains("W")) {
-            spaceShip.moveUp();
-        }
-        if (input.contains("DOWN") || input.contains("S")) {
-            spaceShip.moveDown();
-        }
-        if(input.contains("SPACE")){
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastShot >= COOLDOWN) {
-                if(!spaceShip.isDead()){
-                    shoot(spaceShip);
-                }
-                lastShot = currentTime; // Update the last shoot time
-            }
-        }
-
-
-
-        if (elapsedTime > 2) {
-            elapsedTime = 0;
-        }
-
-    }
-
-    private void processSprite(Sprite sprite) {
-        switch (sprite.getType()) {
-            case "enemybullet" ->
-                handleEnemyBullet(sprite);
-            case "playerbullet" ->
-                handlePlayerBullet(sprite);
-            case "enemy" ->
-                handleEnemyFiring(sprite);
-        }
-    }
-
-    private void handleEnemyBullet(Sprite sprite) {
-        sprite.moveDown();
-        // Check for collision with the spaceship
-        if (sprite.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-            spaceShip.setDead(true);
-            sprite.setDead(true);
-        }
-    }
-
-    private void handlePlayerBullet(Sprite sprite) {
-        sprite.moveUp();
-        for (Sprite enemy : getSprites()) {
-            if (enemy.getType().equals("enemy")) {
-                // Check for collision with an enemy
-                if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    enemy.setDead(true);
-                    sprite.setDead(true);
-
+    // Example usage in moveInvaders():
+    private void moveInvaders() {
+        long now = System.currentTimeMillis();
+        if (now - lastEnemyMoveTime > 200) {
+            for (Node n : animationPanel.getChildren()) {
+                if (n instanceof Small_Invader smallInvader) {
+                    randomNumber = (int) (Math.random() * 2);
+                    switch (randomNumber) {
+                        case 0 -> moveInvaderSmoothly(smallInvader, 20, 0); // Example movement
+                        case 1 -> moveInvaderSmoothly(smallInvader, -20, 0);
+                    }
                 }
             }
-        }
-    }
-
-
-
-    private void handleEnemyFiring(Sprite sprite) {
-        if (elapsedTime > 2) {
-            if (Math.random() < 0.3) {
-                shoot(sprite);
-            }
-        }
-    }
-
-
-    private void removeDeadSprites() {
-        animationPanel.getChildren().removeIf(n -> {
-            Sprite sprite = (Sprite) n;
-            return sprite.isDead();
-        });
-    }
-
-
-    private void shoot(Sprite firingEntity) {
-        Timer coolDown = new Timer();
-        // The firing entity can be either an enemy or the spaceship.
-        Missile missile = new Missile(
-                (int) (firingEntity.getTranslateX() + 45),
-                (int) (firingEntity.getTranslateY() - 10),
-                5, 20,
-                firingEntity.getType() + "bullet", Color.BLACK, "/icons/PNG/Sprites/Missiles/spaceMissiles_004.png");
-        animationPanel.getChildren().add(missile);
-
-    }
-
-    public void setScene(Scene scene) {
-        mainScene = scene;
-    }
-
-    public void stopAnimation() {
-        if (gameLoop != null) {
-            gameLoop.stop();
+            lastEnemyMoveTime = now;
         }
     }
