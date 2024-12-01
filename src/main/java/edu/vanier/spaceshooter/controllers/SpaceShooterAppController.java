@@ -60,8 +60,8 @@ public class SpaceShooterAppController {
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
-        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 30, 30, 3, "player", 10, 400);
-        animationPanel.setPrefSize(SpaceShooterApp.getSceneSize(), SpaceShooterApp.getSceneSize());
+        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 30, 30, levelController.getHealth_player(), "player", 400, 600);
+        animationPanel.setPrefSize(1000, 800);
         animationPanel.getChildren().add(spaceShip);
         util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
     }
@@ -124,19 +124,19 @@ public class SpaceShooterAppController {
                 spaceShip.moveLeft(levelController.getSpeedSpaceShip());
             }
         }
-        // -2 i dont know why & -30 allows the wing to show
+        // -2 i don't know why & -30 allows the wing to show
         if (input.contains("RIGHT") || input.contains("D")) {
             if (spaceShip.getTranslateX() >= -2 && spaceShip.getTranslateX() < sceneActual.getWidth() - 30) {
                 spaceShip.moveRight(levelController.getSpeedSpaceShip());
             }
         }
         if (input.contains("UP") || input.contains("W")) {
-            if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
+            if (spaceShip.getTranslateY() >= 2 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
                 spaceShip.moveUp(levelController.getSpeedSpaceShip());
             }
         }
         if (input.contains("DOWN") || input.contains("S")) {
-            if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
+            if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight() - 30) {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
