@@ -13,10 +13,11 @@ public class LevelController {
     }
 
     public void setSpeedInvader(int speedInvader) {
-        this.speedInvader = speedInvader;
+        this.speedInvader += speedInvader;
     }
 
     public long lastShot = 0;
+    public int animationDuration = 500;
 
     public int getSpeedSpaceShip() {
         return speedSpaceShip;
@@ -33,6 +34,14 @@ public class LevelController {
 
     public void setSpeedSpaceShip(int speedSpaceShip) {
         this.speedSpaceShip = speedSpaceShip;
+    }
+
+    public int getAnimationDuration() {
+        return animationDuration;
+    }
+
+    public void setAnimationDuration(int animationDuration) {
+        this.animationDuration = animationDuration;
     }
 
     /* Score */
@@ -59,6 +68,8 @@ public class LevelController {
     public void setNumberEnemies(ArrayList<Integer> numberEnemies) {
         this.numberEnemies = numberEnemies;
     }
+
+
 
     /* Invader values */
     public final String small_Enemy = "/invaders/enemyBlue2.png";

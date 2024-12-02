@@ -24,10 +24,6 @@ public class SpaceShooterAppController {
     @FXML
     Pane animationPanel;
 
-    @FXML
-    HBox uiContainer;
-
-    @FXML
     Label scoreLabel;
 
     @FXML
@@ -54,23 +50,23 @@ public class SpaceShooterAppController {
     // todo how to setup game animation
     public void initialize() {
         // todo how to set up the score
-//        stageLabel.setText("Stage: 1");
-//        scoreLabel.setText("Score: 0");
+//        scoreLabel = new Label("Score: " + levelController.getScore());
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
         spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 30, 30, levelController.getHealth_player(), "player", 400, 600);
         animationPanel.setPrefSize(1000, 800);
-        animationPanel.getChildren().add(spaceShip);
+//        scoreLabel.setLayoutX(50);
+//        scoreLabel.setLayoutY(50);
+        animationPanel.getChildren().addAll(spaceShip);
         util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
+
     }
 
     public void setupGameWorld() {
         initGameLoop();
         setupKeyPressHandlers();
         generateInvaders();
-        System.out.println("spaceship:" + spaceShip.getLayoutX());
-        System.out.println("scene:" + sceneActual.getWidth());
     }
 
     private void initGameLoop() {
@@ -105,6 +101,8 @@ public class SpaceShooterAppController {
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
         moveInvaders();
+
+//        updateUI();
 
         if (!areEnemiesRemaining()) {
             // increase player speed, enemy speed. the type of missile player can fire depending on the stage resetting the player
@@ -277,7 +275,7 @@ public class SpaceShooterAppController {
 
     private void shoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > 500) {
+        if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
                     (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
@@ -302,7 +300,7 @@ public class SpaceShooterAppController {
 
     public  void singleShot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > 500) {
+        if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
                     (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
@@ -313,7 +311,7 @@ public class SpaceShooterAppController {
 
     public void doubleShot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > 500) {
+        if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 3),
@@ -331,7 +329,7 @@ public class SpaceShooterAppController {
 
     public void customTripleShoot(Sprite firingEntity, int leftX, int LefY, int RightX, int RightY) {
         long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > 500) {
+        if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             singleShot(firingEntity);
 
             Missile leftMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
@@ -354,7 +352,7 @@ public class SpaceShooterAppController {
 
     public void tripleSpread(Sprite firingEntity) {
         long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > 500) {
+        if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             singleShot(firingEntity);
 
 
