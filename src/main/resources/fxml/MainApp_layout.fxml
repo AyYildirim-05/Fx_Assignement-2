@@ -20,12 +20,12 @@
       <Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" />
     <HBox fx:id="uiContainer" prefHeight="25.0" prefWidth="1000.0" spacing="425.0">
         <children>
-            <Label fx:id="scoreLabel" text="Score:" textFill="WHITE">
+            <Label fx:id="scoreLabel" text="Score: 0" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="stageLabel" text="Stage: " textFill="WHITE">
+            <Label fx:id="stageLabel" text="Stage: 1" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>

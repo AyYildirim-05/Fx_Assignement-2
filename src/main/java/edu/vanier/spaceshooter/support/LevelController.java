@@ -1,12 +1,20 @@
 package edu.vanier.spaceshooter.support;
 
-import java.util.ArrayList;
-
 public class LevelController {
     /* Speed controller */
-    public int speedSpaceShip = 2;
+    public int speedSpaceShip = 0;
 
-    public int speedInvader = 10;
+    public int invaderShootingFrequency = 1;
+
+    public int getInvaderShootingFrequency() {
+        return invaderShootingFrequency;
+    }
+
+    public void setInvaderShootingFrequency() {
+        this.invaderShootingFrequency -= 0.1;
+    }
+
+    public int speedInvader = 0;
 
     public int getSpeedInvader() {
         return speedInvader;
@@ -23,6 +31,8 @@ public class LevelController {
         return speedSpaceShip;
     }
 
+
+
     public long getLastShot() {
         return lastShot;
     }
@@ -33,7 +43,7 @@ public class LevelController {
 
 
     public void setSpeedSpaceShip(int speedSpaceShip) {
-        this.speedSpaceShip = speedSpaceShip;
+        this.speedSpaceShip += speedSpaceShip;
     }
 
     public int getAnimationDuration() {
@@ -56,20 +66,16 @@ public class LevelController {
     }
 
     /* Enemy number */
-    public ArrayList<Integer> numberEnemies = new ArrayList<>(10);
-    public void increaseNumberEnemies() {
-        numberEnemies.add(5);
-    }
+    public int numberEnemies = 5;
 
-    public ArrayList<Integer> getNumberEnemies() {
+
+    public int getNumberEnemies() {
         return numberEnemies;
     }
 
-    public void setNumberEnemies(ArrayList<Integer> numberEnemies) {
-        this.numberEnemies = numberEnemies;
+    public void setNumberEnemies(int numberEnemies) {
+        this.numberEnemies += 5;
     }
-
-
 
     /* Invader values */
     public final String small_Enemy = "/invaders/enemyBlue2.png";

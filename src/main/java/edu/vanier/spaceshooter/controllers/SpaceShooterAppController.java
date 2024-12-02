@@ -51,20 +51,15 @@ public class SpaceShooterAppController {
     Random random = new Random();
     private long lastEnemyMoveTime = 0;
 
-    boolean weapSwitch = false;
+    public int stageNumber = 0;
 
-
-    // todo how to setup game animation
     public void initialize() {
-        // todo how to set up the score
-//        scoreLabel = new Label("Score: " + levelController.getScore());
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
         spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 30, 30, levelController.getHealth_player(), "player", 400, 600);
         animationPanel.setPrefSize(1000, 800);
-//        scoreLabel.setLayoutX(50);
-//        scoreLabel.setLayoutY(50);
+
         animationPanel.getChildren().addAll(spaceShip);
         util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
 
@@ -73,7 +68,6 @@ public class SpaceShooterAppController {
     public void setupGameWorld() {
         initGameLoop();
         setupKeyPressHandlers();
-        generateInvaders();
     }
 
     private void initGameLoop() {
@@ -112,9 +106,13 @@ public class SpaceShooterAppController {
 //        updateUI();
 
         if (!areEnemiesRemaining()) {
-            // increase player speed, enemy speed. the type of missile player can fire depending on the stage resetting the player
             generateInvaders();
-            // todo how to make so that this doesnt run infinitely
+            stageNumber++;
+            levelController.setNumberEnemies(5);
+            levelController.setSpeedInvader(5);
+            levelController.setSpeedSpaceShip(1);
+            stageLabel.setText("Stage: " + stageNumber);
+            levelController.setInvaderShootingFrequency();
         }
 
         if (input.contains(KeyCode.F)) {
@@ -166,7 +164,7 @@ public class SpaceShooterAppController {
     }
 
     private void generateInvaders() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < levelController.getNumberEnemies(); i++) {
             invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
                     90 + i * 100, 500);
             animationPanel.getChildren().addAll(invader);
@@ -174,7 +172,7 @@ public class SpaceShooterAppController {
     }
 
 
-
+    // todo implement custom movement types, not just shifting around
     private void moveInvaders() {
         long now = System.currentTimeMillis();
         if (now - lastEnemyMoveTime > 200) {
@@ -213,6 +211,7 @@ public class SpaceShooterAppController {
     }
 
 
+// todo make this so that it seperates the firing type cause after setting them to go diagonally, they come back to moveUp
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
             case "enemybullet" ->
@@ -239,7 +238,6 @@ public class SpaceShooterAppController {
     }
 
     private void handlePlayerBullet(Sprite sprite) {
-        // todo set the way the bullet moves in individual methods
         sprite.moveUp(levelController.getSpeedSpaceShip());
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
@@ -257,6 +255,7 @@ public class SpaceShooterAppController {
                             levelController.score += 5;
                             System.out.println(levelController.score);
                         }
+                        scoreLabel.setText("Score: " + levelController.getScore());
                     }
                 }
             }
@@ -267,12 +266,13 @@ public class SpaceShooterAppController {
     private void handleEnemyFiring(Sprite sprite) {
         // if i decrease the value of 2, they fire more frequently
         if (elapsedTime > 2) {
-            if (Math.random() < 0.9) {
+            if (Math.random() < levelController.getInvaderShootingFrequency()) {
                 singleShot(sprite);
             }
         }
     }
 
+    // todo update this so that any sprite (espacially missiles) will stop rendering if they go out of bounds
     private void removeDeadSprites() {
         animationPanel.getChildren().removeIf(n -> {
             Sprite sprite = (Sprite) n;
