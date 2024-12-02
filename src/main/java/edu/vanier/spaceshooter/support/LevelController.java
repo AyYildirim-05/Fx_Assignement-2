@@ -127,7 +127,7 @@ public class LevelController {
     public final String greenMissile_1 = "/missile/laserGreen12.png";
     public final String greenMissile_2 = "/missile/laserGreen13.png";
     public int health_missile = 1;
-    public int numberOfGuns = 2;
+    public int numberOfGuns = 3;
 
     public int getNumberOfGuns() {
         return numberOfGuns;

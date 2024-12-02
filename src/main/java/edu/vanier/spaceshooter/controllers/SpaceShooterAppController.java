@@ -149,13 +149,9 @@ public class SpaceShooterAppController {
             }
             input.remove("C");
         }
-        if(input.contains("SPACE")) {
-            tripleSpread(spaceShip);
+        if(input.contains("SPACE")){
+            shooting(spaceShip, used_gun);
         }
-        // todo this needs to be worked on
-//        if(input.contains("SPACE")){
-//            shooting(spaceShip, used_gun);
-//        }
 
         if (elapsedTime > 2) {
             elapsedTime = 0;
@@ -292,13 +288,13 @@ public class SpaceShooterAppController {
 
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
-            case 1:
+            case 0:
                 singleShot(firingEntity);
                 System.out.println("weapon 1");
-            case 2:
+            case 1:
                 doubleShot(firingEntity);
                 System.out.println("weapon 2");
-            case 3:
+            case 2:
                 customTripleShoot(spaceShip, 50, -50, -30,-30);
                 System.out.println("weapon 3");
         }
