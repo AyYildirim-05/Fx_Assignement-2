@@ -1,22 +1,20 @@
 package edu.vanier.spaceshooter.controllers;
 
-import edu.vanier.spaceshooter.SpaceShooterApp;
 import edu.vanier.spaceshooter.models.*;
-import edu.vanier.spaceshooter.support.Util;
 import edu.vanier.spaceshooter.support.LevelController;
+import edu.vanier.spaceshooter.support.Util;
 import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javafx.scene.control.Label;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,6 +51,7 @@ public class SpaceShooterAppController {
     private long lastEnemyMoveTime = 0;
 
 
+    // todo how to setup game animation
     public void initialize() {
         // todo how to set up the score
 //        stageLabel.setText("Stage: 1");
@@ -100,7 +99,7 @@ public class SpaceShooterAppController {
 
     }
 
-    // todo how to limit the movement of invaders and spaceship within the animationPanel
+    // todo how to limit the movement of invaders within the animationPanel
     private void update() {
         elapsedTime += 0.016;
         getSprites().forEach(this::processSprite);
@@ -140,6 +139,7 @@ public class SpaceShooterAppController {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
+        // todo ask the teacher about the gun logic
         if (input.contains("C")) {
             if (used_gun < levelController.numberOfGuns) {
                 used_gun += 1;
@@ -150,7 +150,7 @@ public class SpaceShooterAppController {
             input.remove("C");
         }
         if(input.contains("SPACE")) {
-            shoot(spaceShip);
+            tripleSpread(spaceShip);
         }
         // todo this needs to be worked on
 //        if(input.contains("SPACE")){
@@ -180,14 +180,18 @@ public class SpaceShooterAppController {
                 if (n instanceof Small_Invader smallInvader) {
                     randomNumber = random.nextInt(8);
                     switch (randomNumber) {
-                        case 0 -> smallInvader.moveInvader( levelController.getSpeedInvader(), 0); // move right
-                        case 1 -> smallInvader.moveInvader( -levelController.getSpeedInvader(), 0); // move left
-                        case 2 -> smallInvader.moveInvader( 0, levelController.getSpeedInvader()); // move down
-                        case 3 -> smallInvader.moveInvader( 0, -levelController.getSpeedInvader()); // move up
-                        case 4 -> smallInvader.moveInvader( levelController.getSpeedInvader(), levelController.getSpeedInvader()); // right down
-                        case 5 -> smallInvader.moveInvader( -levelController.getSpeedInvader(), levelController.getSpeedInvader()); // left down
-                        case 6 -> smallInvader.moveInvader( levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // right up
-                        case 7 -> smallInvader.moveInvader( -levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
+                        case 0 -> smallInvader.moveSprite(levelController.getSpeedInvader(), 0); // move right
+                        case 1 -> smallInvader.moveSprite(-levelController.getSpeedInvader(), 0); // move left
+                        case 2 -> smallInvader.moveSprite(0, levelController.getSpeedInvader()); // move down
+                        case 3 -> smallInvader.moveSprite(0, -levelController.getSpeedInvader()); // move up
+                        case 4 ->
+                                smallInvader.moveSprite(levelController.getSpeedInvader(), levelController.getSpeedInvader()); // right down
+                        case 5 ->
+                                smallInvader.moveSprite(-levelController.getSpeedInvader(), levelController.getSpeedInvader()); // left down
+                        case 6 ->
+                                smallInvader.moveSprite(levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // right up
+                        case 7 ->
+                                smallInvader.moveSprite(-levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
                     }
                 }
             }
@@ -294,13 +298,16 @@ public class SpaceShooterAppController {
             case 2:
                 doubleShot(firingEntity);
                 System.out.println("weapon 2");
+            case 3:
+                customTripleShoot(spaceShip, 50, -50, -30,-30);
+                System.out.println("weapon 3");
         }
     }
 
     public  void singleShot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {
-            missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
+            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
                     (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
             animationPanel.getChildren().add(missile);
@@ -309,30 +316,56 @@ public class SpaceShooterAppController {
     }
 
     public void doubleShot(Sprite firingEntity) {
-        missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
-                firingEntity.getType() + "bullet",
-                (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 3),
-                (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
-        animationPanel.getChildren().add(missile);
+        long now = System.currentTimeMillis();
+        if (now - levelController.lastShot > 500) {
+            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet",
+                    (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 3),
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+            animationPanel.getChildren().add(missile);
 
-        missile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
-                firingEntity.getType() + "bullet",
-                (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
-                (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
-        animationPanel.getChildren().add(missile);
-
-        levelController.setLastShot(System.currentTimeMillis());
+            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet",
+                    (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+            animationPanel.getChildren().add(missile);
+            levelController.setLastShot(now);
+        }
     }
 
-    public void tripleShot(Sprite firingEntity) {
-        singleShot(firingEntity);
+    public void customTripleShoot(Sprite firingEntity, int leftX, int LefY, int RightX, int RightY) {
+        long now = System.currentTimeMillis();
+        if (now - levelController.lastShot > 500) {
+            singleShot(firingEntity);
 
-        Missile leftMissile = new Missile(levelController.blueMissile_1, 20, 20, levelController.getHealth_missile(),
-                firingEntity.getType() + "bullet",
-                (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
-                (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
-        // todo how to angle the sprite
+            Missile leftMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet",
+                    (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
 
+            leftMissile.moveSprite(-leftX, LefY);
+
+            Missile rightMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet",
+                    (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+
+            rightMissile.moveSprite(RightX, RightY);
+            animationPanel.getChildren().addAll(leftMissile, rightMissile);
+            levelController.setLastShot(now);
+        }
+    }
+
+    public void tripleSpread(Sprite firingEntity) {
+        long now = System.currentTimeMillis();
+        if (now - levelController.lastShot > 500) {
+            singleShot(firingEntity);
+
+
+
+            animationPanel.getChildren().addAll();
+            levelController.setLastShot(now);
+        }
     }
 
     public void setScene(Scene scene) {

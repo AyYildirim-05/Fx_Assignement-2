@@ -9,12 +9,4 @@ public class Invader extends FiringSprites {
         super(imagePath, width, height, health, type, x, y);
     }
 
-    // straight patterns
-    public void moveInvader(double xAxis, double yAxis) {
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), this);
-        transition.setByX(xAxis);
-        transition.setByY(yAxis);
-        transition.setCycleCount(1);
-        transition.play();
-    }
 }

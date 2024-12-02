@@ -1,8 +1,10 @@
 package edu.vanier.spaceshooter.models;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public abstract class Sprite extends ImageView {
 
@@ -37,6 +39,14 @@ public abstract class Sprite extends ImageView {
     }
     public void moveDown(int speed) {
         setTranslateY(getTranslateY() + speed);
+    }
+
+    public void moveSprite(double xAxis, double yAxis) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), this);
+        transition.setByX(xAxis);
+        transition.setByY(yAxis);
+        transition.setCycleCount(1);
+        transition.play();
     }
 
     public void lose_health() {
