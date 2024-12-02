@@ -8,9 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,10 @@ public class SpaceShooterAppController {
     @FXML
     Pane animationPanel;
 
+    @FXML
+    StackPane HUD;
+
+    @FXML
     Label scoreLabel;
 
     @FXML
@@ -34,17 +39,19 @@ public class SpaceShooterAppController {
     private long lastNanoTime = System.nanoTime();
     private double elapsedTime = 0;
     private AnimationTimer gameLoop;
-    private List<String> input = new ArrayList<>();
+    private List<KeyCode> input = new ArrayList<>();
     public SpaceShip spaceShip;
     public Invader invader;
     public Obstacles obstacles;
     public Missile missile;
     public LevelController levelController;
     public Util util;
-    public int used_gun = 0;
+    public int usedGun = 0;
     int randomNumber;
     Random random = new Random();
     private long lastEnemyMoveTime = 0;
+
+    boolean weapSwitch = false;
 
 
     // todo how to setup game animation
@@ -81,14 +88,14 @@ public class SpaceShooterAppController {
 
     private void setupKeyPressHandlers() {
         sceneActual.setOnKeyPressed((KeyEvent e) -> {
-            String code = e.getCode().toString();
+            KeyCode code = e.getCode();
             if (!input.contains(code)) {
                 input.add(code);
             }
         });
 
         sceneActual.setOnKeyReleased((KeyEvent e) -> {
-            String code = e.getCode().toString();
+            KeyCode code = e.getCode();
             input.remove(code);
             update();
         });
@@ -106,49 +113,50 @@ public class SpaceShooterAppController {
 
         if (!areEnemiesRemaining()) {
             // increase player speed, enemy speed. the type of missile player can fire depending on the stage resetting the player
-            System.out.println("No enemies remaining. Level cleared!");
+            generateInvaders();
             // todo how to make so that this doesnt run infinitely
         }
 
-        if (input.contains("F")) {
+        if (input.contains(KeyCode.F)) {
             Stage stage = (Stage) sceneActual.getWindow();
             stage.setFullScreen(!stage.isFullScreen());
-            input.remove("F");
+            input.remove(KeyCode.F);
         }
         // 2 allows the fins to show without going out
-        if (input.contains("LEFT") || input.contains("A")) {
+        if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
             if (spaceShip.getTranslateX() >= 2 && spaceShip.getTranslateX() < sceneActual.getWidth()) {
                 spaceShip.moveLeft(levelController.getSpeedSpaceShip());
             }
         }
         // -2 i don't know why & -30 allows the wing to show
-        if (input.contains("RIGHT") || input.contains("D")) {
+        if (input.contains(KeyCode.D) || input.contains(KeyCode.RIGHT)) {
             if (spaceShip.getTranslateX() >= -2 && spaceShip.getTranslateX() < sceneActual.getWidth() - 30) {
                 spaceShip.moveRight(levelController.getSpeedSpaceShip());
             }
         }
-        if (input.contains("UP") || input.contains("W")) {
+        if (input.contains(KeyCode.W) || input.contains(KeyCode.UP)) {
             if (spaceShip.getTranslateY() >= 2 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
                 spaceShip.moveUp(levelController.getSpeedSpaceShip());
             }
         }
-        if (input.contains("DOWN") || input.contains("S")) {
+        if (input.contains(KeyCode.S)|| input.contains(KeyCode.DOWN)) {
             if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight() - 30) {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
-        // todo ask the teacher about the gun logic
-        if (input.contains("C")) {
-            if (used_gun < levelController.numberOfGuns) {
-                used_gun += 1;
-                System.out.println("gun: " + used_gun);
+        if (input.contains(KeyCode.C)) {
+            if (usedGun < levelController.numberOfGuns) {
+                usedGun += 1;
+                System.out.println("gun: " + usedGun);
             } else {
-                used_gun = 0;
+                usedGun = 0;
             }
-            input.remove("C");
+            input.remove(KeyCode.C);
         }
-        if(input.contains("SPACE")){
-            shooting(spaceShip, used_gun);
+        input.remove(KeyCode.C);
+
+        if(input.contains(KeyCode.SPACE)){
+            shooting(spaceShip, usedGun);
         }
 
         if (elapsedTime > 2) {
@@ -225,13 +233,13 @@ public class SpaceShooterAppController {
             if (spaceShip.checkHealth()) {
                 spaceShip.setDead(true);
                 System.out.println("Sprite marked as dead.");
-
             }
             sprite.setDead(true);
         }
     }
 
     private void handlePlayerBullet(Sprite sprite) {
+        // todo set the way the bullet moves in individual methods
         sprite.moveUp(levelController.getSpeedSpaceShip());
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
@@ -260,7 +268,7 @@ public class SpaceShooterAppController {
         // if i decrease the value of 2, they fire more frequently
         if (elapsedTime > 2) {
             if (Math.random() < 0.9) {
-                shoot(sprite);
+                singleShot(sprite);
             }
         }
     }
@@ -273,28 +281,20 @@ public class SpaceShooterAppController {
     }
 
 
-    private void shoot(Sprite firingEntity) {
-        long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > levelController.getAnimationDuration()) {
-            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
-                    firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
-                    (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
-            animationPanel.getChildren().add(missile);
-            levelController.setLastShot(now);
-        }
-    }
-
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
             case 0:
                 singleShot(firingEntity);
                 System.out.println("weapon 1");
+                break;
             case 1:
                 doubleShot(firingEntity);
                 System.out.println("weapon 2");
+                break;
             case 2:
                 customTripleShoot(spaceShip, 50, -50, -30,-30);
                 System.out.println("weapon 3");
+                break;
         }
     }
 
@@ -379,6 +379,10 @@ public class SpaceShooterAppController {
             }
         }
         return false;
+    }
+
+    private void MoveBullet(Sprite sprite, int usedGun) {
+
     }
 
 }
