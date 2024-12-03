@@ -17,7 +17,10 @@ public abstract class Sprite extends ImageView {
     public boolean dead = false;
     public String type;
 
-    public Sprite(String imagePath, double width, double height, int health, String type, double x, double y) {
+    private double dx;
+    private double dy;
+
+    public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
         this.health = health;
         this.width = width;
@@ -28,6 +31,8 @@ public abstract class Sprite extends ImageView {
         setTranslateY(y);
         setFitWidth(width);
         setFitHeight(height);
+        this.dx = dx;
+        this.dy = dy;
     }
 
     public void moveLeft(int speed) { setTranslateX(getTranslateX() - speed); }
@@ -47,6 +52,16 @@ public abstract class Sprite extends ImageView {
         transition.setByY(yAxis);
         transition.setCycleCount(1);
         transition.play();
+    }
+
+    public void move() {
+        this.setTranslateX(this.getTranslateX() + dx);
+        this.setTranslateY(this.getTranslateY() + dy);
+    }
+
+    public void setVelocity(double dx, double dy) {
+        this.dx = dx;
+        this.dy = dy;
     }
 
     public void lose_health() {

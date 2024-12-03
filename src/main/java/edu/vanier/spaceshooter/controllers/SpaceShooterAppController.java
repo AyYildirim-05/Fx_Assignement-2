@@ -57,8 +57,12 @@ public class SpaceShooterAppController {
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
-        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(), 30, 30, levelController.getHealth_player(), "player", 400, 600);
-        animationPanel.setPrefSize(1000, 800);
+        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(),
+                30, 30,
+                levelController.getHealth_player(),
+                "player",
+                400, 600,
+                0, 0);        animationPanel.setPrefSize(1000, 800);
 
         animationPanel.getChildren().addAll(spaceShip);
         util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
@@ -97,13 +101,13 @@ public class SpaceShooterAppController {
     }
 
     // todo how to limit the movement of invaders within the animationPanel
+    // todo need to implement collision between spacehip and invader -1 health to both
+    // todo implement a gif for explosion
     private void update() {
         elapsedTime += 0.016;
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
         moveInvaders();
-
-//        updateUI();
 
         if (!areEnemiesRemaining()) {
             generateInvaders();
@@ -163,11 +167,24 @@ public class SpaceShooterAppController {
 
     }
 
+    // todo fix the enemy generation problem
     private void generateInvaders() {
-        for (int i = 0; i < levelController.getNumberEnemies(); i++) {
-            invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy",
-                    90 + i * 100, 500);
-            animationPanel.getChildren().addAll(invader);
+        if (stageNumber >= 1) {
+            for (int i = 0; i < levelController.getNumberEnemies(); i++) {
+                invader = new Small_Invader(levelController.getSmall_Enemy(),
+                        35, 35,
+                        levelController.getHealth_small_Invader(),
+                        "enemy",
+                        90 + i * 100, 500,
+                        0, 0);
+                animationPanel.getChildren().addAll(invader);
+            }
+        }
+        if (stageNumber >= 3) {
+            // implement the logic of adding medium size enemies
+        }
+        if (stageNumber >= 5) {
+            // implement logic of adding big enemies
         }
     }
 
@@ -193,6 +210,8 @@ public class SpaceShooterAppController {
                         case 7 ->
                                 smallInvader.moveSprite(-levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
                     }
+                } else if (n instanceof Medium_Invader mediumInvader) {
+
                 }
             }
             lastEnemyMoveTime = now;
@@ -223,9 +242,10 @@ public class SpaceShooterAppController {
         }
     }
 
-    private void handleEnemyBullet(Sprite sprite) {
-        sprite.moveDown(levelController.getSpeedSpaceShip());
-        if (sprite.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
+    // todo enemy is shooting from the back fix it
+    private void handleEnemyBullet(Sprite missile) {
+        missile.move();
+        if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
             System.out.println("Collision detected!");
             spaceShip.lose_health();
             System.out.println("SpaceShip health: " + spaceShip.getHealth());
@@ -233,12 +253,12 @@ public class SpaceShooterAppController {
                 spaceShip.setDead(true);
                 System.out.println("Sprite marked as dead.");
             }
-            sprite.setDead(true);
+            missile.setDead(true);
         }
     }
 
     private void handlePlayerBullet(Sprite sprite) {
-        sprite.moveUp(levelController.getSpeedSpaceShip());
+        sprite.move();
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
@@ -247,13 +267,10 @@ public class SpaceShooterAppController {
                         enemy.setDead(true);
                         if (enemy instanceof Small_Invader) {
                             levelController.score += 1;
-                            System.out.println(levelController.score);
                         } else if (enemy instanceof Medium_Invader) {
                             levelController.score += 3;
-                            System.out.println(levelController.score);
                         } else if (enemy instanceof Big_Invader) {
                             levelController.score += 5;
-                            System.out.println(levelController.score);
                         }
                         scoreLabel.setText("Score: " + levelController.getScore());
                     }
@@ -281,6 +298,7 @@ public class SpaceShooterAppController {
     }
 
 
+
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
             case 0:
@@ -298,57 +316,79 @@ public class SpaceShooterAppController {
         }
     }
 
-    public  void singleShot(Sprite firingEntity) {
+    public void singleShot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
-            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
-                    firingEntity.getType() + "bullet", (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth()/2),
-                    (int) (firingEntity.getTranslateY() -  firingEntity.getFitHeight()/2));
+            double dx = 0; // Straight up
+            double dy = -levelController.getSpeedSpaceShip();
+
+            Missile missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+                    firingEntity.getType() + "bullet",
+                    (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
+                    dx, dy);
+
             animationPanel.getChildren().add(missile);
             levelController.setLastShot(now);
         }
     }
+
 
     public void doubleShot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
-            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+            // Define velocities for the missiles
+            double dxLeft = -2; // Slightly left
+            double dyLeft = -levelController.getSpeedSpaceShip(); // Upward
+
+            double dxRight = 2; // Slightly right
+            double dyRight = -levelController.getSpeedSpaceShip(); // Upward
+
+            // Create the left missile
+            Missile leftMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 3),
-                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
-            animationPanel.getChildren().add(missile);
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
+                    dxLeft, dyLeft);
 
-            missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+            // Create the right missile
+            Missile rightMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
-                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
-            animationPanel.getChildren().add(missile);
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
+                    dxRight, dyRight);
+
+            // Add both missiles to the animation panel
+            animationPanel.getChildren().addAll(leftMissile, rightMissile);
+
+            // Update the last shot time
             levelController.setLastShot(now);
         }
     }
 
-    public void customTripleShoot(Sprite firingEntity, int leftX, int LefY, int RightX, int RightY) {
+
+    public void customTripleShoot(Sprite firingEntity, double leftDx, double leftDy, double rightDx, double rightDy) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
-            singleShot(firingEntity);
+            singleShot(firingEntity); // Center shot
 
             Missile leftMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
-                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
-
-            leftMissile.moveSprite(-leftX, LefY);
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
+                    leftDx, leftDy);
 
             Missile rightMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
-                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2));
+                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
+                    rightDx, rightDy);
 
-            rightMissile.moveSprite(RightX, RightY);
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
             levelController.setLastShot(now);
         }
     }
+
 
     public void tripleSpread(Sprite firingEntity) {
         long now = System.currentTimeMillis();
