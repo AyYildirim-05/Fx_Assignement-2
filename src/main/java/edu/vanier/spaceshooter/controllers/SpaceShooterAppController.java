@@ -118,7 +118,7 @@ public class SpaceShooterAppController {
             stageNumber++;
             levelController.setNumberEnemies(5);
             levelController.setSpeedInvader(1);
-            levelController.setSpeedSpaceShip(5);
+            levelController.setSpeedSpaceShip(10);
             stageLabel.setText("Stage: " + stageNumber);
             levelController.setInvaderShootingFrequency();
         }
@@ -128,6 +128,7 @@ public class SpaceShooterAppController {
             stage.setFullScreen(!stage.isFullScreen());
             input.remove(KeyCode.F);
         }
+        // todo enemy does not get out of the screen no matter the speed, but some inconsistencies
         if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
             if (spaceShip.getTranslateX() - levelController.getSpeedSpaceShip() >= -2) {
                 spaceShip.moveLeft(levelController.getSpeedSpaceShip());
