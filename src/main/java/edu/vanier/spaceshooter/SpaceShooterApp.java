@@ -33,22 +33,22 @@ public class SpaceShooterApp extends Application {
             loader.setController(controller);
             Pane root = loader.load();
 
-            //  Attempt #3
-//            primaryStage.widthProperty().addListener((obs, oldX, newX) -> {
-//                if (!Objects.equals(oldX, newX)) {
-//                    controller.bindScene(primaryStage);
-//                }
-//                System.out.println("New width: " + newX);
-//            });
-//
-//            primaryStage.heightProperty().addListener((obs, oldY, newY) -> {
-//                if (!Objects.equals(oldY, newY)) {
-//                    controller.bindScene(primaryStage);
-//                }
-//                System.out.println("New height: " + newY);
-//            });
+            scene = new Scene(root, 1000, 800);
 
-            scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
+            primaryStage.widthProperty().addListener((obs, oldX, newX) -> {
+                if (!Objects.equals(oldX, newX)) {
+                    controller.bindScene(primaryStage);
+                }
+                System.out.println("New width: " + newX);
+            });
+
+            primaryStage.heightProperty().addListener((obs, oldY, newY) -> {
+                if (!Objects.equals(oldY, newY)) {
+                    controller.bindScene(primaryStage);
+                }
+                System.out.println("New height: " + newY);
+            });
+
             controller.setScene(scene);
             controller.setStage(primaryStage);
             controller.setupGameWorld();
@@ -56,23 +56,9 @@ public class SpaceShooterApp extends Application {
             primaryStage.setTitle("Space Invaders!");
             primaryStage.sizeToScene();
 
-//            root.minWidthProperty().bind(primaryStage.minWidthProperty());
-//            root.minHeightProperty().bind(primaryStage.minHeightProperty());
-
-            // Attempt #4
-//            controller.newSceneDimensions(newX, newY);
-
             primaryStage.setAlwaysOnTop(true);
             primaryStage.show();
             primaryStage.setAlwaysOnTop(false);
-
-
-            // Attempt #2
-//            primaryStage.minWidthProperty().bind(scene.heightProperty().divide(1.5));
-//            primaryStage.minHeightProperty().bind(scene.widthProperty().divide(1.5));
-
-            // Attempt #1
-//            primaryStage.setResizable(false);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }

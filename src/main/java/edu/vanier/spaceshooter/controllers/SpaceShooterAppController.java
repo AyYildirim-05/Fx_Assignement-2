@@ -4,20 +4,16 @@ import edu.vanier.spaceshooter.models.*;
 import edu.vanier.spaceshooter.support.LevelController;
 import edu.vanier.spaceshooter.support.Util;
 import javafx.animation.AnimationTimer;
-import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +61,7 @@ public class SpaceShooterAppController {
 
 
     public void initialize() {
+
         levelController = new LevelController();
         util = new Util();
         logger.info("Initializing MainAppController...");
@@ -81,6 +78,8 @@ public class SpaceShooterAppController {
     }
 
     public void setupGameWorld() {
+        animationPanel.prefWidthProperty().bind(stageActual.widthProperty());
+        animationPanel.prefHeightProperty().bind(stageActual.heightProperty());
         initGameLoop();
         setupKeyPressHandlers();
     }
@@ -535,10 +534,5 @@ public class SpaceShooterAppController {
     public void bindScene(Stage stage) {
         stage.minWidthProperty().bind(stageActual.heightProperty());
         stage.minHeightProperty().bind(stageActual.widthProperty());
-    }
-
-    public void newSceneDimensions(double width, double height) {
-        animationPanel.setMaxWidth(width);
-        animationPanel.setMaxHeight(height);
     }
 }
