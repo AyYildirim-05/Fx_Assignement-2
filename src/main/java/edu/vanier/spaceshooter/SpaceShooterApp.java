@@ -33,7 +33,6 @@ public class SpaceShooterApp extends Application {
             loader.setController(controller);
             Pane root = loader.load();
 
-
             //  Attempt #3
 //            primaryStage.widthProperty().addListener((obs, oldX, newX) -> {
 //                if (!Objects.equals(oldX, newX)) {
@@ -57,6 +56,10 @@ public class SpaceShooterApp extends Application {
             primaryStage.setTitle("Space Invaders!");
             primaryStage.sizeToScene();
 
+//            root.minWidthProperty().bind(primaryStage.minWidthProperty());
+//            root.minHeightProperty().bind(primaryStage.minHeightProperty());
+
+            // Attempt #4
 //            controller.newSceneDimensions(newX, newY);
 
             primaryStage.setAlwaysOnTop(true);
