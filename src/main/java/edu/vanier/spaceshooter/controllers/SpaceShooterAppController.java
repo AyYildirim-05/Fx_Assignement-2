@@ -114,7 +114,7 @@ public class SpaceShooterAppController {
             stageNumber++;
             levelController.setNumberEnemies(5);
             levelController.setSpeedInvader(1);
-            levelController.setSpeedSpaceShip(1);
+            levelController.setSpeedSpaceShip(5);
             stageLabel.setText("Stage: " + stageNumber);
             levelController.setInvaderShootingFrequency();
         }
@@ -196,8 +196,8 @@ public class SpaceShooterAppController {
         if (now - lastEnemyMoveTime > 200) {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
-                    randomNumber = random.nextInt(8);
-                    smallInvader.setVelocity(levelController.getSpeedInvader(), 0);
+                    randomNumber = random.nextInt(2);
+
                     System.out.println(levelController.getSpeedInvader());
 //                    switch (randomNumber) {
 //                        case 0 -> smallInvader.setVelocity(levelController.getSpeedInvader(), 0); // move right
