@@ -4,15 +4,19 @@ import edu.vanier.spaceshooter.models.*;
 import edu.vanier.spaceshooter.support.LevelController;
 import edu.vanier.spaceshooter.support.Util;
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,7 +193,6 @@ public class SpaceShooterAppController {
         }
     }
 
-
     // todo implement custom movement types, not just shifting around
     private void moveInvaders() {
         long now = System.currentTimeMillis();
@@ -197,8 +200,8 @@ public class SpaceShooterAppController {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
                     randomNumber = random.nextInt(2);
+                    smallInvader.movementOne(levelController.getSpeedInvader());
 
-                    System.out.println(levelController.getSpeedInvader());
 //                    switch (randomNumber) {
 //                        case 0 -> smallInvader.setVelocity(levelController.getSpeedInvader(), 0); // move right
 //                        case 1 -> smallInvader.setVelocity(-levelController.getSpeedInvader(), 0); // move left
@@ -286,7 +289,6 @@ public class SpaceShooterAppController {
 
 
     private void handleEnemyFiring(Sprite sprite) {
-        // if i decrease the value of 2, they fire more frequently
         if (elapsedTime > 2) {
             if (Math.random() < levelController.getInvaderShootingFrequency()) {
                 singleShot(sprite);
@@ -354,7 +356,6 @@ public class SpaceShooterAppController {
         }
     }
 
-
     public void doubleShot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
@@ -408,7 +409,6 @@ public class SpaceShooterAppController {
             levelController.setLastShot(now);
         }
     }
-
 
     public void customTripleShoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
@@ -482,4 +482,8 @@ public class SpaceShooterAppController {
         return false;
     }
 
+    private boolean ifCharacterWithinScene() {
+        // todo method to check if the sprites are within the scene
+        return false;
+    }
 }

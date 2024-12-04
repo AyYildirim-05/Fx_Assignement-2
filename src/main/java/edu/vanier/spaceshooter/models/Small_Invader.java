@@ -13,6 +13,7 @@ public class Small_Invader extends Invader {
     }
 
     public void movementOne(int speed) {
+        this.setVelocity(speed, 0);
         randomNumber = random.nextInt(2);
         switch (randomNumber) {
             case 0 -> this.setVelocity(speed, 0);
