@@ -1,6 +1,7 @@
 package edu.vanier.spaceshooter.support;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -12,6 +13,16 @@ public class Util {
     public final String BACKGROUND_IMAGE_2 = "/background/purple.png";
     public final String BACKGROUND_IMAGE_3 = "/background/darkPurple.png";
     public final String BACKGROUND_IMAGE_4 = "/background/black.png";
+    public final String HP_REPRESENTATION = "/player/playerLife1_red.png";
+
+    ImageView imageView;
+
+    public Util() {
+        Image image = new Image(getClass().getResource(HP_REPRESENTATION).toExternalForm());
+        imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setPreserveRatio(true);
+    }
 
     public final List<String> imageContainer = List.of(
             BACKGROUND_IMAGE_1, BACKGROUND_IMAGE_2, BACKGROUND_IMAGE_3, BACKGROUND_IMAGE_4
@@ -35,6 +46,18 @@ public class Util {
                 backgroundSize
         );
         pane.setBackground(new javafx.scene.layout.Background(bgImage));
+    }
+
+    public void playerHP(HBox container, int amount, int action) {
+        if (action == 1) {
+            for (int i = 0; i < amount; i++) {
+                container.getChildren().addAll(imageView);
+            }
+        } else if (action == -1) {
+            for (int i = 0; i < amount; i++) {
+                container.getChildren().remove(imageView);
+            }
+        }
     }
 
     public String getBACKGROUND_IMAGE_1() {

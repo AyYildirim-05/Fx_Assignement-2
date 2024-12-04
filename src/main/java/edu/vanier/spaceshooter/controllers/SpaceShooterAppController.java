@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -38,7 +39,12 @@ public class SpaceShooterAppController {
     @FXML
     Label stageLabel;
 
+    @FXML
+    HBox playerHealthRepresentation;
+
     private Scene sceneActual;
+
+    private Stage stageActual;
 
     private double elapsedTime = 0;
     private AnimationTimer gameLoop;
@@ -57,6 +63,7 @@ public class SpaceShooterAppController {
 
     public int stageNumber = 0;
 
+
     public void initialize() {
         levelController = new LevelController();
         util = new Util();
@@ -69,7 +76,8 @@ public class SpaceShooterAppController {
                 0, 0);
         animationPanel.setPrefSize(1000, 800);
         animationPanel.getChildren().addAll(spaceShip);
-
+        // todo player hp representation does not work
+//        util.playerHP(playerHealthRepresentation, 3, 1);
     }
 
     public void setupGameWorld() {
@@ -513,8 +521,24 @@ public class SpaceShooterAppController {
         return false;
     }
 
+
+
     private boolean ifCharacterWithinScene() {
         // todo method to check if the sprites are within the scene
         return false;
+    }
+
+    public void setStage(Stage stage) {
+        stageActual = stage;
+    }
+
+    public void bindScene(Stage stage) {
+        stage.minWidthProperty().bind(stageActual.heightProperty());
+        stage.minHeightProperty().bind(stageActual.widthProperty());
+    }
+
+    public void newSceneDimensions(double width, double height) {
+        animationPanel.setMaxWidth(width);
+        animationPanel.setMaxHeight(height);
     }
 }
