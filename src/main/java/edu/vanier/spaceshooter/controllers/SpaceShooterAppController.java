@@ -318,7 +318,7 @@ public class SpaceShooterAppController {
 
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
-            if (Math.random() < levelController.getInvaderShootingFrequency()) {
+            if (Math.random() < 0.5) {
                 singleShot(sprite);
             }
         }
@@ -345,7 +345,7 @@ public class SpaceShooterAppController {
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
             case 1:
-                laser(firingEntity);
+                singleShot(firingEntity);
                 System.out.println("weapon 1");
                 break;
             case 2:
@@ -362,16 +362,24 @@ public class SpaceShooterAppController {
     }
 
     public void singleShot(Sprite firingEntity) {
+        double dy = levelController.getSpeedSpaceShip();
+        int x = 0;
+        int y = 0;
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
-            double dx = 0; // Straight up
-            double dy = -levelController.getSpeedSpaceShip();
-
+            if (firingEntity instanceof SpaceShip) {
+                dy = -1 * dy;
+                x = (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2);
+                y = (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2);
+            } else if (firingEntity instanceof Invader) {
+                dy = 1 * dy;
+                x = (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2 - 5);
+                y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight() / 2 + 5);
+            }
             Missile missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
-                    (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2),
-                    (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
-                    dx, dy);
+                    x, y,
+                    0, dy);
 
             animationPanel.getChildren().add(missile);
             levelController.setLastShot(now);
