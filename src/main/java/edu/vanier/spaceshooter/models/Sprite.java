@@ -1,6 +1,7 @@
 package edu.vanier.spaceshooter.models;
 
 import javafx.animation.TranslateTransition;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -100,6 +101,9 @@ public abstract class Sprite extends ImageView {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+    public static boolean isCollision(Node sprite1, Node sprite2) {
+        return sprite1.getBoundsInParent().intersects(sprite2.getBoundsInParent());
     }
 
 }

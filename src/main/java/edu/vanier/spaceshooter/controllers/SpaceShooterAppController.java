@@ -149,6 +149,11 @@ public class SpaceShooterAppController {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
+        // todo the collision is not really working
+        if (Sprite.isCollision(spaceShip, invader)) {
+            spaceShip.lose_health();
+            invader.lose_health();
+        }
 
 
         if (input.contains(KeyCode.C)) {
@@ -167,6 +172,11 @@ public class SpaceShooterAppController {
 
         if(input.contains(KeyCode.SPACE)){
             shooting(spaceShip, usedGun);
+        }
+        if (spaceShip.getBoundsInParent().intersects(invader.getBoundsInParent())) {
+            System.out.println("collision");
+            invader.setDead(true);
+            spaceShip.lose_health();
         }
 
         if (elapsedTime > 2) {
@@ -252,6 +262,8 @@ public class SpaceShooterAppController {
                     handleEnemyFiring(sprite);
         }
     }
+
+
 
     // todo enemy is shooting from the back fix it
     private void handleEnemyBullet(Sprite missile) {
