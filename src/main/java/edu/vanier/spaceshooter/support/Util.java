@@ -3,14 +3,21 @@ package edu.vanier.spaceshooter.support;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Util {
     public final String BACKGROUND_IMAGE_1 = "/background/blue.png";
     public final String BACKGROUND_IMAGE_2 = "/background/purple.png";
     public final String BACKGROUND_IMAGE_3 = "/background/darkPurple.png";
     public final String BACKGROUND_IMAGE_4 = "/background/black.png";
 
-    public void settingBackground(String backgroundColor, Pane pane) {
-        Image backgroundImage = new Image(getClass().getResource(backgroundColor).toExternalForm());
+    public final List<String> imageContainer = List.of(
+            BACKGROUND_IMAGE_1, BACKGROUND_IMAGE_2, BACKGROUND_IMAGE_3, BACKGROUND_IMAGE_4
+    );
+    public void settingBackground(int imageNumber, Pane pane) {
+        Image backgroundImage = new Image(getClass().getResource(imageContainer.get(imageNumber - 1)).toExternalForm());
 
         BackgroundSize backgroundSize = new BackgroundSize(
                 pane.getWidth(),

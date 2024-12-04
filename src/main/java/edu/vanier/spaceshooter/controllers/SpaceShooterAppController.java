@@ -69,7 +69,6 @@ public class SpaceShooterAppController {
                 0, 0);
         animationPanel.setPrefSize(1000, 800);
         animationPanel.getChildren().addAll(spaceShip);
-        util.settingBackground(util.getBACKGROUND_IMAGE_1(), animationPanel);
 
     }
 
@@ -117,11 +116,18 @@ public class SpaceShooterAppController {
             generateInvaders();
             stageNumber++;
             levelController.setNumberEnemies(1);
-            levelController.setSpeedInvader(1);
-            levelController.setSpeedSpaceShip(1);
+
+
+            if (stageNumber % 3 == 0) {
+                levelController.setSpeedInvader(1);
+                levelController.setSpeedSpaceShip(1);
+            }
+
             stageLabel.setText("Stage: " + stageNumber);
             levelController.setInvaderShootingFrequency();
         }
+        util.settingBackground(stageNumber, animationPanel);
+
 
         if (input.contains(KeyCode.F)) {
             Stage stage = (Stage) sceneActual.getWindow();
@@ -213,7 +219,7 @@ public class SpaceShooterAppController {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
                     randomNumber = random.nextInt(2);
-                    smallInvader.movementOne(levelController.getSpeedInvader());
+                    smallInvader.movementThree(levelController.getSpeedInvader());
 
 //                    switch (randomNumber) {
 //                        case 0 -> smallInvader.setVelocity(levelController.getSpeedInvader(), 0); // move right

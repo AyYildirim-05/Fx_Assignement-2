@@ -37,7 +37,7 @@ public class SpaceShooterApp extends Application {
             primaryStage.setAlwaysOnTop(true);
             primaryStage.show();
             primaryStage.setAlwaysOnTop(false);
-            primaryStage.setResizable(false);
+//            primaryStage.setResizable(false);
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }

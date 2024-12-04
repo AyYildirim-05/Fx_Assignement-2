@@ -14,7 +14,7 @@ public class LevelController {
         this.invaderShootingFrequency -= 0.1;
     }
 
-    public int speedInvader = 0;
+    public int speedInvader = 1;
 
     public int getSpeedInvader() {
         return speedInvader;
