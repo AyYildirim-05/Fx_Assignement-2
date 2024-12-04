@@ -128,28 +128,28 @@ public class SpaceShooterAppController {
             stage.setFullScreen(!stage.isFullScreen());
             input.remove(KeyCode.F);
         }
-        // 2 allows the fins to show without going out
         if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
-            if (spaceShip.getTranslateX() >= 2 && spaceShip.getTranslateX() < sceneActual.getWidth()) {
+            if (spaceShip.getTranslateX() - levelController.getSpeedSpaceShip() >= -2) {
                 spaceShip.moveLeft(levelController.getSpeedSpaceShip());
             }
         }
-        // -2 i don't know why & -30 allows the wing to show
         if (input.contains(KeyCode.D) || input.contains(KeyCode.RIGHT)) {
-            if (spaceShip.getTranslateX() >= -2 && spaceShip.getTranslateX() < sceneActual.getWidth() - 30) {
+            if (spaceShip.getTranslateX() + spaceShip.getFitWidth() + levelController.getSpeedSpaceShip() <= sceneActual.getWidth()) {
                 spaceShip.moveRight(levelController.getSpeedSpaceShip());
             }
         }
         if (input.contains(KeyCode.W) || input.contains(KeyCode.UP)) {
-            if (spaceShip.getTranslateY() >= 2 && spaceShip.getTranslateY() < sceneActual.getHeight()) {
+            if (spaceShip.getTranslateY() - levelController.getSpeedSpaceShip() >= -2) {
                 spaceShip.moveUp(levelController.getSpeedSpaceShip());
             }
         }
-        if (input.contains(KeyCode.S)|| input.contains(KeyCode.DOWN)) {
-            if (spaceShip.getTranslateY() >= 0 && spaceShip.getTranslateY() < sceneActual.getHeight() - 30) {
+        if (input.contains(KeyCode.S) || input.contains(KeyCode.DOWN)) {
+            if (spaceShip.getTranslateY() + spaceShip.getFitHeight() + levelController.getSpeedSpaceShip() <= sceneActual.getHeight()) {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
+
+
         if (input.contains(KeyCode.C)) {
             // todo there is an odd delay after the swithchin from the last weapon
             if (usedGun < levelController.numberOfGuns) {
@@ -299,10 +299,18 @@ public class SpaceShooterAppController {
     // todo update this so that any sprite (espacially missiles) will stop rendering if they go out of bounds
     private void removeDeadSprites() {
         animationPanel.getChildren().removeIf(n -> {
-            Sprite sprite = (Sprite) n;
-            return sprite.isDead();
+            if (n instanceof Sprite sprite) {
+                // Check if the sprite is dead or out of bounds
+                boolean isOutOfBounds = sprite.getTranslateX() < -2 ||
+                        sprite.getTranslateX() > animationPanel.getWidth() ||
+                        sprite.getTranslateY() < -2 ||
+                        sprite.getTranslateY() > animationPanel.getHeight();
+                return sprite.isDead() || isOutOfBounds;
+            }
+            return false;
         });
     }
+
 
 
     // todo fix the shooting. after pressing on the last one, user has to press one more time to allow to come back to 0
