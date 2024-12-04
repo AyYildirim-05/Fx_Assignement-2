@@ -46,14 +46,7 @@ public abstract class Sprite extends ImageView {
         setTranslateY(getTranslateY() + speed);
     }
 
-    public void moveSprite(double xAxis, double yAxis) {
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), this);
-        transition.setByX(xAxis);
-        transition.setByY(yAxis);
-        transition.setCycleCount(1);
-        transition.play();
-    }
-
+    // move the missiles
     public void move() {
         this.setTranslateX(this.getTranslateX() + dx);
         this.setTranslateY(this.getTranslateY() + dy);
