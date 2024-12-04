@@ -50,7 +50,7 @@ public class SpaceShooterAppController {
     public LevelController levelController;
 
     public Util util;
-    public int usedGun = 0;
+    public int usedGun = 1;
     int randomNumber;
     Random random = new Random();
     private long lastEnemyMoveTime = 0;
@@ -116,9 +116,9 @@ public class SpaceShooterAppController {
         if (!areEnemiesRemaining()) {
             generateInvaders();
             stageNumber++;
-            levelController.setNumberEnemies(5);
+            levelController.setNumberEnemies(1);
             levelController.setSpeedInvader(1);
-            levelController.setSpeedSpaceShip(10);
+            levelController.setSpeedSpaceShip(1);
             stageLabel.setText("Stage: " + stageNumber);
             levelController.setInvaderShootingFrequency();
         }
@@ -153,11 +153,13 @@ public class SpaceShooterAppController {
 
         if (input.contains(KeyCode.C)) {
             // todo there is an odd delay after the swithchin from the last weapon
-            if (usedGun < levelController.numberOfGuns) {
+            System.out.println("Before: " + usedGun);
+            if (usedGun <= levelController.numberOfGuns) {
                 usedGun += 1;
-                System.out.println("gun: " + usedGun);
+                System.out.println("Gun number: " + usedGun);
             } else {
-                usedGun = 0;
+                usedGun = 1;
+                System.out.println("Cleaned");
             }
             input.remove(KeyCode.C);
         }
@@ -317,17 +319,19 @@ public class SpaceShooterAppController {
     // todo fix the shooting. after pressing on the last one, user has to press one more time to allow to come back to 0
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
-            case 0:
+            case 1:
                 laser(firingEntity);
                 System.out.println("weapon 1");
                 break;
-            case 1:
+            case 2:
                 doubleShot(firingEntity);
                 System.out.println("weapon 2");
                 break;
-            case 2:
+            case 3:
                 circleShot(firingEntity);
                 System.out.println("weapon 3");
+                break;
+            default:
                 break;
         }
     }
