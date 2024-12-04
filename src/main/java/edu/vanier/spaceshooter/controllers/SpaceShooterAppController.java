@@ -319,7 +319,7 @@ public class SpaceShooterAppController {
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
             if (Math.random() < 0.5) {
-                singleShot(sprite);
+                singleShot(sprite, 10, 5);
             }
         }
     }
@@ -345,7 +345,8 @@ public class SpaceShooterAppController {
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
             case 1:
-                singleShot(firingEntity);
+//                singleShot(firingEntity, 10, 10);
+                laser(firingEntity);
                 System.out.println("weapon 1");
                 break;
             case 2:
@@ -361,7 +362,7 @@ public class SpaceShooterAppController {
         }
     }
 
-    public void singleShot(Sprite firingEntity) {
+    public void singleShot(Sprite firingEntity, int width, int height) {
         double dy = levelController.getSpeedSpaceShip();
         int x = 0;
         int y = 0;
@@ -376,7 +377,7 @@ public class SpaceShooterAppController {
                 x = (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2 - 5);
                 y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight() / 2 + 5);
             }
-            Missile missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+            Missile missile = new Missile(levelController.blueMissile_1, width, height, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     x, y,
                     0, dy);
@@ -386,16 +387,24 @@ public class SpaceShooterAppController {
         }
     }
     public void laser(Sprite firingEntity) {
+        double dy = 25;
+        int x = 0;
+        int y = 0;
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {
-            double dx = 0;
-            double dy = -25;
+            if (firingEntity instanceof SpaceShip) {
+                dy = -1 * dy;
+                x = (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2 - 2.5);
+                y = (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() * 2);
+            } else if (firingEntity instanceof Invader) {
+                x = (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2 - 5);
+                y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight() + 5);
+            }
 
             Missile missile = new Missile(levelController.blueMissile_1, 5, 65, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
-                    (int) firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2 - 2.5,
-                    (int) firingEntity.getTranslateY() - firingEntity.getFitHeight() * 2,
-                    dx, dy);
+                    x, y,
+                    0, dy);
 
             animationPanel.getChildren().add(missile);
             levelController.setLastShot(now);
@@ -464,7 +473,7 @@ public class SpaceShooterAppController {
 
             double dxRight = 0.5; // Slightly right
             double dyRight = -levelController.getSpeedSpaceShip(); // Upward
-            singleShot(firingEntity);
+            singleShot(firingEntity, 10, 10);
 
             Missile leftMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
