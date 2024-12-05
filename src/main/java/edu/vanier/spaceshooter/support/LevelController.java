@@ -2,7 +2,7 @@ package edu.vanier.spaceshooter.support;
 
 public class LevelController {
     /* Speed controller */
-    public int speedSpaceShip = 10;
+    public int speedSpaceShip = 1;
 
     public int invaderShootingFrequency = 1;
 

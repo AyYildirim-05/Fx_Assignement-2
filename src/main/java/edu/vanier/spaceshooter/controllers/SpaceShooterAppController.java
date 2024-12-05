@@ -8,12 +8,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class SpaceShooterAppController {
     Label stageLabel;
 
     @FXML
-    VBox playerHealthRepresentation;
+    HBox playerHealthRepresentation;
 
     private Scene sceneActual;
 
@@ -65,7 +66,7 @@ public class SpaceShooterAppController {
 
     public void initialize() {
         levelController = new LevelController();
-        util = new Util();
+        util = new Util(playerHealthRepresentation);
         logger.info("Initializing MainAppController...");
         spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(),
                 30, 30,
@@ -76,7 +77,11 @@ public class SpaceShooterAppController {
         animationPanel.setPrefSize(1000, 800);
         animationPanel.getChildren().addAll(spaceShip);
         // todo player hp representation does not work
-        util.playerAddHP(playerHealthRepresentation, 3);
+
+//        for (int i = 0; i < 3; i++) {
+//            util.playerAddHP(playerHealthRepresentation);
+//        }
+
     }
 
     public void setupGameWorld() {
@@ -280,6 +285,7 @@ public class SpaceShooterAppController {
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
             System.out.println("Collision detected!");
             spaceShip.lose_health();
+            util.removeLastHealth(playerHealthRepresentation);
             System.out.println("SpaceShip health: " + spaceShip.getHealth());
             if (spaceShip.checkHealth()) {
                 spaceShip.setDead(true);

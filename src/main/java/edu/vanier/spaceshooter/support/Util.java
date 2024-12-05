@@ -5,28 +5,40 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Util {
+public class Util extends ImageView {
     public final String BACKGROUND_IMAGE_1 = "/background/blue.png";
     public final String BACKGROUND_IMAGE_2 = "/background/purple.png";
     public final String BACKGROUND_IMAGE_3 = "/background/darkPurple.png";
     public final String BACKGROUND_IMAGE_4 = "/background/black.png";
     public final String HP_REPRESENTATION = "/player/playerLife1_red.png";
-
-    ImageView imageView;
-
-    public Util() {
-        Image image = new Image(getClass().getResource(HP_REPRESENTATION).toExternalForm());
-        imageView = new ImageView(image);
-        imageView.setFitWidth(20);
-        imageView.setPreserveRatio(true);
-    }
-
     public final List<String> imageContainer = List.of(
             BACKGROUND_IMAGE_1, BACKGROUND_IMAGE_2, BACKGROUND_IMAGE_3, BACKGROUND_IMAGE_4
     );
+
+    public ArrayList<ImageView> container = new ArrayList<>();
+
+    public String temp = "imageView";
+
+    public Image image;
+
+    public HBox enteredBox;
+
+
+    public Util(HBox hBox) {
+        image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
+        this.enteredBox = hBox;
+        for (int i = 1; i <= 3; i++) {
+            temp += i;
+            System.out.println("the temp is:" + temp);
+            ImageView imView = new ImageView(image);
+            hBox.getChildren().add(imView);
+            container.add(imView);
+            temp = "imageView";
+        }
+    }
+
     public void settingBackground(int imageNumber, Pane pane) {
         Image backgroundImage = new Image(getClass().getResource(imageContainer.get(imageNumber - 1)).toExternalForm());
 
@@ -48,15 +60,21 @@ public class Util {
         pane.setBackground(new javafx.scene.layout.Background(bgImage));
     }
 
-    public void playerAddHP(VBox container, int amount) {
-        for (int i = 0; i < amount; i++) {
-            container.getChildren().addAll(imageView);
-        }
+    public void playerAddHP(HBox container) {
+        Image image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
+        ImageView imageView1 = new ImageView(image);
+        container.getChildren().add(imageView1);
     }
 
-    public void playerRemoveHP(VBox container, int amount) {
-        for (int i = 0; i < amount; i++) {
-            container.getChildren().addAll(imageView);
+    public void removeLastHealth(HBox hBox) {
+        if (!container.isEmpty()) {
+            ImageView lastHealth = container.get(container.size() - 1);
+
+            container.remove(container.size() - 1);
+
+            hBox.getChildren().remove(lastHealth);
+        } else {
+            System.out.println("No health points to remove!");
         }
     }
 
