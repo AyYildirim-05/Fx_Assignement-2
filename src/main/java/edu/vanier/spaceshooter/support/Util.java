@@ -31,8 +31,8 @@ public class Util extends ImageView {
         this.enteredBox = hBox;
         for (int i = 1; i <= 3; i++) {
             temp += i;
-            System.out.println("the temp is:" + temp);
             ImageView imView = new ImageView(image);
+            imView.setId(temp);
             hBox.getChildren().add(imView);
             container.add(imView);
             temp = "imageView";
@@ -60,10 +60,17 @@ public class Util extends ImageView {
         pane.setBackground(new javafx.scene.layout.Background(bgImage));
     }
 
-    public void playerAddHP(HBox container) {
-        Image image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
-        ImageView imageView1 = new ImageView(image);
-        container.getChildren().add(imageView1);
+    public void playerAddHP(HBox hBox) {
+        int newId = container.size() + 1;
+        if (container.size() < 3) {
+            image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
+            ImageView newHealth = new ImageView(image);
+            newHealth.setId(temp + newId);
+            hBox.getChildren().add(newHealth);
+            container.add(newHealth);
+        } else {
+            System.out.println("HP is already 3!");
+        }
     }
 
     public void removeLastHealth(HBox hBox) {

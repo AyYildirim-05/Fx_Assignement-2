@@ -305,6 +305,7 @@ public class SpaceShooterAppController {
                         enemy.setDead(true);
                         if (enemy instanceof Small_Invader) {
                             levelController.score += 1;
+                            util.playerAddHP(playerHealthRepresentation);
                         } else if (enemy instanceof Medium_Invader) {
                             levelController.score += 3;
                         } else if (enemy instanceof Big_Invader) {
