@@ -76,12 +76,6 @@ public class SpaceShooterAppController {
                 0, 0);
         animationPanel.setPrefSize(1000, 800);
         animationPanel.getChildren().addAll(spaceShip);
-        // todo player hp representation does not work
-
-//        for (int i = 0; i < 3; i++) {
-//            util.playerAddHP(playerHealthRepresentation);
-//        }
-
     }
 
     public void setupGameWorld() {
@@ -131,10 +125,10 @@ public class SpaceShooterAppController {
             stageNumber++;
             levelController.setNumberEnemies(1);
 
-
-            if (stageNumber % 3 == 0) {
+            if (stageNumber % 2 == 0) {
                 levelController.setSpeedInvader(1);
                 levelController.setSpeedSpaceShip(1);
+                levelController.setNumOfMissile(1);
             }
 
             stageLabel.setText("Stage: " + stageNumber);
@@ -147,7 +141,6 @@ public class SpaceShooterAppController {
             stage.setFullScreen(!stage.isFullScreen());
             input.remove(KeyCode.F);
         }
-        // todo enemy does not get out of the screen no matter the speed, but some inconsistencies
         if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
             if (spaceShip.getTranslateX() - levelController.getSpeedSpaceShip() >= -2) {
                 spaceShip.moveLeft(levelController.getSpeedSpaceShip());
@@ -176,9 +169,8 @@ public class SpaceShooterAppController {
 
 
         if (input.contains(KeyCode.C)) {
-            // todo there is an odd delay after the swithchin from the last weapon
             System.out.println("Before: " + usedGun);
-            if (usedGun <= levelController.numberOfGuns) {
+            if (usedGun < levelController.numberOfGuns) {
                 usedGun += 1;
                 System.out.println("Gun number: " + usedGun);
             } else {
@@ -201,7 +193,6 @@ public class SpaceShooterAppController {
         if (elapsedTime > 2) {
             elapsedTime = 0;
         }
-
     }
 
     // todo fix the enemy generation problem
@@ -268,8 +259,6 @@ public class SpaceShooterAppController {
         return spriteList;
     }
 
-
-    // todo make this so that it seperates the firing type cause after setting them to go diagonally, they come back to moveUp
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
             case "enemybullet" -> handleEnemyBullet(sprite);
@@ -278,8 +267,6 @@ public class SpaceShooterAppController {
         }
     }
 
-
-    // todo enemy is shooting from the back fix it
     private void handleEnemyBullet(Sprite missile) {
         missile.move();
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
@@ -305,11 +292,11 @@ public class SpaceShooterAppController {
                         enemy.setDead(true);
                         if (enemy instanceof Small_Invader) {
                             levelController.score += 1;
-                            util.playerAddHP(playerHealthRepresentation);
                         } else if (enemy instanceof Medium_Invader) {
                             levelController.score += 3;
                         } else if (enemy instanceof Big_Invader) {
                             levelController.score += 5;
+                            util.playerAddHP(playerHealthRepresentation);
                         }
                         scoreLabel.setText("Score: " + levelController.getScore());
                     }
@@ -318,20 +305,18 @@ public class SpaceShooterAppController {
         }
     }
 
-
+    // todo implement the logic of enemies shooting
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
             if (Math.random() < 0.5) {
-                doubleShotAngle(sprite);
+                circleShot(sprite, 4);
             }
         }
     }
 
-    // todo update this so that any sprite (espacially missiles) will stop rendering if they go out of bounds
     private void removeDeadSprites() {
         animationPanel.getChildren().removeIf(n -> {
             if (n instanceof Sprite sprite) {
-                // Check if the sprite is dead or out of bounds
                 boolean isOutOfBounds = sprite.getTranslateX() < -2 ||
                         sprite.getTranslateX() > animationPanel.getWidth() ||
                         sprite.getTranslateY() < -2 ||
@@ -342,8 +327,6 @@ public class SpaceShooterAppController {
         });
     }
 
-
-    // todo fix the shooting. after pressing on the last one, user has to press one more time to allow to come back to 0
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
             case 1:
@@ -365,12 +348,10 @@ public class SpaceShooterAppController {
             case 5:
                 laser(firingEntity);
                 System.out.println("weapon 5");
-
                 break;
             case 6:
-                circleShot(firingEntity);
+                circleShot(firingEntity, levelController.getNumOfMissile());
                 System.out.println("weapon 6");
-
                 break;
             default:
                 break;
@@ -516,14 +497,15 @@ public class SpaceShooterAppController {
 
     }
 
-    public void circleShot(Sprite firingEntity) {
+    // can shoot different number of bullets depending on the feed number of missiles
+    public void circleShot(Sprite firingEntity, int numMissile) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 5000) {
             double centerX = firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2;
             double centerY = firingEntity.getTranslateY() + firingEntity.getFitHeight() / 2;
 
-            for (int i = 0; i < 12; i++) {
-                double angle = 2 * Math.PI * i / 12;
+            for (int i = 0; i < numMissile; i++) {
+                double angle = 2 * Math.PI * i / numMissile;
 
                 double dx = levelController.getSpeedSpaceShip() * Math.cos(angle);
                 double dy = levelController.getSpeedSpaceShip() * Math.sin(angle);
@@ -539,7 +521,6 @@ public class SpaceShooterAppController {
             levelController.setLastShot(now);
         }
     }
-
 
     public void setScene(Scene scene) {
         sceneActual = scene;
@@ -559,7 +540,6 @@ public class SpaceShooterAppController {
         }
         return false;
     }
-
 
     public void setStage(Stage stage) {
         stageActual = stage;

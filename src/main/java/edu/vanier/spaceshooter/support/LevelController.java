@@ -144,6 +144,16 @@ public class LevelController {
     public int health_missile = 1;
     public int numberOfGuns = 6;
 
+    public int numOfMissile = 1;
+
+    public int getNumOfMissile() {
+        return numOfMissile;
+    }
+
+    public void setNumOfMissile(int numOfMissile) {
+        this.numOfMissile += numOfMissile;
+    }
+
     public int getNumberOfGuns() {
         return numberOfGuns;
     }
