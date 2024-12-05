@@ -48,15 +48,15 @@ public class Util {
         pane.setBackground(new javafx.scene.layout.Background(bgImage));
     }
 
-    public void playerHP(HBox container, int amount, int action) {
-        if (action == 1) {
-            for (int i = 0; i < amount; i++) {
-                container.getChildren().addAll(imageView);
-            }
-        } else if (action == -1) {
-            for (int i = 0; i < amount; i++) {
-                container.getChildren().remove(imageView);
-            }
+    public void playerAddHP(VBox container, int amount) {
+        for (int i = 0; i < amount; i++) {
+            container.getChildren().addAll(imageView);
+        }
+    }
+
+    public void playerRemoveHP(VBox container, int amount) {
+        for (int i = 0; i < amount; i++) {
+            container.getChildren().addAll(imageView);
         }
     }
 

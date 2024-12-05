@@ -8,7 +8,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public abstract class Sprite extends ImageView {
-
     public int health;
     public ImageView imageView;
     public double positionX;
@@ -17,7 +16,6 @@ public abstract class Sprite extends ImageView {
     public double width;
     public boolean dead = false;
     public String type;
-
     private double dx;
     private double dy;
 
@@ -28,7 +26,7 @@ public abstract class Sprite extends ImageView {
         this.height = height;
         Image image = new Image(getClass().getResource(imagePath).toExternalForm());
         setImage(image);
-        setTranslateX(x); // set incremental changes
+        setTranslateX(x);
         setTranslateY(y);
         setFitWidth(width);
         setFitHeight(height);

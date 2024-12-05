@@ -14,10 +14,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.layout.VBox?>
 <StackPane fx:id="HUD" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="800.0" />
-    <HBox fx:id="uiContainer" prefHeight="25.0" prefWidth="1000.0" spacing="300.0">
+      <Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" />
+    <VBox fx:id="uiContainer" prefHeight="25.0" prefWidth="1000.0" spacing="25.0">
         <children>
             <Label fx:id="scoreLabel" text="Score: 0" textFill="WHITE">
                <font>
@@ -31,6 +32,6 @@
             </Label>
             <HBox fx:id="playerHealthRepresentation" prefHeight="100.0" prefWidth="200.0" />
         </children>
-    </HBox>
+    </VBox>
    </children>
 </StackPane>

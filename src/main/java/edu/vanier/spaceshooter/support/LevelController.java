@@ -2,7 +2,7 @@ package edu.vanier.spaceshooter.support;
 
 public class LevelController {
     /* Speed controller */
-    public int speedSpaceShip = 2;
+    public int speedSpaceShip = 10;
 
     public int invaderShootingFrequency = 1;
 
@@ -30,8 +30,6 @@ public class LevelController {
     public int getSpeedSpaceShip() {
         return speedSpaceShip;
     }
-
-
 
     public long getLastShot() {
         return lastShot;
@@ -144,7 +142,7 @@ public class LevelController {
     public final String greenMissile_1 = "/missile/laserGreen12.png";
     public final String greenMissile_2 = "/missile/laserGreen13.png";
     public int health_missile = 1;
-    public int numberOfGuns = 2;
+    public int numberOfGuns = 6;
 
     public int getNumberOfGuns() {
         return numberOfGuns;

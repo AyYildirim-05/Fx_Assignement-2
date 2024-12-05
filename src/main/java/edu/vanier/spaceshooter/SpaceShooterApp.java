@@ -20,9 +20,6 @@ public class SpaceShooterApp extends Application {
     private SpaceShooterAppController controller;
     public Scene scene;
 
-    public double newX = 1000;
-    public double newY = 800;
-
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -37,16 +34,16 @@ public class SpaceShooterApp extends Application {
 
             primaryStage.widthProperty().addListener((obs, oldX, newX) -> {
                 if (!Objects.equals(oldX, newX)) {
-                    controller.bindScene(primaryStage);
+                    controller.bindSceneWidth(primaryStage);
                 }
-                System.out.println("New width: " + newX);
             });
 
             primaryStage.heightProperty().addListener((obs, oldY, newY) -> {
                 if (!Objects.equals(oldY, newY)) {
-                    controller.bindScene(primaryStage);
+                    System.out.println("old Y:" + oldY);
+                    System.out.println("new Y:" + newY);
+                    controller.bindSceneHeight(primaryStage);
                 }
-                System.out.println("New height: " + newY);
             });
 
             controller.setScene(scene);
