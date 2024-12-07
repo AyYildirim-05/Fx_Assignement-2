@@ -8,8 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -19,6 +17,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -49,6 +48,8 @@ public class SpaceShooterAppController {
     private List<KeyCode> input = new ArrayList<>();
     public SpaceShip spaceShip;
     public Invader invader;
+
+    public List<Invader> invaders = new ArrayList<>();
     public Obstacles obstacles;
     public Missile missile;
     public LevelController levelController;
@@ -60,6 +61,8 @@ public class SpaceShooterAppController {
     private long lastEnemyMoveTime = 0;
 
     public int stageNumber = 0;
+
+    private long lastCollisionTime = 0;
 
     int x = 0;
     int y = 0;
@@ -161,11 +164,7 @@ public class SpaceShooterAppController {
                 spaceShip.moveDown(levelController.getSpeedSpaceShip());
             }
         }
-        // todo the collision is not really working
-        if (Sprite.isCollision(spaceShip, invader)) {
-            spaceShip.lose_health();
-            invader.lose_health();
-        }
+
 
 
         if (input.contains(KeyCode.C)) {
@@ -184,11 +183,21 @@ public class SpaceShooterAppController {
         if (input.contains(KeyCode.SPACE)) {
             shooting(spaceShip, usedGun);
         }
-        if (spaceShip.getBoundsInParent().intersects(invader.getBoundsInParent())) {
-            System.out.println("collision");
-            invader.setDead(true);
-            spaceShip.lose_health();
+
+//        collisionDetector();
+
+        for (Invader invader : invaders) {
+            if (Sprite.isCollision(spaceShip, invader)) {
+                long currentTime = Instant.now().toEpochMilli();
+                if (currentTime - lastCollisionTime >= 1000) {
+                    spaceShip.lose_health();
+                    System.out.println("health sp:" + spaceShip.getHealth());
+                    invader.lose_health();
+                    lastCollisionTime = currentTime;
+                }
+            }
         }
+
 
         if (elapsedTime > 2) {
             elapsedTime = 0;
@@ -206,6 +215,7 @@ public class SpaceShooterAppController {
                         90 + i * 100, 500,
                         0, 0);
                 animationPanel.getChildren().addAll(invader);
+                invaders.add(invader);
             }
         }
         if (stageNumber >= 3) {
@@ -222,9 +232,12 @@ public class SpaceShooterAppController {
         if (now - lastEnemyMoveTime > 200) {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
-                    randomNumber = random.nextInt(2);
-                    smallInvader.movementThree(levelController.getSpeedInvader());
+                    randomNumber = random.nextInt(8);
 
+                    if (smallInvader.getTranslateX() - levelController.getSpeedInvader() >= -2) {
+                        smallInvader.setVelocity(-levelController.getSpeedInvader(), 0);
+//                        smallInvader.moveLeft(levelController.getSpeedInvader());
+                    }
 //                    switch (randomNumber) {
 //                        case 0 -> smallInvader.setVelocity(levelController.getSpeedInvader(), 0); // move right
 //                        case 1 -> smallInvader.setVelocity(-levelController.getSpeedInvader(), 0); // move left
@@ -240,7 +253,6 @@ public class SpaceShooterAppController {
             lastEnemyMoveTime = now;
         }
 
-        // Now actually move all invaders based on their velocities
         for (Node n : animationPanel.getChildren()) {
             if (n instanceof Small_Invader smallInvader) {
                 smallInvader.move();
@@ -553,5 +565,26 @@ public class SpaceShooterAppController {
     public void bindSceneHeight(Stage stage) {
         stage.minHeightProperty().bind(stageActual.heightProperty());
     }
+
+    public void collisionDetector() {
+        if (spaceShip.getBoundsInParent().intersects(invader.getBoundsInParent())) {
+            if (invader instanceof Small_Invader smallInvader) {
+                spaceShip.lose_health();
+                smallInvader.lose_health();
+            } else if (invader instanceof Medium_Invader mediumInvader) {
+                for (int i = 0; i < 2; i++) {
+                    spaceShip.lose_health();
+                    mediumInvader.lose_health();
+                }
+            } else if (invader instanceof Big_Invader bigInvader) {
+                for (int i = 0; i < 3; i++) {
+                    spaceShip.lose_health();
+                    bigInvader.lose_health();
+                }
+            }
+
+        }
+    }
+
 
 }

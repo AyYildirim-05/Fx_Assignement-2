@@ -16,8 +16,10 @@ public abstract class Sprite extends ImageView {
     public double width;
     public boolean dead = false;
     public String type;
-    private double dx;
-    private double dy;
+    public double dx;
+    public double dy;
+    public double x;
+    public double y;
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
@@ -30,6 +32,8 @@ public abstract class Sprite extends ImageView {
         setTranslateY(y);
         setFitWidth(width);
         setFitHeight(height);
+        this.x = x;
+        this.y = y;
         this.dx = dx;
         this.dy = dy;
     }
@@ -45,8 +49,9 @@ public abstract class Sprite extends ImageView {
         setTranslateY(getTranslateY() + speed);
     }
 
-    // move the missiles
     public void move() {
+
+//        if () here we do the logic of border
         this.setTranslateX(this.getTranslateX() + dx);
         this.setTranslateY(this.getTranslateY() + dy);
     }
@@ -55,6 +60,7 @@ public abstract class Sprite extends ImageView {
         this.dx = dx;
         this.dy = dy;
     }
+
 
     public void lose_health() {
         if (this.health > 0) {
@@ -85,7 +91,6 @@ public abstract class Sprite extends ImageView {
 
     public boolean isColliding(Sprite other) {
         return this.getBoundsInParent().intersects(other.getBoundsInParent());
-        // or getBoundsInLocal()
     }
 
     public void render(GraphicsContext gc) {
