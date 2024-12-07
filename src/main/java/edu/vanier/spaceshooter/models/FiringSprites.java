@@ -13,17 +13,5 @@ public abstract class FiringSprites extends Sprite {
     }
 
 
-    public void tripleShot() {
 
-    }
-    public  void circleShot() {
-
-    }
-    public void machineGun() {
-
-    }
-
-    public void homing() {
-
-    }
 }

@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -115,7 +114,6 @@ public class SpaceShooterAppController {
     }
 
     // todo how to limit the movement of invaders within the animationPanel
-    // todo need to implement collision between spacehip and invader -1 health to both
     // todo implement a gif for explosion
     private void update() {
         elapsedTime += 0.016;
@@ -126,13 +124,14 @@ public class SpaceShooterAppController {
         if (!areEnemiesRemaining()) {
             generateInvaders();
             stageNumber++;
-            levelController.setNumberEnemies(1);
 
-            if (stageNumber % 2 == 0) {
-                levelController.setSpeedInvader(1);
-                levelController.setSpeedSpaceShip(1);
-                levelController.setNumOfMissile(1);
+            if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 10) {
+                levelController.setNumberEnemies(1);
             }
+
+            levelController.setSpeedInvader(1);
+            levelController.setSpeedSpaceShip(1);
+            levelController.setNumOfMissile(1);
 
             stageLabel.setText("Stage: " + stageNumber);
             levelController.setInvaderShootingFrequency();
@@ -165,16 +164,12 @@ public class SpaceShooterAppController {
             }
         }
 
-
-
         if (input.contains(KeyCode.C)) {
             System.out.println("Before: " + usedGun);
             if (usedGun < levelController.numberOfGuns) {
                 usedGun += 1;
-                System.out.println("Gun number: " + usedGun);
             } else {
                 usedGun = 1;
-                System.out.println("Cleaned");
             }
             input.remove(KeyCode.C);
         }
@@ -184,46 +179,41 @@ public class SpaceShooterAppController {
             shooting(spaceShip, usedGun);
         }
 
-//        collisionDetector();
-
+        // todo time duration is not working
         for (Invader invader : invaders) {
             if (Sprite.isCollision(spaceShip, invader)) {
-                long currentTime = Instant.now().toEpochMilli();
-                if (currentTime - lastCollisionTime >= 1000) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastCollisionTime > 5000) {
                     spaceShip.lose_health();
                     System.out.println("health sp:" + spaceShip.getHealth());
                     invader.lose_health();
+                    invader.isDead();
                     lastCollisionTime = currentTime;
                 }
             }
         }
-
-
         if (elapsedTime > 2) {
             elapsedTime = 0;
         }
     }
 
-    // todo fix the enemy generation problem
     private void generateInvaders() {
-        if (stageNumber >= 0) {
-            for (int i = 0; i < levelController.getNumberEnemies(); i++) {
-                invader = new Small_Invader(levelController.getSmall_Enemy(),
-                        35, 35,
-                        levelController.getHealth_small_Invader(),
-                        "enemy",
-                        90 + i * 100, 500,
-                        0, 0);
-                animationPanel.getChildren().addAll(invader);
-                invaders.add(invader);
-            }
+        if (stageNumber == 1) {
+            generateEnemy(5, 0, 0, 0);
         }
-        if (stageNumber >= 3) {
-            // implement the logic of adding medium size enemies
+        if (stageNumber == 2) {
+            generateEnemy(6, 2, 1, 0);
         }
-        if (stageNumber >= 5) {
-            // implement logic of adding big enemies
+        if (stageNumber == 3) {
+            generateEnemy(8, 4, 1, 0);
         }
+        if (stageNumber >= 3)
+            generateEnemy(
+                    random.nextInt(0, levelController.getNumberEnemies()),
+                    random.nextInt(0, levelController.getNumberEnemies()),
+                    random.nextInt(0, levelController.getNumberEnemies()),
+                    random.nextInt(0, levelController.getNumberEnemies())
+            );
     }
 
     // todo implement custom movement types, not just shifting around
@@ -333,7 +323,7 @@ public class SpaceShooterAppController {
                         sprite.getTranslateX() > animationPanel.getWidth() ||
                         sprite.getTranslateY() < -2 ||
                         sprite.getTranslateY() > animationPanel.getHeight();
-                return sprite.isDead() || isOutOfBounds;
+                return sprite.isDead() || isOutOfBounds || sprite.getHealth() == 0;
             }
             return false;
         });
@@ -509,7 +499,6 @@ public class SpaceShooterAppController {
 
     }
 
-    // can shoot different number of bullets depending on the feed number of missiles
     public void circleShot(Sprite firingEntity, int numMissile) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 5000) {
@@ -583,6 +572,29 @@ public class SpaceShooterAppController {
                 }
             }
 
+        }
+    }
+
+    public void generateEnemy(int small, int medium, int big, int boss) {
+        for (int i = 0; i < small; i++) {
+            invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35, levelController.getHealth_small_Invader(), "enemy", 90 + i * 100, 500, 0, 0);
+            animationPanel.getChildren().addAll(invader);
+            invaders.add(invader);
+        }
+        for (int i = 0; i < medium; i++) {
+            invader = new Medium_Invader(levelController.getMedium_Enemy(), 35, 35, levelController.getHealth_medium_Invader(), "enemy", 90 + i * 100, 500, 0, 0);
+            animationPanel.getChildren().addAll(invader);
+            invaders.add(invader);
+        }
+        for (int i = 0; i < big; i++) {
+            invader = new Big_Invader(levelController.getBig_Enemy(), 35, 35, levelController.getHealth_big_Invader(), "enemy", 90 + i * 100, 500, 0, 0);
+            animationPanel.getChildren().addAll(invader);
+            invaders.add(invader);
+        }
+        for (int i = 0; i < boss; i++) {
+            invader = new Boss_Invader(levelController.getBoss_Enemy(), 35, 35, levelController.getHealth_boss_Invader(), "enemy", 90 + i * 100, 500, 0, 0);
+            animationPanel.getChildren().addAll(invader);
+            invaders.add(invader);
         }
     }
 

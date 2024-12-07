@@ -2,7 +2,7 @@ package edu.vanier.spaceshooter.support;
 
 public class LevelController {
     /* Speed controller */
-    public int speedSpaceShip = 1;
+    public int speedSpaceShip = 10;
 
     public int invaderShootingFrequency = 1;
 
@@ -66,7 +66,6 @@ public class LevelController {
     /* Enemy number */
     public int numberEnemies = 5;
 
-
     public int getNumberEnemies() {
         return numberEnemies;
     }
@@ -79,12 +78,28 @@ public class LevelController {
     public final String small_Enemy = "/invaders/enemyBlue2.png";
     public final String medium_Enemy = "/invaders/enemyBlue3.png";
     public final String big_Enemy = "/invaders/enemyBlue4.png";
-    public final String boss_Enemy = "/invaders/enemyBlue5.png";
+    public final String boss_Enemy = "/invaders/ufoBlue.png";
 
     public int health_small_Invader = 1;
-    public int health_medium_Invader = 1;
-    public int health_big_Invader = 1;
-    public int health_boss_Invader = 1;
+    public int health_medium_Invader = 2;
+    public int health_big_Invader = 3;
+    public int health_boss_Invader = 5;
+
+    public void setInvaderShootingFrequency(int invaderShootingFrequency) {
+        this.invaderShootingFrequency = invaderShootingFrequency;
+    }
+
+    public String getBoss_Enemy() {
+        return boss_Enemy;
+    }
+
+    public int getHealth_boss_Invader() {
+        return health_boss_Invader;
+    }
+
+    public void setHealth_boss_Invader(int health_boss_Invader) {
+        this.health_boss_Invader = health_boss_Invader;
+    }
 
     public String getSmall_Enemy() {
         return small_Enemy;
@@ -98,9 +113,6 @@ public class LevelController {
         return big_Enemy;
     }
 
-    public String getBoss_Enemy() {
-        return boss_Enemy;
-    }
 
     public int getHealth_small_Invader() {
         return health_small_Invader;
@@ -124,14 +136,6 @@ public class LevelController {
 
     public void setHealth_big_Invader(int health_big_Invader) {
         this.health_big_Invader = health_big_Invader;
-    }
-
-    public int getHealth_boss_Invader() {
-        return health_boss_Invader;
-    }
-
-    public void setHealth_boss_Invader(int health_boss_Invader) {
-        this.health_boss_Invader = health_boss_Invader;
     }
 
     /* Missile values */
