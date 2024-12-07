@@ -228,15 +228,25 @@ public class SpaceShooterAppController {
             );
     }
 
-    // todo implement custom movement types, not just shifting around
     private void moveInvaders() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastEnemyMoveTime > 200) {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
-                    randomNumber = random.nextInt(8);
-
-
+                    randomNumber = random.nextInt(2);
+                    switch (randomNumber) {
+                        case 0 -> smallInvader.movementOne(levelController.speedInvader);
+                        case 1 -> smallInvader.movementTwo(levelController.speedInvader);
+                    }
+                } else if (n instanceof Medium_Invader mediumInvader) {
+                    switch (randomNumber) {
+                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
+                        case 1 -> mediumInvader.movementFour(levelController.speedInvader);
+                    }
+                }  else if (n instanceof Big_Invader bigInvader) {
+                    bigInvader.movementFive(levelController.speedInvader);
+                } else if (n instanceof Boss_Invader bossInvader) {
+                    bossInvader.shiftingAround(levelController.speedInvader);
                 }
             }
             lastEnemyMoveTime = currentTime;
@@ -248,7 +258,6 @@ public class SpaceShooterAppController {
             }
         }
     }
-
 
     private List<Sprite> getSprites() {
         List<Sprite> spriteList = new ArrayList<>();

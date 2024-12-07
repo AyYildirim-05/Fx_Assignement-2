@@ -94,6 +94,12 @@ public class Invader extends FiringSprites {
     }
 
     public void movementFive(int speed) {
-        randomNumber = random.nextInt(1001);
+        int random1 = random.nextInt(201 - (-201) + (-201));
+        int random2 = random.nextInt(201 - (-201) + (-201));
+
+        double xVector = (this.getTranslateX() - random1);
+        double yVector = (this.getTranslateX() - random2);
+
+        this.setVelocity(xVector, yVector);
     }
 }
