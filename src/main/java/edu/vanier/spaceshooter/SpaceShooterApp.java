@@ -21,6 +21,7 @@ public class SpaceShooterApp extends Application {
     public Scene scene;
 
 
+    // todo create a stage before lunching the game
     @Override
     public void start(Stage primaryStage) throws IOException {
         try {

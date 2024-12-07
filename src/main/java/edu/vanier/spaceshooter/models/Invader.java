@@ -15,8 +15,22 @@ public class Invader extends FiringSprites {
         super(imagePath, width, height, health, type, x, y, dx, dy);
     }
 
-    public void shiftingAround() {
-
+    public void shiftingAround(int speed) {
+        randomNumber = random.nextInt(8);
+        switch (randomNumber) {
+            case 0 -> this.setVelocity(levelController.getSpeedInvader(), 0); // move right
+            case 1 -> this.setVelocity(-levelController.getSpeedInvader(), 0); // move left
+            case 2 -> this.setVelocity(0, levelController.getSpeedInvader()); // move down
+            case 3 -> this.setVelocity(0, -levelController.getSpeedInvader()); // move up
+            case 4 ->
+                    this.setVelocity(levelController.getSpeedInvader(), levelController.getSpeedInvader()); // right down
+            case 5 ->
+                    this.setVelocity(-levelController.getSpeedInvader(), levelController.getSpeedInvader()); // left down
+            case 6 ->
+                    this.setVelocity(levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // right up
+            case 7 ->
+                    this.setVelocity(-levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
+        }
     }
 
     public void movementOne(int speed) {

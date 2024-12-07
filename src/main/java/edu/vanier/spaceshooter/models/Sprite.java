@@ -89,14 +89,9 @@ public abstract class Sprite extends ImageView {
         return health <= 0;
     }
 
-    public boolean isColliding(Sprite other) {
-        return this.getBoundsInParent().intersects(other.getBoundsInParent());
-    }
-
     public void render(GraphicsContext gc) {
         gc.drawImage(imageView.getImage(), positionX, positionY);
     }
-
 
     public int getHealth() {
         return health;
