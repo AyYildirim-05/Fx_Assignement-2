@@ -94,6 +94,11 @@ public class SpaceShooterAppController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                // todo stop the gameloop when dead
+                if (spaceShip.isDead()) {
+                    stop();
+                    return;
+                }
                 update();
             }
         };
@@ -118,6 +123,7 @@ public class SpaceShooterAppController {
 
     // todo how to limit the movement of invaders within the animationPanel
     // todo implement a gif for explosion
+    // todo change sprite every level
     private void update() {
         elapsedTime += 0.016;
         getSprites().forEach(this::processSprite);
@@ -127,6 +133,7 @@ public class SpaceShooterAppController {
         if (!areEnemiesRemaining()) {
             generateInvaders();
             stageNumber++;
+            levelController.setCurrentGun(1);
 
             if (stageNumber != 4) {
                 imageNum++;
@@ -176,8 +183,7 @@ public class SpaceShooterAppController {
         }
 
         if (input.contains(KeyCode.C)) {
-            System.out.println("Before: " + usedGun);
-            if (usedGun < levelController.numberOfGuns) {
+            if (usedGun < levelController.getCurrentGun() && usedGun < levelController.getNumberOfGuns()) {
                 usedGun += 1;
             } else {
                 usedGun = 1;
@@ -196,7 +202,7 @@ public class SpaceShooterAppController {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastCollisionTime > 5000) {
                     spaceShip.lose_health();
-                    System.out.println("health sp:" + spaceShip.getHealth());
+//                    System.out.println("health sp:" + spaceShip.getHealth());
                     invader.lose_health();
                     lastCollisionTime = currentTime;
                 }
@@ -224,19 +230,16 @@ public class SpaceShooterAppController {
 
     // todo implement custom movement types, not just shifting around
     private void moveInvaders() {
-        long now = System.currentTimeMillis();
-        if (now - lastEnemyMoveTime > 200) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastEnemyMoveTime > 200) {
             for (Node n : animationPanel.getChildren()) {
                 if (n instanceof Small_Invader smallInvader) {
                     randomNumber = random.nextInt(8);
 
-                    if (smallInvader.getTranslateX() - levelController.getSpeedInvader() >= -2) {
-                        smallInvader.setVelocity(-levelController.getSpeedInvader(), 0);
-//                        smallInvader.moveLeft(levelController.getSpeedInvader());
-                    }
+
                 }
             }
-            lastEnemyMoveTime = now;
+            lastEnemyMoveTime = currentTime;
         }
 
         for (Node n : animationPanel.getChildren()) {
@@ -269,13 +272,11 @@ public class SpaceShooterAppController {
     private void handleEnemyBullet(Sprite missile) {
         missile.move();
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-            System.out.println("Collision detected!");
             spaceShip.lose_health();
             util.removeLastHealth(playerHealthRepresentation);
-            System.out.println("SpaceShip health: " + spaceShip.getHealth());
             if (spaceShip.checkHealth()) {
                 spaceShip.setDead(true);
-                System.out.println("Sprite marked as dead.");
+                stopAnimation();
             }
             missile.setDead(true);
         }
@@ -292,8 +293,10 @@ public class SpaceShooterAppController {
                         if (enemy instanceof Small_Invader) {
                             levelController.score += 1;
                         } else if (enemy instanceof Medium_Invader) {
-                            levelController.score += 3;
+                            levelController.score += 2;
                         } else if (enemy instanceof Big_Invader) {
+                            levelController.score += 3;
+                        } else if (enemy instanceof Boss_Invader) {
                             levelController.score += 5;
                             util.playerAddHP(playerHealthRepresentation);
                         }
