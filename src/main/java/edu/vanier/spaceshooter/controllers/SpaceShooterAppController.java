@@ -79,6 +79,7 @@ public class SpaceShooterAppController {
                 "player",
                 400, 600,
                 0, 0);
+
         animationPanel.setPrefSize(1000, 800);
         animationPanel.getChildren().addAll(spaceShip);
     }
@@ -95,10 +96,6 @@ public class SpaceShooterAppController {
             @Override
             public void handle(long now) {
                 // todo stop the gameloop when dead
-                if (spaceShip.isDead()) {
-                    stop();
-                    return;
-                }
                 update();
             }
         };
@@ -126,11 +123,20 @@ public class SpaceShooterAppController {
     // todo change sprite every level
     private void update() {
         elapsedTime += 0.016;
+
+        if (spaceShip.getHealth() == 0) {
+            resetScene();
+            stopAnimation();
+            return;
+        }
+
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
         moveInvaders();
+        stageLabel.setText("Stage: " + stageNumber);
 
-        if (!areEnemiesRemaining()) {
+
+        if (!areEnemiesRemaining() && spaceShip.checkHealth()) {
             generateInvaders();
             stageNumber++;
             levelController.setCurrentGun(1);
@@ -147,9 +153,9 @@ public class SpaceShooterAppController {
             levelController.setSpeedSpaceShip(1);
             levelController.setNumOfMissile(1);
 
-            stageLabel.setText("Stage: " + stageNumber);
             levelController.setInvaderShootingFrequency();
         }
+
 
         if (stageNumber != 5) {
             util.settingBackground(imageNum, animationPanel);
@@ -204,6 +210,7 @@ public class SpaceShooterAppController {
                     spaceShip.lose_health();
 //                    System.out.println("health sp:" + spaceShip.getHealth());
                     invader.lose_health();
+                    util.removeLastHealth(playerHealthRepresentation);
                     lastCollisionTime = currentTime;
                 }
             }
@@ -214,18 +221,21 @@ public class SpaceShooterAppController {
     }
 
     private void generateInvaders() {
-        if (stageNumber == 1) {
-            generateEnemy(5, 0, 0, 0);
+        switch (stageNumber) {
+            case 1 -> generateEnemy(5, 0, 0, 0);
+            case 2 -> generateEnemy(6, 2, 1, 0);
+            case 3 -> generateEnemy(8, 4, 1, 0);
+            default -> {
+                if (stageNumber >= 3) {
+                    generateEnemy(
+                            random.nextInt(1, levelController.getNumberEnemies()),
+                            random.nextInt(1, levelController.getNumberEnemies()),
+                            random.nextInt(1, levelController.getNumberEnemies()),
+                            random.nextInt(1, levelController.getNumberEnemies())
+                    );
+                }
+            }
         }
-        if (stageNumber == 2) {
-            generateEnemy(6, 2, 1, 0);
-        }
-        if (stageNumber == 3) {
-            generateEnemy(8, 4, 1, 0);
-        }
-        if (stageNumber >= 3)
-            generateEnemy(random.nextInt(1, levelController.getNumberEnemies()), random.nextInt(1, levelController.getNumberEnemies()), random.nextInt(1, levelController.getNumberEnemies()), random.nextInt(1, levelController.getNumberEnemies())
-            );
     }
 
     private void moveInvaders() {
@@ -238,16 +248,17 @@ public class SpaceShooterAppController {
                         case 0 -> smallInvader.movementOne(levelController.speedInvader);
                         case 1 -> smallInvader.movementTwo(levelController.speedInvader);
                     }
-                } else if (n instanceof Medium_Invader mediumInvader) {
-                    switch (randomNumber) {
-                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
-                        case 1 -> mediumInvader.movementFour(levelController.speedInvader);
-                    }
-                }  else if (n instanceof Big_Invader bigInvader) {
-                    bigInvader.movementFive(levelController.speedInvader);
-                } else if (n instanceof Boss_Invader bossInvader) {
-                    bossInvader.shiftingAround(levelController.speedInvader);
                 }
+//                else if (n instanceof Medium_Invader mediumInvader) {
+//                    switch (randomNumber) {
+//                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
+//                        case 1 -> mediumInvader.movementFour(levelController.speedInvader);
+//                    }
+//                }  else if (n instanceof Big_Invader bigInvader) {
+//                    bigInvader.movementFive(levelController.speedInvader);
+//                } else if (n instanceof Boss_Invader bossInvader) {
+//                    bossInvader.shiftingAround(levelController.speedInvader);
+//                }
             }
             lastEnemyMoveTime = currentTime;
         }
@@ -586,5 +597,13 @@ public class SpaceShooterAppController {
             invaders.add(invader);
         }
     }
+
+    public void resetScene() {
+        animationPanel.getChildren().removeIf(n -> n instanceof Sprite);
+        stopAnimation();
+        invaders.clear();
+    }
+
+
 
 }
