@@ -314,6 +314,7 @@ public class SpaceShooterAppController {
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                    logger.info("Enemy Class: " + enemy.getClass().getSimpleName());
                     enemy.lose_health();
                     if (enemy.checkHealth()) {
                         enemy.setDead(true);
