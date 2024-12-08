@@ -480,7 +480,7 @@ public class SpaceShooterAppController {
 
             Missile rightMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
-                    (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
+                    (int) (firingEntity.getTranslateX()  + firingEntity.getFitWidth() / 3),
                     y,
                     dxRight, dyRight);
 

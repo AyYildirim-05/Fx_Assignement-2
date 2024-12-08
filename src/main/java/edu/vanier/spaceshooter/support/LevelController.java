@@ -148,7 +148,7 @@ public class LevelController {
     public int health_missile = 1;
     public int numberOfGuns = 6;
 
-    public int currentGun = 0;
+    public int currentGun = -1;
 
     public int getCurrentGun() {
         return currentGun;
