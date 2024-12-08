@@ -206,9 +206,8 @@ public class SpaceShooterAppController {
             if (Sprite.isCollision(spaceShip, invader)) {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastCollisionTime > 5000) {
-                    spaceShip.lose_health();
+                    playerLoseHealth();
                     invader.lose_health();
-                    util.removeLastHealth(playerHealthRepresentation);
                     lastCollisionTime = currentTime;
                 }
             }
@@ -290,11 +289,15 @@ public class SpaceShooterAppController {
     private void handleEnemyBullet(Sprite missile) {
         missile.move();
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-            spaceShip.lose_health();
-            util.removeLastHealth(playerHealthRepresentation);
+            playerLoseHealth();
             missile.lose_health();
             missile.setDead(true);
         }
+    }
+
+    private void playerLoseHealth() {
+        spaceShip.lose_health();
+        util.removeLastHealth(playerHealthRepresentation);
     }
 
     private void updateScore(Sprite enemy) {
@@ -314,7 +317,6 @@ public class SpaceShooterAppController {
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    logger.info("Enemy Class: " + enemy.getClass().getSimpleName());
                     enemy.lose_health();
                     if (enemy.checkHealth()) {
                         enemy.setDead(true);
