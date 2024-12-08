@@ -45,11 +45,12 @@ public class SpaceShooterAppController {
     private double elapsedTime = 0;
     private AnimationTimer gameLoop;
     private List<KeyCode> input = new ArrayList<>();
+    public List<Invader> invaders = new ArrayList<>();
+    public List<Missile> missiles = new ArrayList<>();
     public SpaceShip spaceShip;
     public Invader invader;
 
-    public List<Invader> invaders = new ArrayList<>();
-    public List<Missile> missiles = new ArrayList<>(); // to add them to an arraylist then getting rid of them?
+
     public Obstacles obstacles;
     public Missile missile;
     public LevelController levelController;
@@ -60,7 +61,7 @@ public class SpaceShooterAppController {
     Random random = new Random();
     private long lastEnemyMoveTime = 0;
 
-    public int stageNumber = 0;
+    public int stageNumber = -1;
 
     private long lastCollisionTime = 0;
 
@@ -95,7 +96,6 @@ public class SpaceShooterAppController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // todo stop the gameloop when dead
                 update();
             }
         };
@@ -133,12 +133,12 @@ public class SpaceShooterAppController {
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
         moveInvaders();
+        // todo stage starts at 2
         stageLabel.setText("Stage: " + stageNumber);
 
-
         if (!areEnemiesRemaining() && spaceShip.checkHealth()) {
-            generateInvaders();
             stageNumber++;
+            generateInvaders();
             levelController.setCurrentGun(1);
 
             if (stageNumber != 4) {
@@ -159,7 +159,6 @@ public class SpaceShooterAppController {
 
         if (stageNumber != 5) {
             util.settingBackground(imageNum, animationPanel);
-
         }
 
         if (input.contains(KeyCode.F)) {
@@ -208,7 +207,6 @@ public class SpaceShooterAppController {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastCollisionTime > 5000) {
                     spaceShip.lose_health();
-//                    System.out.println("health sp:" + spaceShip.getHealth());
                     invader.lose_health();
                     util.removeLastHealth(playerHealthRepresentation);
                     lastCollisionTime = currentTime;
@@ -294,12 +292,21 @@ public class SpaceShooterAppController {
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
             spaceShip.lose_health();
             util.removeLastHealth(playerHealthRepresentation);
-            if (spaceShip.checkHealth()) {
-                spaceShip.setDead(true);
-                stopAnimation();
-            }
+            missile.lose_health();
             missile.setDead(true);
         }
+    }
+
+    private void updateScore(Sprite enemy) {
+        int scoreToAdd = switch (enemy.getClass().getSimpleName()) {
+            case "Small_Invader" -> 1;
+            case "Medium_Invader" -> 2;
+            case "Big_Invader" -> 3;
+            case "Boss_Invader" -> 5;
+            default -> 0;
+        };
+        levelController.score += scoreToAdd;
+        scoreLabel.setText("Score: " + levelController.getScore());
     }
 
     private void handlePlayerBullet(Sprite sprite) {
@@ -310,18 +317,9 @@ public class SpaceShooterAppController {
                     enemy.lose_health();
                     if (enemy.checkHealth()) {
                         enemy.setDead(true);
-                        if (enemy instanceof Small_Invader) {
-                            levelController.score += 1;
-                        } else if (enemy instanceof Medium_Invader) {
-                            levelController.score += 2;
-                        } else if (enemy instanceof Big_Invader) {
-                            levelController.score += 3;
-                        } else if (enemy instanceof Boss_Invader) {
-                            levelController.score += 5;
-                            util.playerAddHP(playerHealthRepresentation);
-                        }
-                        scoreLabel.setText("Score: " + levelController.getScore());
+                        updateScore(enemy);
                     }
+                    sprite.lose_health();
                 }
             }
         }
@@ -600,10 +598,6 @@ public class SpaceShooterAppController {
 
     public void resetScene() {
         animationPanel.getChildren().removeIf(n -> n instanceof Sprite);
-        stopAnimation();
         invaders.clear();
     }
-
-
-
 }
