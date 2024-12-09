@@ -1,11 +1,9 @@
 package edu.vanier.spaceshooter.models;
 
-import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 
 public abstract class Sprite extends ImageView {
     public int health;
@@ -50,10 +48,34 @@ public abstract class Sprite extends ImageView {
     }
 
     public void move() {
-
-//        if () here we do the logic of border
         this.setTranslateX(this.getTranslateX() + dx);
         this.setTranslateY(this.getTranslateY() + dy);
+    }
+
+    public void moveInvaders() {
+        double nextX = this.getTranslateX() + dx;
+        double nextY = this.getTranslateY() + dy;
+
+        double panelWidth = getParent().getLayoutBounds().getWidth();
+        double panelHeight = getParent().getLayoutBounds().getHeight();
+
+        if (nextX < 0) {
+            dx = -dx;
+        } else if (nextX + this.getFitWidth() > panelWidth) {
+            nextX = panelWidth - this.getFitWidth();
+            dx = -dx;
+        }
+
+        if (nextY < 0) {
+            nextY = 0;
+            dy = -dy;
+        } else if (nextY + this.getFitHeight() > panelHeight) {
+            nextY = panelHeight - this.getFitHeight();
+            dy = -dy;
+        }
+
+        this.setTranslateX(nextX);
+        this.setTranslateY(nextY);
     }
 
     public void setVelocity(double dx, double dy) {

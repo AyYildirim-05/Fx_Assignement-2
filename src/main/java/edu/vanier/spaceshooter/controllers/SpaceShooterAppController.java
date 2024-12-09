@@ -133,13 +133,14 @@ public class SpaceShooterAppController {
         getSprites().forEach(this::processSprite);
         removeDeadSprites();
         moveInvaders();
-        // todo stage starts at 2
         stageLabel.setText("Stage: " + stageNumber);
 
         if (!areEnemiesRemaining() && spaceShip.checkHealth()) {
             stageNumber++;
             generateInvaders();
             levelController.setCurrentGun(1);
+            spaceShip.setTranslateX(sceneActual.getWidth() / 2);
+            spaceShip.setTranslateY(sceneActual.getHeight() / 2);
 
             if (stageNumber != 4) {
                 imageNum++;
@@ -200,8 +201,6 @@ public class SpaceShooterAppController {
         if (input.contains(KeyCode.SPACE)) {
             shooting(spaceShip, usedGun);
         }
-
-        // todo time duration is not working
         for (Invader invader : invaders) {
             if (Sprite.isCollision(spaceShip, invader)) {
                 long currentTime = System.currentTimeMillis();
@@ -237,15 +236,16 @@ public class SpaceShooterAppController {
 
     private void moveInvaders() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastEnemyMoveTime > 200) {
+        if (currentTime - lastEnemyMoveTime > 500) {
             for (Node n : animationPanel.getChildren()) {
+                randomNumber = random.nextInt(2);
                 if (n instanceof Small_Invader smallInvader) {
-                    randomNumber = random.nextInt(2);
-                    switch (randomNumber) {
-                        case 0 -> smallInvader.movementOne(levelController.speedInvader);
-                        case 1 -> smallInvader.movementTwo(levelController.speedInvader);
-                    }
-                }
+                    smallInvader.movementOne(levelController.speedInvader);
+//                    switch (randomNumber) {
+//                        case 0 -> smallInvader.movementOne(levelController.speedInvader);
+//                        case 1 -> smallInvader.movementTwo(levelController.speedInvader);
+//                    }
+//                }
 //                else if (n instanceof Medium_Invader mediumInvader) {
 //                    switch (randomNumber) {
 //                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
@@ -255,14 +255,15 @@ public class SpaceShooterAppController {
 //                    bigInvader.movementFive(levelController.speedInvader);
 //                } else if (n instanceof Boss_Invader bossInvader) {
 //                    bossInvader.shiftingAround(levelController.speedInvader);
-//                }
+                }
+
             }
             lastEnemyMoveTime = currentTime;
         }
 
         for (Node n : animationPanel.getChildren()) {
-            if (n instanceof Small_Invader smallInvader) {
-                smallInvader.move();
+            if (n instanceof Invader invaderInstances) {
+                invaderInstances.moveInvaders();
             }
         }
     }

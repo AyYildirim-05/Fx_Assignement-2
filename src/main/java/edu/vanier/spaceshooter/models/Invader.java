@@ -1,9 +1,5 @@
 package edu.vanier.spaceshooter.models;
 
-import javafx.animation.TranslateTransition;
-import javafx.scene.paint.Color;
-import javafx.util.Duration;
-
 import java.util.Random;
 
 public class Invader extends FiringSprites {
@@ -94,12 +90,41 @@ public class Invader extends FiringSprites {
     }
 
     public void movementFive(int speed) {
-        int random1 = random.nextInt(201 - (-201) + (-201));
-        int random2 = random.nextInt(201 - (-201) + (-201));
+        randomNumber = random.nextInt(8);
+        switch (randomNumber) {
+            case 0 -> this.setVelocity(speed, 0);
+            case 1 -> this.setVelocity(speed, speed);
+            case 2 -> this.setVelocity(0, speed);
+            case 3 -> this.setVelocity(-speed, speed);
+            case 4 -> this.setVelocity(-speed, 0);
+            case 5 -> this.setVelocity(-speed, -speed);
+            case 6 -> this.setVelocity(0, -speed);
+            case 7 -> this.setVelocity(speed, -speed);
+        }
+    }
 
-        double xVector = (this.getTranslateX() - random1);
-        double yVector = (this.getTranslateX() - random2);
+    public void movementSix(int speed) {
+        // Random jump-like movement
+        int xRandom = random.nextInt(speed * 2) - speed;
+        int yRandom = random.nextInt(speed * 2) - speed;
+        this.setVelocity(xRandom, yRandom);
+    }
 
+    public void movementSeven(int speed) {
+        // Oscillating movement
+        randomNumber = random.nextInt(2);
+        if (randomNumber == 0) {
+            this.setVelocity(speed, (int) (Math.sin(System.currentTimeMillis() % 360) * speed));
+        } else {
+            this.setVelocity((int) (Math.cos(System.currentTimeMillis() % 360) * speed), speed);
+        }
+    }
+
+    public void movementEight(int speed) {
+        // Spiral movement
+        double angle = Math.toRadians(random.nextInt(360));
+        double xVector = Math.cos(angle) * speed;
+        double yVector = Math.sin(angle) * speed;
         this.setVelocity(xVector, yVector);
     }
 }
