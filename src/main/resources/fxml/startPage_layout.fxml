@@ -9,8 +9,8 @@
    <children>
       <VBox fx:id="vertContainer" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
          <children>
-            <Button fx:id="startButton" mnemonicParsing="false" text="Button" alignment="CENTER" />
-            <Button fx:id="howTo" mnemonicParsing="false" text="Button" alignment="CENTER"/>
+            <Button fx:id="startButton" mnemonicParsing="false" text="Start" alignment="CENTER" />
+            <Button fx:id="howTo" mnemonicParsing="false" text="How to Play" alignment="CENTER"/>
          </children>
       </VBox>
    </children>
