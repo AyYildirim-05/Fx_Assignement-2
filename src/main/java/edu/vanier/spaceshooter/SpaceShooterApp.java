@@ -17,8 +17,12 @@ import java.util.Objects;
 public class SpaceShooterApp extends Application {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterApp.class);
     private final static String mainApp = "/fxml/MainApp_layout.fxml";
+    private final static String startApp = "/fxml/startPage_layout.fxml";
+    private final static String endApp = "/fxml/endGame_layout.fxml";
     private SpaceShooterAppController controller;
     public Scene scene;
+
+    private Stage stage;
 
 
     // todo create a stage before lunching the game
@@ -26,10 +30,10 @@ public class SpaceShooterApp extends Application {
     public void start(Stage primaryStage) throws IOException {
         try {
             logger.info("Bootstrapping the application...");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(mainApp));
+            FXMLLoader gameLoader = new FXMLLoader(getClass().getResource(mainApp));
             controller = new SpaceShooterAppController();
-            loader.setController(controller);
-            Pane root = loader.load();
+            gameLoader.setController(controller);
+            Pane root = gameLoader.load();
 
             scene = new Scene(root, 1000, 800);
 
@@ -68,5 +72,15 @@ public class SpaceShooterApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void startScene() {
+        FXMLLoader startLoader = new FXMLLoader(getClass().getResource(startApp));
+
+
+    }
+
+    public static void gameEndScene() {
+
     }
 }

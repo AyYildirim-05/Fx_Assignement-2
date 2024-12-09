@@ -120,6 +120,10 @@ public class SpaceShooterAppController {
 
     // todo implement a gif for explosion
     // todo change sprite every level
+    // todo do all the remaining shooting and moving logic
+    // todo fix the problem = when enemy go out of bonds, player lose hp
+    // todo modulize code
+    // todo
     private void update() {
         elapsedTime += 0.016;
 
@@ -333,12 +337,12 @@ public class SpaceShooterAppController {
         if (elapsedTime > 2) {
             switch (sprite.getClass().getSimpleName()) {
                 case "Small_Invader" -> {
-                    if (Math.random() < 0.5) {
+                    if (Math.random() < 0.1) {
                         circleShot(sprite, 4);
                     }
                 }
                 case "Medium_Invader" -> {
-                    if (Math.random() < 0.87) {
+                    if (Math.random() < 0.1) {
                         circleShot(sprite, 4);
                     }
                 }
@@ -350,7 +354,7 @@ public class SpaceShooterAppController {
 
     private void removeDeadSprites() {
         animationPanel.getChildren().removeIf(n -> {
-            if (n instanceof Sprite sprite) {
+            if (n instanceof Sprite sprite && !(n instanceof SpaceShip) ) {
                 boolean isOutOfBounds = sprite.getTranslateX() < -2 ||
                         sprite.getTranslateX() > animationPanel.getWidth() ||
                         sprite.getTranslateY() < -2 ||

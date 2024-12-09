@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<StackPane fx:id="endGamePane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox fx:id="vContainer" prefHeight="100.0" prefWidth="200.0" spacing="10.0" alignment="CENTER">
+         <children>
+            <Label fx:id="losingMessage" text="YOU LOSE!" alignment="CENTER"/>
+            <Label fx:id="finalScore" text="Score: " alignment="CENTER"/>
+         </children>
+      </VBox>
+   </children>
+</StackPane>
