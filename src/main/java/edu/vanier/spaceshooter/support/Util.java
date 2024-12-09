@@ -40,6 +40,10 @@ public class Util extends ImageView {
     }
 
     public void settingBackground(int imageNumber, Pane pane) {
+        if (imageNumber < 1 || imageNumber > imageContainer.size()) {
+            System.out.println("Invalid imageNumber: " + imageNumber);
+            return;
+        }
         Image backgroundImage = new Image(getClass().getResource(imageContainer.get(imageNumber - 1)).toExternalForm());
 
         BackgroundSize backgroundSize = new BackgroundSize(

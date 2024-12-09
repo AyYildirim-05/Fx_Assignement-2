@@ -118,7 +118,6 @@ public class SpaceShooterAppController {
 
     }
 
-    // todo how to limit the movement of invaders within the animationPanel
     // todo implement a gif for explosion
     // todo change sprite every level
     private void update() {
@@ -332,8 +331,19 @@ public class SpaceShooterAppController {
     // todo implement the logic of enemies shooting
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
-            if (Math.random() < 0.5) {
-                circleShot(sprite, 4);
+            switch (sprite.getClass().getSimpleName()) {
+                case "Small_Invader" -> {
+                    if (Math.random() < 0.5) {
+                        circleShot(sprite, 4);
+                    }
+                }
+                case "Medium_Invader" -> {
+                    if (Math.random() < 0.87) {
+                        circleShot(sprite, 4);
+                    }
+                }
+//                case "Big_Invader" -> 3;
+//                case "Boss_Invader" -> 5;
             }
         }
     }
