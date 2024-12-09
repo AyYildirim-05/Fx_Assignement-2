@@ -19,8 +19,6 @@ import java.util.Objects;
 public class SpaceShooterApp extends Application {
 
     private final static String startApp = "/fxml/startPage_layout.fxml";
-    private final static String endApp = "/fxml/endGame_layout.fxml";
-
     private SpaceShooterAppController controller;
 
     // todo create a stage before lunching the game

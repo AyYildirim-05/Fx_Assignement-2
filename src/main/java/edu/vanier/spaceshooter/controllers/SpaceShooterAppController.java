@@ -5,7 +5,9 @@ import edu.vanier.spaceshooter.support.LevelController;
 import edu.vanier.spaceshooter.support.Util;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -17,11 +19,14 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class SpaceShooterAppController {
+    private final static String endApp = "/fxml/endGame_layout.fxml";
+
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterAppController.class);
     @FXML
     Pane animationPanel;
@@ -130,6 +135,7 @@ public class SpaceShooterAppController {
         if (spaceShip.getHealth() == 0) {
             resetScene();
             stopAnimation();
+            endGameScene();
             return;
         }
 
@@ -210,6 +216,8 @@ public class SpaceShooterAppController {
                 if (currentTime - lastCollisionTime > 5000) {
                     playerLoseHealth();
                     invader.lose_health();
+                    levelController.score++;
+                    scoreLabel.setText("Score: " + levelController.getScore());
                     lastCollisionTime = currentTime;
                 }
             }
@@ -217,6 +225,23 @@ public class SpaceShooterAppController {
         if (elapsedTime > 2) {
             elapsedTime = 0;
         }
+    }
+
+    private void endGameScene() {
+        endGameController endGameController = new endGameController();
+        endGameController.getScore(levelController.getScore());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(endApp));
+
+        fxmlLoader.setController(endGameController);
+        Parent root;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        stageActual.setScene(scene);
+        stageActual.show();
     }
 
     private void generateInvaders() {
