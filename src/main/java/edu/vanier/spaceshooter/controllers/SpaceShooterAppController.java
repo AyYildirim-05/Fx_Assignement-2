@@ -56,7 +56,6 @@ public class SpaceShooterAppController {
     public Invader invader;
 
 
-    public Obstacles obstacles;
     public Missile missile;
     public LevelController levelController;
 
@@ -128,7 +127,6 @@ public class SpaceShooterAppController {
     // todo do all the remaining shooting and moving logic
     // todo fix the problem = when enemy go out of bonds, player lose hp
     // todo modulize code
-    // todo
     private void update() {
         elapsedTime += 0.016;
 

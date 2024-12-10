@@ -21,7 +21,6 @@ public class SpaceShooterApp extends Application {
     private final static String startApp = "/fxml/startPage_layout.fxml";
     private SpaceShooterAppController controller;
 
-    // todo create a stage before lunching the game
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource(startApp));

@@ -4,8 +4,6 @@ import edu.vanier.spaceshooter.support.LevelController;
 import javafx.scene.layout.Pane;
 
 public abstract class FiringSprites extends Sprite {
-
-    public Missile missile;
     public LevelController levelController;
 
     public FiringSprites(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
