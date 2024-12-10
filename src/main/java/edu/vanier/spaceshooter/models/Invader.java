@@ -11,7 +11,7 @@ public class Invader extends FiringSprites {
         super(imagePath, width, height, health, type, x, y, dx, dy);
     }
 
-    public void shiftingAround(int speed) {
+    public void shiftingAround() {
         randomNumber = random.nextInt(8);
         switch (randomNumber) {
             case 0 -> this.setVelocity(levelController.getSpeedInvader(), 0); // move right

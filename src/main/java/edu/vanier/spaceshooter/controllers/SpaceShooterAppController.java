@@ -155,13 +155,12 @@ public class SpaceShooterAppController {
 
             if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 15) {
                 levelController.setNumberEnemies(1);
+                levelController.increaseShooting();
             }
 
             levelController.setSpeedInvader(1);
             levelController.setSpeedSpaceShip(1);
-            levelController.setNumOfMissile(1);
-
-            levelController.setInvaderShootingFrequency();
+            levelController.setNumOfMissile();
         }
 
 
@@ -266,21 +265,20 @@ public class SpaceShooterAppController {
             for (Node n : animationPanel.getChildren()) {
                 randomNumber = random.nextInt(2);
                 if (n instanceof Small_Invader smallInvader) {
-                    smallInvader.movementOne(levelController.speedInvader);
-//                    switch (randomNumber) {
-//                        case 0 -> smallInvader.movementOne(levelController.speedInvader);
-//                        case 1 -> smallInvader.movementTwo(levelController.speedInvader);
-//                    }
-//                }
-//                else if (n instanceof Medium_Invader mediumInvader) {
-//                    switch (randomNumber) {
-//                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
-//                        case 1 -> mediumInvader.movementFour(levelController.speedInvader);
-//                    }
-//                }  else if (n instanceof Big_Invader bigInvader) {
-//                    bigInvader.movementFive(levelController.speedInvader);
-//                } else if (n instanceof Boss_Invader bossInvader) {
-//                    bossInvader.shiftingAround(levelController.speedInvader);
+                    switch (randomNumber) {
+                        case 0 -> smallInvader.movementOne(levelController.speedInvader);
+                        case 1 -> smallInvader.movementTwo(levelController.speedInvader);
+                    }
+                }
+                else if (n instanceof Medium_Invader mediumInvader) {
+                    switch (randomNumber) {
+                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
+                        case 1 -> mediumInvader.movementFour(levelController.speedInvader);
+                    }
+                }  else if (n instanceof Big_Invader bigInvader) {
+                    bigInvader.movementFive(levelController.speedInvader);
+                } else if (n instanceof Boss_Invader bossInvader) {
+                    bossInvader.shiftingAround();
                 }
 
             }
@@ -355,22 +353,40 @@ public class SpaceShooterAppController {
         }
     }
 
-    // todo implement the logic of enemies shooting
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
             switch (sprite.getClass().getSimpleName()) {
                 case "Small_Invader" -> {
                     if (Math.random() < 0.1) {
-                        circleShot(sprite, 4);
+                        randomNumber = random.nextInt(2);
+                        switch (randomNumber) {
+                            case 0 ->  singleShot(sprite);
+                            case 1 ->  doubleShotAngle(sprite);
+                        }
+
                     }
                 }
                 case "Medium_Invader" -> {
                     if (Math.random() < 0.1) {
-                        circleShot(sprite, 4);
+                        randomNumber = random.nextInt(2);
+                        switch (randomNumber) {
+                            case 0 ->  doubleShot(sprite);
+                            case 1 ->  doubleShotAngle(sprite);
+                        }
                     }
                 }
-//                case "Big_Invader" -> 3;
-//                case "Boss_Invader" -> 5;
+                case "Big_Invader" -> {
+                    if (Math.random() < 0.1) {
+                        randomNumber = random.nextInt(2);
+                        switch (randomNumber) {
+                            case 0 ->  tripleShoot(sprite);
+                            case 1 ->  laser(sprite);
+                        }
+                    }
+                }
+                case "Boss_Invader" -> {
+                    circleShot(sprite, levelController.getNumOfMissile());
+                }
             }
         }
     }
@@ -411,7 +427,7 @@ public class SpaceShooterAppController {
                 System.out.println("weapon 5");
                 break;
             case 6:
-                circleShot(firingEntity, levelController.getNumOfMissile());
+                circleShot(firingEntity, 8);
                 System.out.println("weapon 6");
                 break;
             default:

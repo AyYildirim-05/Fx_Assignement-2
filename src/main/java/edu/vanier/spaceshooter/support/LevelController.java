@@ -4,14 +4,56 @@ public class LevelController {
     /* Speed controller */
     public int speedSpaceShip = 1;
 
-    public int invaderShootingFrequency = 1;
+    public double smallInvaderShooting = 0.8;
+    public double mediumShooting = 0.6;
+    public double bigInvaderShooting = 0.4;
+    public double bossInvaderShooting = 0.5;
 
-    public int getInvaderShootingFrequency() {
-        return invaderShootingFrequency;
+    public double getSmallInvaderShooting() {
+        return smallInvaderShooting;
     }
 
-    public void setInvaderShootingFrequency() {
-        this.invaderShootingFrequency -= 0.1;
+    public void setSmallInvaderShooting() {
+        if (this.smallInvaderShooting <= 1) {
+            this.smallInvaderShooting += 0.05;
+        }
+    }
+
+    public double getMediumShooting() {
+        return mediumShooting;
+    }
+
+    public void setMediumShooting() {
+        if (this.mediumShooting <= 1) {
+            this.mediumShooting += 0.05;
+        }
+    }
+
+    public double getBigInvaderShooting() {
+        return bigInvaderShooting;
+    }
+
+    public void setBigInvaderShooting() {
+        if (this.bigInvaderShooting <= 1) {
+            this.bigInvaderShooting += 0.05;
+        }
+    }
+
+    public double getBossInvaderShooting() {
+        return bossInvaderShooting;
+    }
+
+    public void setBossInvaderShooting() {
+        if (this.bossInvaderShooting <= 1) {
+            this.bossInvaderShooting += 0.05;
+        }
+    }
+
+    public void increaseShooting() {
+        setSmallInvaderShooting();
+        setMediumShooting();
+        setBigInvaderShooting();
+        setBossInvaderShooting();
     }
 
     public int speedInvader = 0;
@@ -84,10 +126,6 @@ public class LevelController {
     public int health_medium_Invader = 2;
     public int health_big_Invader = 3;
     public int health_boss_Invader = 5;
-
-    public void setInvaderShootingFrequency(int invaderShootingFrequency) {
-        this.invaderShootingFrequency = invaderShootingFrequency;
-    }
 
     public String getBoss_Enemy() {
         return boss_Enemy;
@@ -164,8 +202,10 @@ public class LevelController {
         return numOfMissile;
     }
 
-    public void setNumOfMissile(int numOfMissile) {
-        this.numOfMissile += numOfMissile;
+    public void setNumOfMissile() {
+        if (this.numOfMissile <= 20) {
+            this.numOfMissile += 1;
+        }
     }
 
     public int getNumberOfGuns() {

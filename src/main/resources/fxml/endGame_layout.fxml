@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <StackPane fx:id="endGamePane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
-           style="-fx-background-image: url('/background/mainPageBackground.png'); -fx-background-size: cover;">
+           style="-fx-background-image: url('/background/mainPageBackground.png'); -fx-background-size: cover;"
+           stylesheets="@/css/MainAppStyle.css">
    <children>
       <VBox fx:id="vContainer" prefHeight="100.0" prefWidth="200.0" spacing="10.0" alignment="CENTER">
          <children>
