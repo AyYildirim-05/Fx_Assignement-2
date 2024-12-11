@@ -4,6 +4,11 @@ import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
+import java.io.File;
 
 public abstract class Sprite extends ImageView {
     public int health;
@@ -18,6 +23,12 @@ public abstract class Sprite extends ImageView {
     public double dy;
     public double x;
     public double y;
+
+    private MediaView mediaView;
+
+    public String explosionSound = "";
+    public String firingSound = "/sound_effects/15640-laser_gun_shot_3.wav";
+    public String explosionGif = "";
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
@@ -94,7 +105,6 @@ public abstract class Sprite extends ImageView {
         this.health++;
     }
 
-
     public void setDead(boolean dead) {
         this.dead = dead;
     }
@@ -124,6 +134,26 @@ public abstract class Sprite extends ImageView {
     }
     public static boolean isCollision(Node sprite1, Node sprite2) {
         return sprite1.getBoundsInParent().intersects(sprite2.getBoundsInParent());
+    }
+
+    public void soundExplosion() {
+
+    }
+
+    public void soundFiring() {
+        mediaView = new MediaView();
+        if (mediaView.getMediaPlayer() == null) {
+            Media media = new Media(new File(firingSound).toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaView.setMediaPlayer(mediaPlayer);
+        }
+
+        mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStartTime());
+        mediaView.getMediaPlayer().play();
+    }
+
+    public void explosionGif() {
+
     }
 
 }

@@ -124,8 +124,6 @@ public class SpaceShooterAppController {
 
     // todo implement a gif for explosion
     // todo change sprite every level
-    // todo do all the remaining shooting and moving logic
-    // todo fix the problem = when enemy go out of bonds, player lose hp
     // todo modulize code
     private void update() {
         elapsedTime += 0.016;
@@ -206,6 +204,7 @@ public class SpaceShooterAppController {
 
         if (input.contains(KeyCode.SPACE)) {
             shooting(spaceShip, usedGun);
+            spaceShip.soundFiring();
         }
         for (Invader invader : invaders) {
             if (Sprite.isCollision(spaceShip, invader)) {
@@ -452,7 +451,6 @@ public class SpaceShooterAppController {
                     firingEntity.getType() + "bullet",
                     x, y,
                     0, dy);
-
             animationPanel.getChildren().add(missile);
             levelController.setLastShot(now);
         }
