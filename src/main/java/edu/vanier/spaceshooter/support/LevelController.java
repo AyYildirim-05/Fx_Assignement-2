@@ -267,7 +267,6 @@ public class LevelController {
      */
 
     public String explosionSound = "/sound_effects/explosion.mp3";
-
     public String nextLevel = "/sound_effects/next_level.mp3";
     public String firingSound = "/sound_effects/15640-laser_gun_shot_3.wav";
     public String explosionGif = "";

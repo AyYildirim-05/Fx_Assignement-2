@@ -30,6 +30,8 @@ public class SpaceShooterApp extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+        System.out.println(getClass().getResource("/css/MainAppStyle.css"));
+
     }
 
 

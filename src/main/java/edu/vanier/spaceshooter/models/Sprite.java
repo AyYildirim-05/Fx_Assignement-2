@@ -17,16 +17,12 @@ public abstract class Sprite extends ImageView {
     public double positionY;
     public double height;
     public double width;
-    public boolean dead = false;
     public String type;
     public double dx;
     public double dy;
     public double x;
     public double y;
-
-    private MediaView mediaView;
-
-
+    private static MediaView mediaView;
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
@@ -103,17 +99,13 @@ public abstract class Sprite extends ImageView {
         this.health++;
     }
 
-    public void setDead(boolean dead) {
-        this.dead = dead;
-    }
+
 
     public String getType() {
         return type;
     }
 
-    public boolean isDead() {
-        return dead;
-    }
+
 
     public boolean checkHealth() {
         return health >= 0;
@@ -164,6 +156,9 @@ public abstract class Sprite extends ImageView {
         this.mediaView = mediaView;
     }
 
+    public static void getMediaView(MediaView mW) {
+        mediaView = mW;
+    }
 
 }
 

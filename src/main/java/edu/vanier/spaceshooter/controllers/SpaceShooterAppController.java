@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,7 @@ public class SpaceShooterAppController {
 
     public void initialize() {
         levelController = new LevelController();
+
         util = new Util(playerHealthRepresentation);
         logger.info("Initializing MainAppController...");
         spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(),
@@ -128,6 +130,10 @@ public class SpaceShooterAppController {
     // todo different 2d sprites for missiles
     // todo explosion effect when collision
     // todo player get damage sound effect
+    // todo css in the game scene not effective
+
+
+    // todo not all enemies are shooting & enemies are not trully dead & sound is causing problems
 
     private void update() {
         elapsedTime += 0.016;
@@ -214,7 +220,7 @@ public class SpaceShooterAppController {
             if (Sprite.isCollision(spaceShip, invader)) {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastCollisionTime > 5000) {
-                    sprite.soundPlaying(levelController.getExplosionSound());
+//                    sprite.soundPlaying(levelController.getExplosionSound());
                     playerLoseHealth();
                     invader.lose_health();
                     levelController.score++;
@@ -301,6 +307,7 @@ public class SpaceShooterAppController {
         if (elapsedTime > 2) {
             switch (sprite.getClass().getSimpleName()) {
                 case "Small_Invader" -> {
+                    System.out.println("asura");
                     if (Math.random() < 0.9) {
                         randomNumber = random.nextInt(2);
                         switch (randomNumber) {
@@ -359,10 +366,9 @@ public class SpaceShooterAppController {
     private void handleEnemyBullet(Sprite missile) {
         missile.move();
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-            sprite.soundPlaying(levelController.getExplosionSound());
+//            sprite.soundPlaying(levelController.getExplosionSound());
             playerLoseHealth();
             missile.lose_health();
-            missile.setDead(true);
         }
     }
 
@@ -388,10 +394,9 @@ public class SpaceShooterAppController {
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                    sprite.soundPlaying(levelController.getExplosionSound());
+//                    sprite.soundPlaying(levelController.getExplosionSound());
                     enemy.lose_health();
                     if (enemy.checkHealth()) {
-                        enemy.setDead(true);
                         updateScore(enemy);
                     }
                     sprite.lose_health();
@@ -409,7 +414,7 @@ public class SpaceShooterAppController {
                         sprite.getTranslateX() > animationPanel.getWidth() ||
                         sprite.getTranslateY() < -2 ||
                         sprite.getTranslateY() > animationPanel.getHeight();
-                return sprite.isDead() || isOutOfBounds || sprite.getHealth() == 0;
+                return isOutOfBounds || sprite.getHealth() <= 0;
             }
             return false;
         });
@@ -458,7 +463,7 @@ public class SpaceShooterAppController {
                     x, y,
                     0, dy);
             animationPanel.getChildren().add(missile);
-            firingEntity.soundPlaying(levelController.getFiringSound());
+//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -482,7 +487,7 @@ public class SpaceShooterAppController {
                     0, dy);
 
             animationPanel.getChildren().add(missile);
-            firingEntity.soundPlaying(levelController.getFiringSound());
+//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -511,7 +516,7 @@ public class SpaceShooterAppController {
                     y, 0, dyRight);
 
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
-            firingEntity.soundPlaying(levelController.getFiringSound());
+//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -545,7 +550,7 @@ public class SpaceShooterAppController {
                     dxRight, dyRight);
 
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
-            firingEntity.soundPlaying(levelController.getFiringSound());
+//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -574,7 +579,7 @@ public class SpaceShooterAppController {
                     dxRight, dyRight);
 
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
-            firingEntity.soundPlaying(levelController.getFiringSound());
+//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
 
@@ -598,7 +603,7 @@ public class SpaceShooterAppController {
                         (int) centerY,
                         dx, dy);
                 animationPanel.getChildren().add(missile);
-                firingEntity.soundPlaying(levelController.getFiringSound());
+//                firingEntity.soundPlaying(levelController.getFiringSound());
             }
 
             levelController.setLastShot(now);
