@@ -9,6 +9,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 import java.io.File;
+import java.net.URL;
 
 public abstract class Sprite extends ImageView {
     public int health;
@@ -141,9 +142,17 @@ public abstract class Sprite extends ImageView {
     }
 
     public void soundFiring() {
-        mediaView = new MediaView();
+        if (mediaView == null) {
+            mediaView = new MediaView();
+        }
+
         if (mediaView.getMediaPlayer() == null) {
-            Media media = new Media(new File(firingSound).toURI().toString());
+            URL resourceUrl = getClass().getResource(firingSound);
+            if (resourceUrl == null) {
+                System.err.println("Sound file not found: " + firingSound);
+                return;
+            }
+            Media media = new Media(resourceUrl.toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaView.setMediaPlayer(mediaPlayer);
         }
@@ -151,6 +160,7 @@ public abstract class Sprite extends ImageView {
         mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStartTime());
         mediaView.getMediaPlayer().play();
     }
+
 
     public void explosionGif() {
 
