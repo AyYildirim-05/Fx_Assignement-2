@@ -185,9 +185,7 @@ public class LevelController {
     public final String greenMissile_2 = "/missile/laserGreen13.png";
     public int health_missile = 1;
     public int numberOfGuns = 6;
-
     public int currentGun = -1;
-
     public int getCurrentGun() {
         return currentGun;
     }
@@ -264,8 +262,31 @@ public class LevelController {
         this.health_player = health_player;
     }
 
+    /*
+    Visual Effects
+     */
 
+    public String explosionSound = "/sound_effects/explosion.mp3";
 
+    public String nextLevel = "/sound_effects/next_level.mp3";
+    public String firingSound = "/sound_effects/15640-laser_gun_shot_3.wav";
+    public String explosionGif = "";
+
+    public String getExplosionSound() {
+        return explosionSound;
+    }
+
+    public String getNextLevel() {
+        return nextLevel;
+    }
+
+    public String getFiringSound() {
+        return firingSound;
+    }
+
+    public String getExplosionGif() {
+        return explosionGif;
+    }
 }
 
 

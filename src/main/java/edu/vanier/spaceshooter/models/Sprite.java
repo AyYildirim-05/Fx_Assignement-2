@@ -8,7 +8,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
-import java.io.File;
 import java.net.URL;
 
 public abstract class Sprite extends ImageView {
@@ -27,9 +26,7 @@ public abstract class Sprite extends ImageView {
 
     private MediaView mediaView;
 
-    public String explosionSound = "";
-    public String firingSound = "/sound_effects/15640-laser_gun_shot_3.wav";
-    public String explosionGif = "";
+
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
@@ -137,19 +134,15 @@ public abstract class Sprite extends ImageView {
         return sprite1.getBoundsInParent().intersects(sprite2.getBoundsInParent());
     }
 
-    public void soundExplosion() {
-
-    }
-
-    public void soundFiring() {
+    public void soundPlaying(String sound) {
         if (mediaView == null) {
             mediaView = new MediaView();
         }
 
         if (mediaView.getMediaPlayer() == null) {
-            URL resourceUrl = getClass().getResource(firingSound);
+            URL resourceUrl = getClass().getResource(sound);
             if (resourceUrl == null) {
-                System.err.println("Sound file not found: " + firingSound);
+                System.err.println("Sound file not found: " + sound);
                 return;
             }
             Media media = new Media(resourceUrl.toString());
@@ -162,9 +155,15 @@ public abstract class Sprite extends ImageView {
     }
 
 
+
     public void explosionGif() {
 
     }
+
+    public void setMediaView(MediaView mediaView) {
+        this.mediaView = mediaView;
+    }
+
 
 }
 
