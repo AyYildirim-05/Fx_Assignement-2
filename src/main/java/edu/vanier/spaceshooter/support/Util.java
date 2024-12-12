@@ -40,7 +40,7 @@ public class Util extends ImageView {
     }
 
     public void settingBackground(int imageNumber, Pane pane) {
-        if (imageNumber < 1 || imageNumber > imageContainer.size()) {
+        if (imageNumber < 0 || imageNumber > imageContainer.size()) {
             System.out.println("Invalid imageNumber: " + imageNumber);
             return;
         }
@@ -104,4 +104,5 @@ public class Util extends ImageView {
     public String getBACKGROUND_IMAGE_4() {
         return BACKGROUND_IMAGE_4;
     }
+
 }

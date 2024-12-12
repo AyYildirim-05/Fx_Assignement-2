@@ -124,9 +124,7 @@ public class SpaceShooterAppController {
     }
 
     // todo implement a gif for explosion
-    // todo change sprite every level
     // todo transition mechanism
-    // todo different 2d sprites for missiles
     // todo explosion effect when collision
     // todo player get damage sound effect
     // todo css in the game scene not effective
@@ -166,8 +164,10 @@ public class SpaceShooterAppController {
                     0, 0);
             animationPanel.getChildren().add(spaceShip);
 
-            if (stageNumber != 4) {
+            if (stageNumber != 5) {
                 imageNum++;
+                util.settingBackground(imageNum, animationPanel);
+
             }
 
             if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 25) {
@@ -177,11 +177,6 @@ public class SpaceShooterAppController {
             levelController.setSpeedInvader(0.2);
             levelController.setSpeedSpaceShip(0.2);
             levelController.setNumOfMissile();
-        }
-
-
-        if (stageNumber != 5) {
-            util.settingBackground(imageNum, animationPanel);
         }
 
         if (input.contains(KeyCode.F)) {
@@ -211,7 +206,7 @@ public class SpaceShooterAppController {
         }
 
         if (input.contains(KeyCode.C)) {
-            if (usedGun < levelController.getCurrentGun() && usedGun < levelController.getNumberOfGuns()) {
+            if (usedGun < levelController.getCurrentGun() && usedGun <= levelController.getNumberOfGuns()) {
                 usedGun += 1;
             } else {
                 usedGun = 1;
@@ -262,9 +257,9 @@ public class SpaceShooterAppController {
 
     private void generateInvaders() {
         switch (stageNumber) {
-            case 1 -> generateEnemy(2, 1, 0, 0);
-            case 2 -> generateEnemy(15, 3, 1, 0);
-            case 3 -> generateEnemy(15, 5, 3, 1);
+            case 1 -> generateEnemy(1, 1, 0, 0);
+            case 2 -> generateEnemy(0, 1, 1, 0);
+            case 3 -> generateEnemy(0, 0, 1, 1);
             default -> {
                 if (stageNumber >= 3) {
                     generateEnemy(
@@ -310,8 +305,8 @@ public class SpaceShooterAppController {
             switch (sprite.getClass().getSimpleName()) {
                 case "Small_Invader" -> {
                     System.out.println("asura");
-                    if (Math.random() < 0.9) {
-                        singleShot(sprite);
+                    if (Math.random() < 0.99) {
+                        singleShot(sprite, levelController.getBlueMissile_1());
                     }
                 }
                 case "Medium_Invader" -> {
@@ -328,7 +323,7 @@ public class SpaceShooterAppController {
                         randomNumber = random.nextInt(2);
                         switch (randomNumber) {
                             case 0 ->  tripleShoot(sprite);
-                            case 1 ->  laser(sprite);
+                            case 1 ->  laser(sprite, levelController.getRedMissile_2());
                         }
                     }
                 }
@@ -351,15 +346,6 @@ public class SpaceShooterAppController {
         return spriteList;
     }
 
-    private List<Invader> getInvaders() {
-        List<Invader> spriteList = new ArrayList<>();
-        for (Node n : animationPanel.getChildren()) {
-            if (n instanceof Invader inv) {
-                spriteList.add(inv);
-            }
-        }
-        return spriteList;
-    }
 
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
@@ -435,21 +421,18 @@ public class SpaceShooterAppController {
     private void shooting(Sprite firingEntity, int weapon) {
         switch (weapon) {
             case 1:
-                singleShot(firingEntity);
+                singleShot(firingEntity, levelController.getBlueMissile_1());
                 break;
             case 2:
                 doubleShotAngle(firingEntity);
                 break;
             case 3:
-                doubleShot(firingEntity);
-                break;
-            case 4:
                 tripleShoot(firingEntity);
                 break;
-            case 5:
-                laser(firingEntity);
+            case 4:
+                laser(firingEntity, levelController.getRedMissile_1());
                 break;
-            case 6:
+            case 5:
                 circleShot(firingEntity, 8);
                 break;
             default:
@@ -457,7 +440,7 @@ public class SpaceShooterAppController {
         }
     }
 
-    public void singleShot(Sprite firingEntity) {
+    public void singleShot(Sprite firingEntity, String color) {
         double dy = levelController.getSpeedSpaceShip();
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
@@ -470,7 +453,7 @@ public class SpaceShooterAppController {
                 x = (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2 - 5);
                 y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight() / 2 + 5);
             }
-            Missile missile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+            Missile missile = new Missile(color, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     x, y,
                     0, dy);
@@ -480,7 +463,7 @@ public class SpaceShooterAppController {
         }
     }
 
-    public void laser(Sprite firingEntity) {
+    public void laser(Sprite firingEntity, String color) {
         double dy = 25;
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > 500) {
@@ -493,7 +476,7 @@ public class SpaceShooterAppController {
                 y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight() + 5);
             }
 
-            Missile missile = new Missile(levelController.redMissile_1, 5, 65, levelController.getHealth_missile(),
+            Missile missile = new Missile(color, 5, 65, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     x, y,
                     0, dy);
@@ -517,12 +500,12 @@ public class SpaceShooterAppController {
                 y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight());
             }
 
-            Missile leftMissile = new Missile(levelController.blueMissile_2, 10, 10, levelController.getHealth_missile(),
+            Missile leftMissile = new Missile(levelController.greenMissile_2, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() - 10 + firingEntity.getFitWidth() / 3),
                     y, 0, dyLeft);
 
-            Missile rightMissile = new Missile(levelController.blueMissile_2, 10, 10, levelController.getHealth_missile(),
+            Missile rightMissile = new Missile(levelController.greenMissile_2, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
                     y, 0, dyRight);
@@ -549,13 +532,13 @@ public class SpaceShooterAppController {
                 y = (int) (firingEntity.getTranslateY() + firingEntity.getFitHeight());
             }
 
-            Missile leftMissile = new Missile(levelController.blueMissile_2, 10, 10, levelController.getHealth_missile(),
+            Missile leftMissile = new Missile(levelController.greenMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + firingEntity.getFitWidth() / 3),
                     y,
                     dxLeft, dyLeft);
 
-            Missile rightMissile = new Missile(levelController.blueMissile_2, 10, 10, levelController.getHealth_missile(),
+            Missile rightMissile = new Missile(levelController.greenMissile_1, 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX()  + firingEntity.getFitWidth() / 3),
                     y,
@@ -576,7 +559,7 @@ public class SpaceShooterAppController {
             double dxRight = 0.5;
             double dyRight = -levelController.getSpeedSpaceShip();
 
-            singleShot(firingEntity);
+            singleShot(firingEntity, levelController.getRedMissile_1());
 
             Missile leftMissile = new Missile(levelController.getRedMissile_1(), 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
@@ -584,7 +567,7 @@ public class SpaceShooterAppController {
                     (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),
                     dxLeft, dyLeft);
 
-            Missile rightMissile = new Missile(levelController.blueMissile_1, 10, 10, levelController.getHealth_missile(),
+            Missile rightMissile = new Missile(levelController.getRedMissile_1(), 10, 10, levelController.getHealth_missile(),
                     firingEntity.getType() + "bullet",
                     (int) (firingEntity.getTranslateX() + 2 * firingEntity.getFitWidth() / 3),
                     (int) (firingEntity.getTranslateY() - firingEntity.getFitHeight() / 2),

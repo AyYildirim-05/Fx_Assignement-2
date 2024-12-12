@@ -7,6 +7,7 @@ import java.util.Random;
 public class Invader extends FiringSprites {
 
     Random random = new Random();
+
     int randomNumber;
 
     public Invader(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
