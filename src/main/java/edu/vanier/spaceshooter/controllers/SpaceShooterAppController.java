@@ -154,6 +154,7 @@ public class SpaceShooterAppController {
             stageNumber++;
             generateInvaders();
             levelController.setCurrentGun(1);
+            levelController.increaseShooting();
             spaceShip.setTranslateX(sceneActual.getWidth() / 2);
             spaceShip.setTranslateY(sceneActual.getHeight() - 100);
 
@@ -163,11 +164,10 @@ public class SpaceShooterAppController {
 
             if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 25) {
                 levelController.setNumberEnemies(1);
-                levelController.increaseShooting();
             }
 
-            levelController.setSpeedInvader(1);
-            levelController.setSpeedSpaceShip(1);
+            levelController.setSpeedInvader(0.2);
+            levelController.setSpeedSpaceShip(0.2);
             levelController.setNumOfMissile();
         }
 
@@ -666,28 +666,28 @@ public class SpaceShooterAppController {
 
         for (int i = 0; i < boss; i++) {
             double x = bossSpacing * (i + 1);
-            invader = new Boss_Invader(levelController.getBoss_Enemy(), 60, 60, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
+            invader = new Boss_Invader(levelController.getBoss_Enemy(), 50, 50, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);
         }
 
         for (int i = 0; i < big; i++) {
             double x = bigSpacing * (i + 1);
-            invader = new Big_Invader(levelController.getBig_Enemy(), 50, 50, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
+            invader = new Big_Invader(levelController.getBig_Enemy(), 45, 45, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);
         }
 
         for (int i = 0; i < medium; i++) {
             double x = mediumSpacing * (i + 1);
-            invader = new Medium_Invader(levelController.getMedium_Enemy(), 35, 35, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
+            invader = new Medium_Invader(levelController.getMedium_Enemy(), 40, 40, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);
         }
 
         for (int i = 0; i < small; i++) {
             double x = smallSpacing * (i + 1);
-            invader = new Small_Invader(levelController.getSmall_Enemy(), 35+(i*10), 35+(i*10),
+            invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35,
                     levelController.getHealth_small_Invader(), "enemy", x, smallRow, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);

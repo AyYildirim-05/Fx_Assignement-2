@@ -29,7 +29,7 @@ public class Invader extends FiringSprites {
             case 1 -> this.setVelocity(0, -speed);
         }
     }
-    public void movementThree(int speed) {
+    public void movementThree(double speed) {
         randomNumber = random.nextInt(4);
         switch (randomNumber) {
             case 0:
@@ -47,7 +47,7 @@ public class Invader extends FiringSprites {
         }
     }
 
-    public void movementFour(int speed) {
+    public void movementFour(double speed) {
         randomNumber = random.nextInt(8);
         switch (randomNumber) {
             case 0 -> this.setVelocity(speed, 0);
@@ -61,14 +61,14 @@ public class Invader extends FiringSprites {
         }
     }
 
-    public void movementFive(int speed) {
-        int xRandom = random.nextInt(speed * 2) - speed;
-        int yRandom = random.nextInt(speed * 2) - speed;
+    public void movementFive(double speed) {
+        double xRandom = (random.nextDouble() * 2 - 1) * speed;
+        double yRandom = (random.nextDouble() * 2 - 1) * speed;
         this.setVelocity(xRandom, yRandom);
     }
 
 
-    public void movementSix(int speed) {
+    public void movementSix(double speed) {
         double angle = Math.toRadians(random.nextInt(360));
         double xVector = Math.cos(angle) * speed;
         double yVector = Math.sin(angle) * speed;

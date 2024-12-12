@@ -2,7 +2,7 @@ package edu.vanier.spaceshooter.support;
 
 public class LevelController {
     /* Speed controller */
-    public int speedSpaceShip = 1;
+    public double speedSpaceShip = 1;
 
     public double smallInvaderShooting = 0.8;
     public double mediumShooting = 0.6;
@@ -56,20 +56,20 @@ public class LevelController {
         setBossInvaderShooting();
     }
 
-    public int speedInvader = 0;
+    public double speedInvader = 1;
 
-    public int getSpeedInvader() {
+    public double getSpeedInvader() {
         return speedInvader;
     }
 
-    public void setSpeedInvader(int speedInvader) {
+    public void setSpeedInvader(double speedInvader) {
         this.speedInvader += speedInvader;
     }
 
     public long lastShot = 0;
     public int animationDuration = 500;
 
-    public int getSpeedSpaceShip() {
+    public double getSpeedSpaceShip() {
         return speedSpaceShip;
     }
 
@@ -82,7 +82,7 @@ public class LevelController {
     }
 
 
-    public void setSpeedSpaceShip(int speedSpaceShip) {
+    public void setSpeedSpaceShip(double speedSpaceShip) {
         this.speedSpaceShip += speedSpaceShip;
     }
 

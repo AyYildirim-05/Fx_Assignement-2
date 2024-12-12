@@ -44,14 +44,14 @@ public abstract class Sprite extends ImageView {
         this.dy = dy;
     }
 
-    public void moveLeft(int speed) { setTranslateX(getTranslateX() - speed); }
-    public void moveRight(int speed) {
+    public void moveLeft(double speed) { setTranslateX(getTranslateX() - speed); }
+    public void moveRight(double speed) {
         setTranslateX(getTranslateX() + speed);
     }
-    public void moveUp(int speed) {
+    public void moveUp(double speed) {
         setTranslateY(getTranslateY() - speed);
     }
-    public void moveDown(int speed) {
+    public void moveDown(double speed) {
         setTranslateY(getTranslateY() + speed);
     }
 
