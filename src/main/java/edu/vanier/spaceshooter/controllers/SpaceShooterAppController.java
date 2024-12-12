@@ -79,9 +79,9 @@ public class SpaceShooterAppController {
 
         util = new Util(playerHealthRepresentation);
         logger.info("Initializing MainAppController...");
-        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip(),
+        spaceShip = new SpaceShip(levelController.getPlayer_spaceShip1(),
                 30, 30,
-                levelController.getHealth_player(),
+                levelController.getHealth_player1(),
                 "player",
                 500,  700,
                 0, 0);
@@ -157,6 +157,14 @@ public class SpaceShooterAppController {
             levelController.increaseShooting();
             spaceShip.setTranslateX(sceneActual.getWidth() / 2);
             spaceShip.setTranslateY(sceneActual.getHeight() - 100);
+            animationPanel.getChildren().remove(spaceShip);
+            spaceShip = new SpaceShip(levelController.setPlayerSprite(stageNumber),
+                    30, 30,
+                    levelController.getHealth_player1(),
+                    "player",
+                    500,  700,
+                    0, 0);
+            animationPanel.getChildren().add(spaceShip);
 
             if (stageNumber != 4) {
                 imageNum++;

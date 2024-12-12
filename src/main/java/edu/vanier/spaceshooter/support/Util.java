@@ -67,7 +67,7 @@ public class Util extends ImageView {
     public void playerAddHP(HBox hBox) {
         int newId = container.size() + 1;
         if (container.size() < 3) {
-            image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
+            image = new Image(getClass().getResource(HP_REPRESENTATION).toExternalForm());
             ImageView newHealth = new ImageView(image);
             newHealth.setId(temp + newId);
             hBox.getChildren().add(newHealth);

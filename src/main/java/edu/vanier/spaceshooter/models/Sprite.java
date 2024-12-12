@@ -26,6 +26,8 @@ public abstract class Sprite extends ImageView {
 
     public boolean dead = false;
 
+    public String imagePath;
+
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
@@ -58,6 +60,14 @@ public abstract class Sprite extends ImageView {
     public void move() {
         this.setTranslateX(this.getTranslateX() + dx);
         this.setTranslateY(this.getTranslateY() + dy);
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void moveInvaders() {

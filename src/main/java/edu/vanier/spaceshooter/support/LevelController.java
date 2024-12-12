@@ -247,20 +247,41 @@ public class LevelController {
     }
 
     /* Spaceship values */
-    public final String player_spaceShip = "/player/playerShip1_red.png";
-    public int health_player = 3;
+    public final String player_spaceShip1 = "/player/playerShip1_red.png";
+    public final String player_spaceShip2 = "/player/playerShip2_red.png";
+    public final String player_spaceShip3 = "/player/playerShip3_red.png";
 
-    public String getPlayer_spaceShip() {
-        return player_spaceShip;
+    public String getPlayer_spaceShip1() {
+        return player_spaceShip1;
     }
 
-    public int getHealth_player() {
+    public String getPlayer_spaceShip2() {
+        return player_spaceShip2;
+    }
+
+    public String getPlayer_spaceShip3() {
+        return player_spaceShip3;
+    }
+
+    public String setPlayerSprite(int stage) {
+        if (stage <= 1 ) {
+            return player_spaceShip1;
+        } else if (stage == 2) {
+            return player_spaceShip2;
+        } else {
+            return player_spaceShip3;
+        }
+    }
+
+    public int getHealth_player1() {
         return health_player;
     }
 
     public void setHealth_player(int health_player) {
         this.health_player = health_player;
     }
+    public int health_player = 3;
+
 
     /*
     Visual Effects
