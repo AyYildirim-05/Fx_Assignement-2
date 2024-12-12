@@ -15,7 +15,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,11 +132,10 @@ public class SpaceShooterAppController {
     // todo css in the game scene not effective
 
 
-    // todo not all enemies are shooting & enemies are not trully dead & sound is causing problems
+    // todo not all enemies are shooting & sound is causing problems
 
     private void update() {
         elapsedTime += 0.016;
-
 
         if (spaceShip.getHealth() == 0) {
             resetScene();
@@ -147,6 +145,7 @@ public class SpaceShooterAppController {
         }
 
         getSprites().forEach(this::processSprite);
+
         removeDeadSprites();
         moveInvaders();
         stageLabel.setText("Stage: " + stageNumber);
@@ -223,6 +222,7 @@ public class SpaceShooterAppController {
 //                    sprite.soundPlaying(levelController.getExplosionSound());
                     playerLoseHealth();
                     invader.lose_health();
+                    invader.setDead(true);
                     levelController.score++;
                     scoreLabel.setText("Score: " + levelController.getScore());
                     lastCollisionTime = currentTime;
@@ -254,7 +254,7 @@ public class SpaceShooterAppController {
 
     private void generateInvaders() {
         switch (stageNumber) {
-            case 1 -> generateEnemy(2, 0, 0, 0);
+            case 1 -> generateEnemy(2, 1, 0, 0);
             case 2 -> generateEnemy(15, 3, 1, 0);
             case 3 -> generateEnemy(15, 5, 3, 1);
             default -> {
@@ -276,20 +276,14 @@ public class SpaceShooterAppController {
             for (Node n : animationPanel.getChildren()) {
                 randomNumber = random.nextInt(2);
                 if (n instanceof Small_Invader smallInvader) {
-                    switch (randomNumber) {
-                        case 0 -> smallInvader.movementOne(levelController.speedInvader);
-                        case 1 -> smallInvader.movementTwo(levelController.speedInvader);
-                    }
+                    smallInvader.movementThree(levelController.speedInvader);
                 }
                 else if (n instanceof Medium_Invader mediumInvader) {
-                    switch (randomNumber) {
-                        case 0 -> mediumInvader.movementThree(levelController.speedInvader);
-                        case 1 -> mediumInvader.movementFour(levelController.speedInvader);
-                    }
+                    mediumInvader.movementFive(levelController.speedInvader);
                 }  else if (n instanceof Big_Invader bigInvader) {
-                    bigInvader.movementFive(levelController.speedInvader);
+                    bigInvader.movementSix(levelController.speedInvader);
                 } else if (n instanceof Boss_Invader bossInvader) {
-                    bossInvader.shiftingAround();
+                    bossInvader.movementFour(levelController.speedInvader);
                 }
 
             }
@@ -309,12 +303,7 @@ public class SpaceShooterAppController {
                 case "Small_Invader" -> {
                     System.out.println("asura");
                     if (Math.random() < 0.9) {
-                        randomNumber = random.nextInt(2);
-                        switch (randomNumber) {
-                            case 0 ->  singleShot(sprite);
-                            case 1 ->  doubleShotAngle(sprite);
-                        }
-
+                        singleShot(sprite);
                     }
                 }
                 case "Medium_Invader" -> {
@@ -354,9 +343,21 @@ public class SpaceShooterAppController {
         return spriteList;
     }
 
+    private List<Invader> getInvaders() {
+        List<Invader> spriteList = new ArrayList<>();
+        for (Node n : animationPanel.getChildren()) {
+            if (n instanceof Invader inv) {
+                spriteList.add(inv);
+            }
+        }
+        return spriteList;
+    }
+
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
-            case "enemybullet" -> handleEnemyBullet(sprite);
+            case "enemybullet" -> {
+                handleEnemyBullet(sprite);
+            }
             case "playerbullet" -> handlePlayerBullet(sprite);
             case "enemy" -> handleEnemyFiring(sprite);
         }
@@ -369,6 +370,7 @@ public class SpaceShooterAppController {
 //            sprite.soundPlaying(levelController.getExplosionSound());
             playerLoseHealth();
             missile.lose_health();
+            missile.setDead(true);
         }
     }
 
@@ -398,8 +400,9 @@ public class SpaceShooterAppController {
                     enemy.lose_health();
                     if (enemy.checkHealth()) {
                         updateScore(enemy);
+                        enemy.setDead(true);
                     }
-                    sprite.lose_health();
+                    sprite.setDead(true);
                 }
             }
         }
@@ -414,10 +417,11 @@ public class SpaceShooterAppController {
                         sprite.getTranslateX() > animationPanel.getWidth() ||
                         sprite.getTranslateY() < -2 ||
                         sprite.getTranslateY() > animationPanel.getHeight();
-                return isOutOfBounds || sprite.getHealth() <= 0;
+                return isOutOfBounds || sprite.isDead();
             }
             return false;
         });
+        invaders.removeIf(Invader::isDead);
     }
 
     private void shooting(Sprite firingEntity, int weapon) {
@@ -660,29 +664,26 @@ public class SpaceShooterAppController {
         double mediumSpacing = animationPanelWidth / (medium + 1);
         double smallSpacing = animationPanelWidth / (small + 1);
 
-//        for (int i = 0; i < boss; i++) {
-//            double x = bossSpacing * (i + 1);
-//            invader = new Boss_Invader(levelController.getBoss_Enemy(), 60, 60,
-//                    levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
-//            animationPanel.getChildren().add(invader);
-//            invaders.add(invader);
-//        }
-//
-//        for (int i = 0; i < big; i++) {
-//            double x = bigSpacing * (i + 1);
-//            invader = new Big_Invader(levelController.getBig_Enemy(), 50, 50,
-//                    levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
-//            animationPanel.getChildren().add(invader);
-//            invaders.add(invader);
-//        }
-//
-//        for (int i = 0; i < medium; i++) {
-//            double x = mediumSpacing * (i + 1);
-//            invader = new Medium_Invader(levelController.getMedium_Enemy(), 35, 35,
-//                    levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
-//            animationPanel.getChildren().add(invader);
-//            invaders.add(invader);
-//        }
+        for (int i = 0; i < boss; i++) {
+            double x = bossSpacing * (i + 1);
+            invader = new Boss_Invader(levelController.getBoss_Enemy(), 60, 60, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
+            animationPanel.getChildren().add(invader);
+            invaders.add(invader);
+        }
+
+        for (int i = 0; i < big; i++) {
+            double x = bigSpacing * (i + 1);
+            invader = new Big_Invader(levelController.getBig_Enemy(), 50, 50, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
+            animationPanel.getChildren().add(invader);
+            invaders.add(invader);
+        }
+
+        for (int i = 0; i < medium; i++) {
+            double x = mediumSpacing * (i + 1);
+            invader = new Medium_Invader(levelController.getMedium_Enemy(), 35, 35, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
+            animationPanel.getChildren().add(invader);
+            invaders.add(invader);
+        }
 
         for (int i = 0; i < small; i++) {
             double x = smallSpacing * (i + 1);

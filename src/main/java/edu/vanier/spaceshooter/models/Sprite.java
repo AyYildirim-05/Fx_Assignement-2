@@ -24,6 +24,9 @@ public abstract class Sprite extends ImageView {
     public double y;
     private static MediaView mediaView;
 
+    public boolean dead = false;
+
+
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
         this.type = type;
         this.health = health;
@@ -64,18 +67,24 @@ public abstract class Sprite extends ImageView {
         double panelWidth = getParent().getLayoutBounds().getWidth();
         double panelHeight = getParent().getLayoutBounds().getHeight();
 
-        if (nextX < 0) {
+        double leftLimit = 25;
+        double rightLimit = panelWidth - leftLimit;
+        double topLimit = 50;
+        double bottomLimit = panelHeight - topLimit;
+
+        if (nextX < leftLimit) {
+            nextX = leftLimit;
             dx = -dx;
-        } else if (nextX + this.getFitWidth() > panelWidth) {
-            nextX = panelWidth - this.getFitWidth();
+        } else if (nextX + this.getFitWidth() > rightLimit) {
+            nextX = rightLimit - this.getFitWidth();
             dx = -dx;
         }
 
-        if (nextY < 0) {
-            nextY = 0;
+        if (nextY < topLimit) {
+            nextY = topLimit;
             dy = -dy;
-        } else if (nextY + this.getFitHeight() > panelHeight) {
-            nextY = panelHeight - this.getFitHeight();
+        } else if (nextY + this.getFitHeight() > bottomLimit) {
+            nextY = bottomLimit - this.getFitHeight();
             dy = -dy;
         }
 
@@ -93,6 +102,7 @@ public abstract class Sprite extends ImageView {
         if (this.health > 0) {
             this.setHealth(this.getHealth() - 1);
         }
+        soundPlaying("/sound_effects/explosion.mp3");
     }
 
     public void gain_health() {
@@ -111,9 +121,6 @@ public abstract class Sprite extends ImageView {
         return health >= 0;
     }
 
-    public void render(GraphicsContext gc) {
-        gc.drawImage(imageView.getImage(), positionX, positionY);
-    }
 
     public int getHealth() {
         return health;
@@ -159,6 +166,15 @@ public abstract class Sprite extends ImageView {
     public static void getMediaView(MediaView mW) {
         mediaView = mW;
     }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
 
 }
 

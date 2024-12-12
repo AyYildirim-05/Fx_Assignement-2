@@ -13,24 +13,6 @@ public class Invader extends FiringSprites {
         super(imagePath, width, height, health, type, x, y, dx, dy);
     }
 
-    public void shiftingAround() {
-        randomNumber = random.nextInt(8);
-        switch (randomNumber) {
-            case 0 -> this.setVelocity(levelController.getSpeedInvader(), 0); // move right
-            case 1 -> this.setVelocity(-levelController.getSpeedInvader(), 0); // move left
-            case 2 -> this.setVelocity(0, levelController.getSpeedInvader()); // move down
-            case 3 -> this.setVelocity(0, -levelController.getSpeedInvader()); // move up
-            case 4 ->
-                    this.setVelocity(levelController.getSpeedInvader(), levelController.getSpeedInvader()); // right down
-            case 5 ->
-                    this.setVelocity(-levelController.getSpeedInvader(), levelController.getSpeedInvader()); // left down
-            case 6 ->
-                    this.setVelocity(levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // right up
-            case 7 ->
-                    this.setVelocity(-levelController.getSpeedInvader(), -levelController.getSpeedInvader()); // left up
-        }
-    }
-
     public void movementOne(int speed) {
         this.setVelocity(speed, 0);
         randomNumber = random.nextInt(2);
@@ -51,47 +33,21 @@ public class Invader extends FiringSprites {
         randomNumber = random.nextInt(4);
         switch (randomNumber) {
             case 0:
-                this.setVelocity(0, speed);
-                this.setVelocity(speed, 0);
+                this.setVelocity(speed, speed);
                 break;
             case 1:
-                this.setVelocity(0, speed);
-                this.setVelocity(-speed, 0);
+                this.setVelocity(-speed, speed);
                 break;
             case 2:
-                this.setVelocity(0, -speed);
-                this.setVelocity(speed, 0);
+                this.setVelocity(speed, -speed);
                 break;
             case 3:
-                this.setVelocity(0, -speed);
-                this.setVelocity(-speed, 0);
+                this.setVelocity(-speed, -speed);
                 break;
         }
     }
 
     public void movementFour(int speed) {
-        randomNumber = random.nextInt(4);
-        switch (randomNumber) {
-            case 0:
-                this.setVelocity(speed, speed);
-                this.setVelocity(-speed, speed);
-                break;
-            case 1:
-                this.setVelocity(-speed, speed);
-                this.setVelocity(speed, speed);
-                break;
-            case 2:
-                this.setVelocity(speed, -speed);
-                this.setVelocity(-speed, -speed);
-                break;
-            case 3:
-                this.setVelocity(-speed, -speed);
-                this.setVelocity(speed, -speed);
-                break;
-        }
-    }
-
-    public void movementFive(int speed) {
         randomNumber = random.nextInt(8);
         switch (randomNumber) {
             case 0 -> this.setVelocity(speed, 0);
@@ -105,25 +61,14 @@ public class Invader extends FiringSprites {
         }
     }
 
-    public void movementSix(int speed) {
-        // Random jump-like movement
+    public void movementFive(int speed) {
         int xRandom = random.nextInt(speed * 2) - speed;
         int yRandom = random.nextInt(speed * 2) - speed;
         this.setVelocity(xRandom, yRandom);
     }
 
-    public void movementSeven(int speed) {
-        // Oscillating movement
-        randomNumber = random.nextInt(2);
-        if (randomNumber == 0) {
-            this.setVelocity(speed, (int) (Math.sin(System.currentTimeMillis() % 360) * speed));
-        } else {
-            this.setVelocity((int) (Math.cos(System.currentTimeMillis() % 360) * speed), speed);
-        }
-    }
 
-    public void movementEight(int speed) {
-        // Spiral movement
+    public void movementSix(int speed) {
         double angle = Math.toRadians(random.nextInt(360));
         double xVector = Math.cos(angle) * speed;
         double yVector = Math.sin(angle) * speed;
