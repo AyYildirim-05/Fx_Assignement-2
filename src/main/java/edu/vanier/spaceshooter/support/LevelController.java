@@ -194,17 +194,6 @@ public class LevelController {
         this.currentGun += currentGun;
     }
 
-    public int numOfMissile = 5;
-
-    public int getNumOfMissile() {
-        return numOfMissile;
-    }
-
-    public void setNumOfMissile() {
-        if (this.numOfMissile <= 20) {
-            this.numOfMissile += 1;
-        }
-    }
 
     public int getNumberOfGuns() {
         return numberOfGuns;

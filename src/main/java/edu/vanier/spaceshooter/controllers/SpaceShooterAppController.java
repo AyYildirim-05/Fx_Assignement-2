@@ -140,9 +140,9 @@ public class SpaceShooterAppController {
 
     private void generateInvaders() {
         switch (stageNumber) {
-            case 1 -> generateEnemy(3, 0, 0, 0);
+            case 1 -> generateEnemy(1, 0, 0, 0);
             case 2 -> generateEnemy(0, 1, 1, 0);
-            case 3 -> generateEnemy(0, 0, 1, 1);
+            case 3 -> generateEnemy(0, 0, 0, 1);
             default -> {
                 if (stageNumber >= 3) {
                     generateEnemy(
@@ -211,7 +211,7 @@ public class SpaceShooterAppController {
                     }
                 }
                 case "Boss_Invader" -> {
-                    circleShot(sprite, levelController.getNumOfMissile());
+                    circleShot(sprite, 12);
                 }
             }
         }
@@ -321,7 +321,6 @@ public class SpaceShooterAppController {
 
             levelController.setSpeedInvader(0.2);
             levelController.setSpeedSpaceShip(0.2);
-            levelController.setNumOfMissile();
         }
 
         if (input.contains(KeyCode.F)) {
@@ -418,9 +417,12 @@ public class SpaceShooterAppController {
     }
 
     private void shooting(Sprite firingEntity, int weapon) {
+        System.out.println("used gun" + weapon);
         switch (weapon) {
             case 1:
-                singleShot(firingEntity, levelController.getBlueMissile_1());
+                circleShot(firingEntity, 8);
+
+//                singleShot(firingEntity, levelController.getBlueMissile_1());
                 break;
             case 2:
                 doubleShotAngle(firingEntity);
@@ -576,7 +578,8 @@ public class SpaceShooterAppController {
 
     public void circleShot(Sprite firingEntity, int numMissile) {
         long now = System.currentTimeMillis();
-        if (now - levelController.lastShot > 5000) {
+        long down = (firingEntity instanceof SpaceShip) ? 2000 : 1000;
+        if (now - levelController.lastShot > down) {
             double centerX = firingEntity.getTranslateX() + firingEntity.getFitWidth() / 2;
             double centerY = firingEntity.getTranslateY() + firingEntity.getFitHeight() / 2;
 
@@ -595,7 +598,6 @@ public class SpaceShooterAppController {
                         dx, dy);
                 animationPanel.getChildren().add(missile);
             }
-
             levelController.setLastShot(now);
         }
     }
