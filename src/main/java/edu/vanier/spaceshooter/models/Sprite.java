@@ -1,7 +1,6 @@
 package edu.vanier.spaceshooter.models;
 
 import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
@@ -22,9 +21,10 @@ public abstract class Sprite extends ImageView {
     public double dy;
     public double x;
     public double y;
-    private static MediaView mediaView;
 
     public boolean dead = false;
+
+    private MediaView hit;
 
     public String imagePath;
 
@@ -112,7 +112,7 @@ public abstract class Sprite extends ImageView {
         if (this.health > 0) {
             this.setHealth(this.getHealth() - 1);
         }
-        soundPlaying("/sound_effects/explosion.mp3");
+        playSound(hit, "/sound_effects/explosion.mp3");
     }
 
     public void gain_health() {
@@ -143,7 +143,7 @@ public abstract class Sprite extends ImageView {
         return sprite1.getBoundsInParent().intersects(sprite2.getBoundsInParent());
     }
 
-    public void soundPlaying(String sound) {
+    public void playSound(MediaView mediaView, String sound) {
         if (mediaView == null) {
             mediaView = new MediaView();
         }
@@ -161,20 +161,6 @@ public abstract class Sprite extends ImageView {
 
         mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStartTime());
         mediaView.getMediaPlayer().play();
-    }
-
-
-
-    public void explosionGif() {
-
-    }
-
-    public void setMediaView(MediaView mediaView) {
-        this.mediaView = mediaView;
-    }
-
-    public static void getMediaView(MediaView mW) {
-        mediaView = mW;
     }
 
     public boolean isDead() {

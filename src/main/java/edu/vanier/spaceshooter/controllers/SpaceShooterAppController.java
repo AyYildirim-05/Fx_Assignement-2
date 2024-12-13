@@ -10,11 +10,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +49,8 @@ public class SpaceShooterAppController {
     private Scene sceneActual;
 
     private Stage stageActual;
+
+    private static MediaView mediaView;
 
     private double elapsedTime = 0;
     private AnimationTimer gameLoop;
@@ -131,112 +136,7 @@ public class SpaceShooterAppController {
 
 
     // todo not all enemies are shooting & sound is causing problems
-
-    private void update() {
-        elapsedTime += 0.016;
-
-        if (spaceShip.getHealth() == 0) {
-            resetScene();
-            stopAnimation();
-            endGameScene();
-            return;
-        }
-
-        getSprites().forEach(this::processSprite);
-
-        removeDeadSprites();
-        moveInvaders();
-        stageLabel.setText("Stage: " + stageNumber);
-
-        if (!areEnemiesRemaining() && spaceShip.checkHealth()) {
-            stageNumber++;
-            generateInvaders();
-            levelController.setCurrentGun(1);
-            levelController.increaseShooting();
-            spaceShip.setTranslateX(sceneActual.getWidth() / 2);
-            spaceShip.setTranslateY(sceneActual.getHeight() - 100);
-            animationPanel.getChildren().remove(spaceShip);
-            spaceShip = new SpaceShip(levelController.setPlayerSprite(stageNumber),
-                    30, 30,
-                    levelController.getHealth_player1(),
-                    "player",
-                    500,  700,
-                    0, 0);
-            animationPanel.getChildren().add(spaceShip);
-
-            if (stageNumber != 5) {
-                imageNum++;
-                util.settingBackground(imageNum, animationPanel);
-
-            }
-
-            if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 25) {
-                levelController.setNumberEnemies(1);
-            }
-
-            levelController.setSpeedInvader(0.2);
-            levelController.setSpeedSpaceShip(0.2);
-            levelController.setNumOfMissile();
-        }
-
-        if (input.contains(KeyCode.F)) {
-            Stage stage = (Stage) sceneActual.getWindow();
-            stage.setFullScreen(!stage.isFullScreen());
-            input.remove(KeyCode.F);
-        }
-        if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
-            if (spaceShip.getTranslateX() - levelController.getSpeedSpaceShip() >= -2) {
-                spaceShip.moveLeft(levelController.getSpeedSpaceShip());
-            }
-        }
-        if (input.contains(KeyCode.D) || input.contains(KeyCode.RIGHT)) {
-            if (spaceShip.getTranslateX() + spaceShip.getFitWidth() + levelController.getSpeedSpaceShip() <= sceneActual.getWidth()) {
-                spaceShip.moveRight(levelController.getSpeedSpaceShip());
-            }
-        }
-        if (input.contains(KeyCode.W) || input.contains(KeyCode.UP)) {
-            if (spaceShip.getTranslateY() - levelController.getSpeedSpaceShip() >= -2) {
-                spaceShip.moveUp(levelController.getSpeedSpaceShip());
-            }
-        }
-        if (input.contains(KeyCode.S) || input.contains(KeyCode.DOWN)) {
-            if (spaceShip.getTranslateY() + spaceShip.getFitHeight() + levelController.getSpeedSpaceShip() <= sceneActual.getHeight()) {
-                spaceShip.moveDown(levelController.getSpeedSpaceShip());
-            }
-        }
-
-        if (input.contains(KeyCode.C)) {
-            if (usedGun < levelController.getCurrentGun() && usedGun <= levelController.getNumberOfGuns()) {
-                usedGun += 1;
-            } else {
-                usedGun = 1;
-            }
-            input.remove(KeyCode.C);
-        }
-        input.remove(KeyCode.C);
-
-        if (input.contains(KeyCode.SPACE)) {
-            shooting(spaceShip, usedGun);
-        }
-        for (Invader invader : invaders) {
-            if (Sprite.isCollision(spaceShip, invader)) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - lastCollisionTime > 5000) {
-//                    sprite.soundPlaying(levelController.getExplosionSound());
-                    playerLoseHealth();
-                    invader.lose_health();
-                    invader.setDead(true);
-                    levelController.score++;
-                    scoreLabel.setText("Score: " + levelController.getScore());
-                    lastCollisionTime = currentTime;
-                }
-            }
-        }
-
-        if (elapsedTime > 2) {
-            elapsedTime = 0;
-        }
-    }
+    private static Image explosionGif;
 
     private void endGameScene() {
         endGameController endGameController = new endGameController();
@@ -361,7 +261,6 @@ public class SpaceShooterAppController {
     private void handleEnemyBullet(Sprite missile) {
         missile.move();
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
-//            sprite.soundPlaying(levelController.getExplosionSound());
             playerLoseHealth();
             missile.lose_health();
             missile.setDead(true);
@@ -385,13 +284,125 @@ public class SpaceShooterAppController {
         scoreLabel.setText("Score: " + levelController.getScore());
     }
 
+    private ImageView explosion;
+    private ImageView imageView;
+
+    private void update() {
+        elapsedTime += 0.016;
+
+        if (spaceShip.getHealth() == 0) {
+            resetScene();
+            stopAnimation();
+            endGameScene();
+            return;
+        }
+
+
+
+        getSprites().forEach(this::processSprite);
+
+        removeDeadSprites();
+        moveInvaders();
+        stageLabel.setText("Stage: " + stageNumber);
+
+        if (!areEnemiesRemaining() && spaceShip.checkHealth()) {
+            if (stageNumber > 0) {
+                levelController.nextLevel(spaceShip);
+            }
+
+            resetScene();
+            stageNumber++;
+            generateInvaders();
+            levelController.setCurrentGun(1);
+            levelController.increaseShooting();
+            spaceShip.setTranslateX(sceneActual.getWidth() / 2);
+            spaceShip.setTranslateY(sceneActual.getHeight() - 100);
+            animationPanel.getChildren().remove(spaceShip);
+            spaceShip = new SpaceShip(levelController.setPlayerSprite(stageNumber), 30, 30, levelController.getHealth_player1(), "player", 500, 700, 0, 0);
+            animationPanel.getChildren().add(spaceShip);
+
+            if (stageNumber != 5) {
+                imageNum++;
+                util.settingBackground(imageNum, animationPanel);
+
+            }
+
+            if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 25) {
+                levelController.setNumberEnemies(1);
+            }
+
+
+
+            levelController.setSpeedInvader(0.2);
+            levelController.setSpeedSpaceShip(0.2);
+            levelController.setNumOfMissile();
+        }
+
+        if (input.contains(KeyCode.F)) {
+            Stage stage = (Stage) sceneActual.getWindow();
+            stage.setFullScreen(!stage.isFullScreen());
+            input.remove(KeyCode.F);
+        }
+        if (input.contains(KeyCode.A) || input.contains(KeyCode.LEFT)) {
+            if (spaceShip.getTranslateX() - levelController.getSpeedSpaceShip() >= -2) {
+                spaceShip.moveLeft(levelController.getSpeedSpaceShip());
+            }
+        }
+        if (input.contains(KeyCode.D) || input.contains(KeyCode.RIGHT)) {
+            if (spaceShip.getTranslateX() + spaceShip.getFitWidth() + levelController.getSpeedSpaceShip() <= sceneActual.getWidth()) {
+                spaceShip.moveRight(levelController.getSpeedSpaceShip());
+            }
+        }
+        if (input.contains(KeyCode.W) || input.contains(KeyCode.UP)) {
+            if (spaceShip.getTranslateY() - levelController.getSpeedSpaceShip() >= -2) {
+                spaceShip.moveUp(levelController.getSpeedSpaceShip());
+            }
+        }
+        if (input.contains(KeyCode.S) || input.contains(KeyCode.DOWN)) {
+            if (spaceShip.getTranslateY() + spaceShip.getFitHeight() + levelController.getSpeedSpaceShip() <= sceneActual.getHeight()) {
+                spaceShip.moveDown(levelController.getSpeedSpaceShip());
+            }
+        }
+
+        if (input.contains(KeyCode.C)) {
+            if (usedGun < levelController.getCurrentGun() && usedGun <= levelController.getNumberOfGuns()) {
+                usedGun += 1;
+            } else {
+                usedGun = 1;
+            }
+            input.remove(KeyCode.C);
+        }
+        input.remove(KeyCode.C);
+
+        if (input.contains(KeyCode.SPACE)) {
+            shooting(spaceShip, usedGun);
+        }
+        for (Invader invader : invaders) {
+            if (Sprite.isCollision(spaceShip, invader)) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastCollisionTime > 5000) {
+                    playerLoseHealth();
+                    invader.lose_health();
+                    invader.setDead(true);
+                    levelController.score++;
+                    scoreLabel.setText("Score: " + levelController.getScore());
+                    lastCollisionTime = currentTime;
+                }
+            }
+        }
+
+        if (elapsedTime > 2) {
+            elapsedTime = 0;
+        }
+    }
+
     private void handlePlayerBullet(Sprite sprite) {
         sprite.move();
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-//                    sprite.soundPlaying(levelController.getExplosionSound());
                     enemy.lose_health();
+                    explosionGif(enemy);
                     if (enemy.checkHealth()) {
                         updateScore(enemy);
                         enemy.setDead(true);
@@ -400,6 +411,28 @@ public class SpaceShooterAppController {
                 }
             }
         }
+    }
+
+    public ImageView explosionGif(Sprite sp) {
+        try {
+            if (explosionGif == null && imageView == null) {
+                explosionGif = new Image(getClass().getResource("/visual_effects/explosion.mp4").toExternalForm());
+                imageView = new ImageView(explosionGif);
+            }
+            imageView.setFitWidth(20);
+            imageView.setFitHeight(20);
+            imageView.setTranslateX(sp.getTranslateX());
+            imageView.setTranslateY(sp.getTranslateY());
+
+            animationPanel.getChildren().add(imageView);
+
+            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1));
+            pause.setOnFinished(event -> animationPanel.getChildren().remove(imageView));
+            pause.play();
+        } catch (Exception e) {
+            System.err.println("Failed to load explosion GIF: " + e.getMessage());
+        }
+        return imageView;
     }
 
 
@@ -458,7 +491,6 @@ public class SpaceShooterAppController {
                     x, y,
                     0, dy);
             animationPanel.getChildren().add(missile);
-//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -482,7 +514,6 @@ public class SpaceShooterAppController {
                     0, dy);
 
             animationPanel.getChildren().add(missile);
-//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -511,7 +542,6 @@ public class SpaceShooterAppController {
                     y, 0, dyRight);
 
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
-//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -545,7 +575,6 @@ public class SpaceShooterAppController {
                     dxRight, dyRight);
 
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
-//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
     }
@@ -574,7 +603,6 @@ public class SpaceShooterAppController {
                     dxRight, dyRight);
 
             animationPanel.getChildren().addAll(leftMissile, rightMissile);
-//            firingEntity.soundPlaying(levelController.getFiringSound());
             levelController.setLastShot(now);
         }
 
@@ -598,7 +626,6 @@ public class SpaceShooterAppController {
                         (int) centerY,
                         dx, dy);
                 animationPanel.getChildren().add(missile);
-//                firingEntity.soundPlaying(levelController.getFiringSound());
             }
 
             levelController.setLastShot(now);

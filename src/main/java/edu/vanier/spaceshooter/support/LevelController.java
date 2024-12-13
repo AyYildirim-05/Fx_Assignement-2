@@ -1,5 +1,12 @@
 package edu.vanier.spaceshooter.support;
 
+import edu.vanier.spaceshooter.models.SpaceShip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
+import java.net.URL;
+
 public class LevelController {
     /* Speed controller */
     public double speedSpaceShip = 1;
@@ -288,20 +295,16 @@ public class LevelController {
      */
 
     public String nextLevel = "/sound_effects/next_level.mp3";
-    public String firingSound = "/sound_effects/15640-laser_gun_shot_3.wav";
-    public String explosionGif = "";
 
 
     public String getNextLevel() {
         return nextLevel;
     }
 
-    public String getFiringSound() {
-        return firingSound;
-    }
 
-    public String getExplosionGif() {
-        return explosionGif;
+    private static MediaView next;
+    public void nextLevel(SpaceShip spaceShip) {
+        spaceShip.playSound(next, nextLevel);
     }
 }
 
