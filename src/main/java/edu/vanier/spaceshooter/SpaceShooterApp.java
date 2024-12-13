@@ -6,21 +6,24 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.*;
 import java.io.IOException;
-import java.util.Objects;
 
+/**
+ * Launch location of the application
+ */
 public class SpaceShooterApp extends Application {
-
     private final static String startApp = "/fxml/startPage_layout.fxml";
     private SpaceShooterAppController controller;
 
+    /**
+     * Method that creates the main page of the application.
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws IOException
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource(startApp));
@@ -31,12 +34,13 @@ public class SpaceShooterApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         System.out.println(getClass().getResource("/css/MainAppStyle.css"));
-
     }
 
-
+    /**
+     * Stops the application
+     */
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         controller.stopAnimation();
     }
 

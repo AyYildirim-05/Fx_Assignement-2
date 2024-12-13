@@ -20,15 +20,15 @@ public class Util extends ImageView {
     public final List<String> imageContainer = List.of(
             BACKGROUND_IMAGE_1, BACKGROUND_IMAGE_2, BACKGROUND_IMAGE_3, BACKGROUND_IMAGE_4
     );
-
     public ArrayList<ImageView> container = new ArrayList<>();
-
     public String temp = "imageView";
-
     public Image image;
-
     public HBox enteredBox;
 
+    /**
+     * Method that adds the initial three representations of a player's life points.
+     * @param hBox the container in which the images are added.
+     */
     public Util(HBox hBox) {
         image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
         this.enteredBox = hBox;
@@ -42,6 +42,11 @@ public class Util extends ImageView {
         }
     }
 
+    /**
+     * Method that changes the background of the application as the game stages progress further.
+     * @param imageNumber the image that should be set based on the stage.
+     * @param pane the pane in which the image should be set.
+     */
     public void settingBackground(int imageNumber, Pane pane) {
         if (imageNumber < 0 || imageNumber > imageContainer.size()) {
             System.out.println("Invalid imageNumber: " + imageNumber);
@@ -67,6 +72,10 @@ public class Util extends ImageView {
         pane.setBackground(new javafx.scene.layout.Background(bgImage));
     }
 
+    /**
+     * Method that adds extra health point representation to the player if they defeat a boss class invader.
+     * @param hBox the container in which the image is added.
+     */
     public void playerAddHP(HBox hBox) {
         int newId = container.size() + 1;
         if (container.size() < 3) {
@@ -80,6 +89,10 @@ public class Util extends ImageView {
         }
     }
 
+    /**
+     * Method that removes one health point representation to the player if they receive damage.
+     * @param hBox the container in which the image is removed from.
+     */
     public void removeLastHealth(HBox hBox) {
         if (!container.isEmpty()) {
             ImageView lastHealth = container.get(container.size() - 1);
@@ -91,21 +104,4 @@ public class Util extends ImageView {
             System.out.println("No health points to remove!");
         }
     }
-
-    public String getBACKGROUND_IMAGE_1() {
-        return BACKGROUND_IMAGE_1;
-    }
-
-    public String getBACKGROUND_IMAGE_2() {
-        return BACKGROUND_IMAGE_2;
-    }
-
-    public String getBACKGROUND_IMAGE_3() {
-        return BACKGROUND_IMAGE_3;
-    }
-
-    public String getBACKGROUND_IMAGE_4() {
-        return BACKGROUND_IMAGE_4;
-    }
-
 }

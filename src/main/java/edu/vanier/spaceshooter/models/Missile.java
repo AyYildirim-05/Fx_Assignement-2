@@ -1,8 +1,11 @@
 package edu.vanier.spaceshooter.models;
 
-import edu.vanier.spaceshooter.support.PlayingSound;
 import javafx.scene.media.MediaView;
 
+/**
+ * Class that generates missiles.
+ * The class plays a sound whenever a new instance is generated.
+ */
 public class Missile extends Sprite {
     public String firingSound = "/sound_effects/15640-laser_gun_shot_3.wav";
 
