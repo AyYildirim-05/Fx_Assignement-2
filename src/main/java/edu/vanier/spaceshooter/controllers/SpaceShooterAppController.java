@@ -12,13 +12,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,17 +49,11 @@ public class SpaceShooterAppController {
 
     private Stage stageActual;
 
-
     private double elapsedTime = 0;
     private AnimationTimer gameLoop;
     private List<KeyCode> input = new ArrayList<>();
-    public List<Invader> invaders = new ArrayList<>();
-    public List<Missile> missiles = new ArrayList<>();
     public SpaceShip spaceShip;
-    public Invader invader;
-
     public PlayingSound soundClass;
-    public Sprite sprite;
     public Missile missile;
     public LevelController levelController;
 
@@ -74,7 +66,6 @@ public class SpaceShooterAppController {
     public int stageNumber = -1;
 
     private long lastCollisionTime = 0;
-
     int x = 0;
     int y = 0;
 
@@ -129,9 +120,6 @@ public class SpaceShooterAppController {
         });
 
     }
-
-    // todo not all enemies are shooting
-    private static Image explosionGif;
 
     private void endGameScene() {
         endGameController endGameController = new endGameController();
@@ -240,6 +228,16 @@ public class SpaceShooterAppController {
         return spriteList;
     }
 
+    private List<Invader> getInvaders() {
+        List<Invader> spriteInvader = new ArrayList<>();
+        for (Node n : animationPanel.getChildren()) {
+            if (n instanceof Invader inv) {
+                spriteInvader.add(inv);
+            }
+        }
+        return spriteInvader;
+    }
+
 
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
@@ -295,7 +293,7 @@ public class SpaceShooterAppController {
         moveInvaders();
         stageLabel.setText("Stage: " + stageNumber);
 
-        if (!areEnemiesRemaining() && spaceShip.checkHealth()) {
+        if (!areEnemiesRemaining()) {
             if (stageNumber > 0) {
                 levelController.nextLevel(spaceShip);
             }
@@ -314,13 +312,11 @@ public class SpaceShooterAppController {
             if (stageNumber != 5) {
                 imageNum++;
                 util.settingBackground(imageNum, animationPanel);
-
             }
 
             if (stageNumber % 2 == 0 && levelController.getNumberEnemies() <= 25) {
                 levelController.setNumberEnemies(1);
             }
-
 
 
             levelController.setSpeedInvader(0.2);
@@ -367,7 +363,7 @@ public class SpaceShooterAppController {
         if (input.contains(KeyCode.SPACE)) {
             shooting(spaceShip, usedGun);
         }
-        for (Invader invader : invaders) {
+        for (Invader invader : getInvaders()) {
             if (Sprite.isCollision(spaceShip, invader)) {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastCollisionTime > 5000) {
@@ -392,7 +388,9 @@ public class SpaceShooterAppController {
         for (Sprite enemy : getSprites()) {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                    System.out.println("enemy good: " + enemy.getHealth());
                     enemy.lose_health();
+                    System.out.println("enemy injured: " + enemy.getHealth());
                     soundClass.explosionGif(enemy, animationPanel);
                     if (enemy.checkHealth()) {
                         updateScore(enemy);
@@ -416,7 +414,7 @@ public class SpaceShooterAppController {
             }
             return false;
         });
-        invaders.removeIf(Invader::isDead);
+//        invaders.removeIf(Invader::isDead);
     }
 
     private void shooting(Sprite firingEntity, int weapon) {
@@ -442,7 +440,7 @@ public class SpaceShooterAppController {
     }
 
     public void singleShot(Sprite firingEntity, String color) {
-        double dy = levelController.getSpeedSpaceShip();
+        double dy = levelController.getSpeedMissiles();
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             if (firingEntity instanceof SpaceShip) {
@@ -487,8 +485,8 @@ public class SpaceShooterAppController {
     }
 
     public void doubleShot(Sprite firingEntity) {
-        double dyLeft = levelController.getSpeedSpaceShip();
-        double dyRight = levelController.getSpeedSpaceShip();
+        double dyLeft = levelController.getSpeedMissiles();
+        double dyRight = levelController.getSpeedMissiles();
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             if (firingEntity instanceof SpaceShip) {
@@ -515,8 +513,8 @@ public class SpaceShooterAppController {
     }
 
     public void doubleShotAngle(Sprite firingEntity) {
-        double dyLeft = levelController.getSpeedSpaceShip();
-        double dyRight = levelController.getSpeedSpaceShip();
+        double dyLeft = levelController.getSpeedMissiles();
+        double dyRight = levelController.getSpeedMissiles();
         double dxLeft = -0.5;
         double dxRight = 0.5;
 
@@ -551,10 +549,10 @@ public class SpaceShooterAppController {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
             double dxLeft = -0.5;
-            double dyLeft = -levelController.getSpeedSpaceShip();
+            double dyLeft = -levelController.getSpeedMissiles();
 
             double dxRight = 0.5;
-            double dyRight = -levelController.getSpeedSpaceShip();
+            double dyRight = -levelController.getSpeedMissiles();
 
             singleShot(firingEntity, levelController.getRedMissile_1());
 
@@ -585,8 +583,10 @@ public class SpaceShooterAppController {
             for (int i = 0; i < numMissile; i++) {
                 double angle = 2 * Math.PI * i / numMissile;
 
-                double dx = levelController.getSpeedSpaceShip() * Math.cos(angle);
-                double dy = levelController.getSpeedSpaceShip() * Math.sin(angle);
+                double dx = levelController.getSpeedMissiles()
+                        * Math.cos(angle);
+                double dy = levelController.getSpeedMissiles()
+                        * Math.sin(angle);
 
                 missile = new Missile(levelController.getRedMissile_2(), 10, 10, levelController.getHealth_missile(),
                         firingEntity.getType() + "bullet",
@@ -652,37 +652,32 @@ public class SpaceShooterAppController {
 
         for (int i = 0; i < boss; i++) {
             double x = bossSpacing * (i + 1);
-            Boss_Invader invader = new Boss_Invader(levelController.getBoss_Enemy(), 50, 50, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
-            animationPanel.getChildren().add(invader);
-            invaders.add(invader);
+            Boss_Invader bossInvader = new Boss_Invader(levelController.getBoss_Enemy(), 50, 50, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
+            animationPanel.getChildren().add(bossInvader);
         }
 
         for (int i = 0; i < big; i++) {
             double x = bigSpacing * (i + 1);
-            Big_Invader invader = new Big_Invader(levelController.getBig_Enemy(), 45, 45, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
-            animationPanel.getChildren().add(invader);
-            invaders.add(invader);
+            Big_Invader bigInvader = new Big_Invader(levelController.getBig_Enemy(), 45, 45, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
+            animationPanel.getChildren().add(bigInvader);
         }
 
         for (int i = 0; i < medium; i++) {
             double x = mediumSpacing * (i + 1);
-            Medium_Invader invader = new Medium_Invader(levelController.getMedium_Enemy(), 40, 40, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
-            animationPanel.getChildren().add(invader);
-            invaders.add(invader);
+            Medium_Invader mediumInvader = new Medium_Invader(levelController.getMedium_Enemy(), 40, 40, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
+            animationPanel.getChildren().add(mediumInvader);
         }
 
         for (int i = 0; i < small; i++) {
             double x = smallSpacing * (i + 1);
-            Small_Invader invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35,
+            Small_Invader smallInvader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35,
                     levelController.getHealth_small_Invader(), "enemy", x, smallRow, 0, 0);
-            animationPanel.getChildren().add(invader);
-            invaders.add(invader);
+            animationPanel.getChildren().add(smallInvader);
         }
     }
 
 
     public void resetScene() {
         animationPanel.getChildren().removeIf(n -> n instanceof Sprite);
-        invaders.clear();
     }
 }

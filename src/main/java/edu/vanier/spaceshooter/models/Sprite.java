@@ -127,9 +127,8 @@ public abstract class Sprite extends ImageView {
     }
 
 
-
     public boolean checkHealth() {
-        return health >= 0;
+        return health <= 0;
     }
 
 

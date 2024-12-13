@@ -11,14 +11,19 @@ public class LevelController {
     /* Speed controller */
     public double speedSpaceShip = 1;
 
+    public double speedMissiles = 3;
+
+    public double getSpeedMissiles() {
+        return speedMissiles;
+    }
+
     public double smallInvaderShooting = 0.8;
     public double mediumShooting = 0.6;
     public double bigInvaderShooting = 0.4;
     public double bossInvaderShooting = 0.5;
 
-    public double getSmallInvaderShooting() {
-        return smallInvaderShooting;
-    }
+
+
 
     public void setSmallInvaderShooting() {
         if (this.smallInvaderShooting <= 1) {
@@ -26,9 +31,6 @@ public class LevelController {
         }
     }
 
-    public double getMediumShooting() {
-        return mediumShooting;
-    }
 
     public void setMediumShooting() {
         if (this.mediumShooting <= 1) {
@@ -36,9 +38,6 @@ public class LevelController {
         }
     }
 
-    public double getBigInvaderShooting() {
-        return bigInvaderShooting;
-    }
 
     public void setBigInvaderShooting() {
         if (this.bigInvaderShooting <= 1) {
@@ -46,9 +45,6 @@ public class LevelController {
         }
     }
 
-    public double getBossInvaderShooting() {
-        return bossInvaderShooting;
-    }
 
     public void setBossInvaderShooting() {
         if (this.bossInvaderShooting <= 1) {
@@ -65,9 +61,6 @@ public class LevelController {
 
     public double speedInvader = 1;
 
-    public double getSpeedInvader() {
-        return speedInvader;
-    }
 
     public void setSpeedInvader(double speedInvader) {
         this.speedInvader += speedInvader;

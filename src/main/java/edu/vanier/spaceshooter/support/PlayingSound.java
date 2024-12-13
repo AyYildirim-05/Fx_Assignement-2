@@ -44,17 +44,14 @@ public class PlayingSound {
         mediaView.getMediaPlayer().play();
     }
 
-    private ImageView explosionView;
-
     public void explosionGif(Sprite sp, Pane animationPanel) {
         try {
             if (explosionGif == null) {
                 explosionGif = new Image(getClass().getResource("/visual_effects/explosion.gif").toExternalForm());
             }
 
-            // Create a new ImageView for the explosion
-            explosionView = new ImageView(explosionGif);
-            explosionView.setFitWidth(50); // Set appropriate size
+            ImageView explosionView = new ImageView(explosionGif);
+            explosionView.setFitWidth(50);
             explosionView.setFitHeight(50);
             explosionView.setTranslateX(sp.getTranslateX());
             explosionView.setTranslateY(sp.getTranslateY());
