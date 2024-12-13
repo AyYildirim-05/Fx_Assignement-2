@@ -1,9 +1,9 @@
 .label {
     -fx-background-color: transparent;
-    -fx-font-size: 50px;
+    -fx-font-size: 25px;
     -fx-font-family: "Orbitron", sans-serif;
     -fx-text-fill: linear-gradient(to right, #00ffcc, #0077ff);
-    -fx-effect: dropshadow(gaussian, #00ffff, 8, 0.8, 0, 0);
+    -fx-effect: dropshadow(gaussian, #00ffff, 8, 0.1, 0, 0);
 }
 
 .button {

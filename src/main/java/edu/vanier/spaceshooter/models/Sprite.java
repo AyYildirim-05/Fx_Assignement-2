@@ -122,8 +122,6 @@ public abstract class Sprite extends ImageView {
         this.health++;
     }
 
-
-
     public String getType() {
         return type;
     }

@@ -9,16 +9,15 @@
 
 <StackPane fx:id="HUD" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0"
-            stylesheets="@/css/MainAppStyle.css"/>
+      <Pane fx:id="animationPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0"/>
       <VBox fx:id="uiContainer" prefHeight="200.0" prefWidth="100.0" spacing="25.0">
          <children>
-            <Label fx:id="scoreLabel" text="Score: 0" textFill="WHITE">
+            <Label fx:id="scoreLabel" text="Score: 0" >
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label fx:id="stageLabel" text="Stage: 1" textFill="WHITE">
+            <Label fx:id="stageLabel" text="Stage: 1">
                <font>
                   <Font size="16.0" />
                </font>

@@ -201,7 +201,7 @@ public class LevelController {
         this.currentGun += currentGun;
     }
 
-    public int numOfMissile = 1;
+    public int numOfMissile = 5;
 
     public int getNumOfMissile() {
         return numOfMissile;
@@ -293,10 +293,6 @@ public class LevelController {
     /*
     Visual Effects
      */
-
-
-
-
 
     public String nextLevel = "/sound_effects/next_level.mp3";
 

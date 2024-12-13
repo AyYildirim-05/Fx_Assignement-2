@@ -2,6 +2,7 @@ package edu.vanier.spaceshooter.controllers;
 
 import edu.vanier.spaceshooter.models.*;
 import edu.vanier.spaceshooter.support.LevelController;
+import edu.vanier.spaceshooter.support.PlayingSound;
 import edu.vanier.spaceshooter.support.Util;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -50,7 +51,6 @@ public class SpaceShooterAppController {
 
     private Stage stageActual;
 
-    private static MediaView mediaView;
 
     private double elapsedTime = 0;
     private AnimationTimer gameLoop;
@@ -60,6 +60,7 @@ public class SpaceShooterAppController {
     public SpaceShip spaceShip;
     public Invader invader;
 
+    public PlayingSound soundClass;
     public Sprite sprite;
     public Missile missile;
     public LevelController levelController;
@@ -81,6 +82,7 @@ public class SpaceShooterAppController {
 
     public void initialize() {
         levelController = new LevelController();
+        soundClass = new PlayingSound();
 
         util = new Util(playerHealthRepresentation);
         logger.info("Initializing MainAppController...");
@@ -128,11 +130,6 @@ public class SpaceShooterAppController {
 
     }
 
-    // todo implement a gif for explosion
-    // todo explosion effect when collision
-    // todo css in the game scene not effective
-
-
     // todo not all enemies are shooting
     private static Image explosionGif;
 
@@ -155,7 +152,7 @@ public class SpaceShooterAppController {
 
     private void generateInvaders() {
         switch (stageNumber) {
-            case 1 -> generateEnemy(1, 1, 0, 0);
+            case 1 -> generateEnemy(3, 0, 0, 0);
             case 2 -> generateEnemy(0, 1, 1, 0);
             case 3 -> generateEnemy(0, 0, 1, 1);
             default -> {
@@ -233,7 +230,6 @@ public class SpaceShooterAppController {
     }
 
 
-
     private List<Sprite> getSprites() {
         List<Sprite> spriteList = new ArrayList<>();
         for (Node n : animationPanel.getChildren()) {
@@ -282,8 +278,6 @@ public class SpaceShooterAppController {
         scoreLabel.setText("Score: " + levelController.getScore());
     }
 
-    private ImageView explosion;
-    private ImageView imageView;
 
     private void update() {
         elapsedTime += 0.016;
@@ -294,8 +288,6 @@ public class SpaceShooterAppController {
             endGameScene();
             return;
         }
-
-
 
         getSprites().forEach(this::processSprite);
 
@@ -382,6 +374,7 @@ public class SpaceShooterAppController {
                     playerLoseHealth();
                     invader.lose_health();
                     invader.setDead(true);
+                    soundClass.explosionGif(invader, animationPanel);
                     levelController.score++;
                     scoreLabel.setText("Score: " + levelController.getScore());
                     lastCollisionTime = currentTime;
@@ -400,7 +393,7 @@ public class SpaceShooterAppController {
             if (enemy.getType().equals("enemy")) {
                 if (sprite.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
                     enemy.lose_health();
-                    explosionGif(enemy);
+                    soundClass.explosionGif(enemy, animationPanel);
                     if (enemy.checkHealth()) {
                         updateScore(enemy);
                         enemy.setDead(true);
@@ -410,29 +403,6 @@ public class SpaceShooterAppController {
             }
         }
     }
-
-    public ImageView explosionGif(Sprite sp) {
-        try {
-            if (explosionGif == null && imageView == null) {
-                explosionGif = new Image(getClass().getResource("/visual_effects/explosion.mp4").toExternalForm());
-                imageView = new ImageView(explosionGif);
-            }
-            imageView.setFitWidth(20);
-            imageView.setFitHeight(20);
-            imageView.setTranslateX(sp.getTranslateX());
-            imageView.setTranslateY(sp.getTranslateY());
-
-            animationPanel.getChildren().add(imageView);
-
-            javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1));
-            pause.setOnFinished(event -> animationPanel.getChildren().remove(imageView));
-            pause.play();
-        } catch (Exception e) {
-            System.err.println("Failed to load explosion GIF: " + e.getMessage());
-        }
-        return imageView;
-    }
-
 
 
     private void removeDeadSprites() {
@@ -682,28 +652,28 @@ public class SpaceShooterAppController {
 
         for (int i = 0; i < boss; i++) {
             double x = bossSpacing * (i + 1);
-            invader = new Boss_Invader(levelController.getBoss_Enemy(), 50, 50, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
+            Boss_Invader invader = new Boss_Invader(levelController.getBoss_Enemy(), 50, 50, levelController.getHealth_boss_Invader(), "enemy", x, bossRowY, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);
         }
 
         for (int i = 0; i < big; i++) {
             double x = bigSpacing * (i + 1);
-            invader = new Big_Invader(levelController.getBig_Enemy(), 45, 45, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
+            Big_Invader invader = new Big_Invader(levelController.getBig_Enemy(), 45, 45, levelController.getHealth_big_Invader(), "enemy", x, bigRow, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);
         }
 
         for (int i = 0; i < medium; i++) {
             double x = mediumSpacing * (i + 1);
-            invader = new Medium_Invader(levelController.getMedium_Enemy(), 40, 40, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
+            Medium_Invader invader = new Medium_Invader(levelController.getMedium_Enemy(), 40, 40, levelController.getHealth_medium_Invader(), "enemy", x, mediumRow, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);
         }
 
         for (int i = 0; i < small; i++) {
             double x = smallSpacing * (i + 1);
-            invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35,
+            Small_Invader invader = new Small_Invader(levelController.getSmall_Enemy(), 35, 35,
                     levelController.getHealth_small_Invader(), "enemy", x, smallRow, 0, 0);
             animationPanel.getChildren().add(invader);
             invaders.add(invader);

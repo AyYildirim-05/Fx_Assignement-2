@@ -44,6 +44,7 @@ public class InitialController {
                 Pane root = gameLoader.load();
 
                 scene = new Scene(root, 1000, 800);
+                scene.getStylesheets().add("/css/MainAppStyle.css");
 
 
                 primaryStage.widthProperty().addListener((obs, oldX, newX) -> {
