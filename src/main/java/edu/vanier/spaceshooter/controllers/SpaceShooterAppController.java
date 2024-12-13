@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Class the implements the game logic.
+ * Class that implements the game logic.
  */
 
 public class SpaceShooterAppController {
@@ -63,6 +63,9 @@ public class SpaceShooterAppController {
     int y = 0;
     int imageNum = -1;
 
+    /**
+     * Method that initializes the game screen.
+     */
     public void initialize() {
         levelController = new LevelController();
         soundClass = new PlayingSound();
@@ -80,6 +83,9 @@ public class SpaceShooterAppController {
         animationPanel.getChildren().addAll(spaceShip);
     }
 
+    /**
+     * Method that sets up the game world.
+     */
     public void setupGameWorld() {
         animationPanel.prefWidthProperty().bind(stageActual.widthProperty());
         animationPanel.prefHeightProperty().bind(stageActual.heightProperty());
@@ -87,6 +93,9 @@ public class SpaceShooterAppController {
         setupKeyPressHandlers();
     }
 
+    /**
+     * Method that starts the game loop.
+     */
     private void initGameLoop() {
         gameLoop = new AnimationTimer() {
             @Override
@@ -97,6 +106,9 @@ public class SpaceShooterAppController {
         gameLoop.start();
     }
 
+    /**
+     * Method that gets user inputs and puts them all in a list.
+     */
     private void setupKeyPressHandlers() {
         sceneActual.setOnKeyPressed((KeyEvent e) -> {
             KeyCode code = e.getCode();
@@ -113,6 +125,9 @@ public class SpaceShooterAppController {
 
     }
 
+    /**
+     * Method that creates the end game scene.
+     */
     private void endGameScene() {
         endGameController endGameController = new endGameController();
         endGameController.getScore(levelController.getScore());
@@ -130,6 +145,9 @@ public class SpaceShooterAppController {
         stageActual.show();
     }
 
+    /**
+     * Method that generates invaders per level.
+     */
     private void generateInvaders() {
         switch (stageNumber) {
             case 1 -> generateEnemy(1, 0, 0, 1);
@@ -148,6 +166,9 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that moves invaders based on their instance.
+     */
     private void moveInvaders() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastEnemyMoveTime > 500) {
@@ -175,6 +196,10 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that allows an enemy to shoot based on their instance.
+     * @param sprite the entered instance of the invader.
+     */
     private void handleEnemyFiring(Sprite sprite) {
         if (elapsedTime > 2) {
             switch (sprite.getClass().getSimpleName()) {
@@ -210,6 +235,10 @@ public class SpaceShooterAppController {
     }
 
 
+    /**
+     * Method that gets all the sprites int the scene.
+     * @return the list of all the sprites in the scene.
+     */
     private List<Sprite> getSprites() {
         List<Sprite> spriteList = new ArrayList<>();
         for (Node n : animationPanel.getChildren()) {
@@ -220,6 +249,10 @@ public class SpaceShooterAppController {
         return spriteList;
     }
 
+    /**
+     * Method that gets all the invaders int the scene.
+     * @return the list of all the invaders in the scene.
+     */
     private List<Invader> getInvaders() {
         List<Invader> spriteInvader = new ArrayList<>();
         for (Node n : animationPanel.getChildren()) {
@@ -230,7 +263,10 @@ public class SpaceShooterAppController {
         return spriteInvader;
     }
 
-
+    /**
+     * Method that processes sprites based on their types.
+     * @param sprite the given sprite.
+     */
     private void processSprite(Sprite sprite) {
         switch (sprite.getType()) {
             case "enemybullet" -> {
@@ -241,7 +277,10 @@ public class SpaceShooterAppController {
         }
     }
 
-
+    /**
+     * Method that handles enemy missile behavior.
+     * @param missile the given invader missile.
+     */
     private void handleEnemyBullet(Sprite missile) {
         missile.move();
         if (missile.getBoundsInParent().intersects(spaceShip.getBoundsInParent())) {
@@ -251,11 +290,19 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that takes care of player health points.
+     * It connects player health points and their representation on screen.
+     */
     private void playerLoseHealth() {
         spaceShip.lose_health();
         util.removeLastHealth(playerHealthRepresentation);
     }
 
+    /**
+     * Method that updates the score based on the invader killed.
+     * @param enemy the killed invader.
+     */
     private void updateScore(Sprite enemy) {
         int scoreToAdd = switch (enemy.getClass().getSimpleName()) {
             case "Small_Invader" -> 1;
@@ -268,7 +315,9 @@ public class SpaceShooterAppController {
         scoreLabel.setText("Score: " + levelController.getScore());
     }
 
-
+    /**
+     * Method that contains the game loop.
+     */
     private void update() {
         elapsedTime += 0.016;
         stageLabel.setText("Stage: " + stageNumber);
@@ -284,6 +333,9 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that contains the logic of ending the game.
+     */
     private void gameEnd() {
         if (spaceShip.getHealth() == 0) {
             resetScene();
@@ -291,6 +343,10 @@ public class SpaceShooterAppController {
             endGameScene();
         }
     }
+
+    /**
+     * Method that contains game progress.
+     */
     private void gameProgress() {
         if (!areEnemiesRemaining()) {
             if (stageNumber > 0) {
@@ -323,6 +379,9 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that takes care of player inputs.
+     */
     private void playerInputs() {
         if (input.contains(KeyCode.F)) {
             Stage stage = (Stage) sceneActual.getWindow();
@@ -365,6 +424,9 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that takes care of the collision between the invader and the player.
+     */
     private void collisionDetectorEnemy() {
         for (Invader invader : getInvaders()) {
             if (Sprite.isCollision(spaceShip, invader)) {
@@ -381,6 +443,10 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that deals with the logic of player missiles.
+     * @param sprite for a given missile.
+     */
     private void handlePlayerBullet(Sprite sprite) {
         sprite.move();
         for (Sprite enemy : getSprites()) {
@@ -398,6 +464,9 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that checks if a sprite should be removed from the scene.
+     */
     private void removeDeadSprites() {
         animationPanel.getChildren().removeIf(n -> {
             if (n instanceof Sprite sprite && !(n instanceof SpaceShip) ) {
@@ -411,6 +480,11 @@ public class SpaceShooterAppController {
         });
     }
 
+    /**
+     * Method that deals with player switching missile types.
+     * @param firingEntity the spaceship
+     * @param weapon the entered missile type that the player wishes to use.
+     */
     private void shooting(Sprite firingEntity, int weapon) {
         System.out.println("used gun" + weapon);
         switch (weapon) {
@@ -437,6 +511,11 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that creates a single missile.
+     * @param firingEntity the sprite which creates the missile.
+     * @param color the color of the missile.
+     */
     public void singleShot(Sprite firingEntity, String color) {
         double dy = levelController.getSpeedMissiles();
         long now = System.currentTimeMillis();
@@ -459,6 +538,11 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that creates a laser from a sprite.
+     * @param firingEntity the sprite that creates the missile.
+     * @param color the color of the laser.
+     */
     public void laser(Sprite firingEntity, String color) {
         double dy = 25;
         long now = System.currentTimeMillis();
@@ -482,6 +566,10 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that allows to missiles to be shot next to each other.
+     * @param firingEntity the sprite that creates the missile.
+     */
     public void doubleShot(Sprite firingEntity) {
         double dyLeft = levelController.getSpeedMissiles();
         double dyRight = levelController.getSpeedMissiles();
@@ -510,6 +598,10 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that allows to missiles to be created and shot at an angle.
+     * @param firingEntity the sprite that creates the missile.
+     */
     public void doubleShotAngle(Sprite firingEntity) {
         double dyLeft = levelController.getSpeedMissiles();
         double dyRight = levelController.getSpeedMissiles();
@@ -543,6 +635,10 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that creates three missiles with their own pathing (not all straight).
+     * @param firingEntity the sprite that creates the missile.
+     */
     public void tripleShoot(Sprite firingEntity) {
         long now = System.currentTimeMillis();
         if (now - levelController.lastShot > levelController.getAnimationDuration()) {
@@ -572,6 +668,11 @@ public class SpaceShooterAppController {
 
     }
 
+    /**
+     * Method that allows a sprite to shoot all around them.
+     * @param firingEntity the sprite that creates the missile.
+     * @param numMissile the number of missiles the sprite is shooting.
+     */
     public void circleShot(Sprite firingEntity, int numMissile) {
         long now = System.currentTimeMillis();
         long down = (firingEntity instanceof SpaceShip) ? 2000 : 1000;
@@ -598,16 +699,27 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that sets a scene to the current scene.
+     * @param scene the entered scene.
+     */
     public void setScene(Scene scene) {
         sceneActual = scene;
     }
 
+    /**
+     * Method that stops the game loop.
+     */
     public void stopAnimation() {
         if (gameLoop != null) {
             gameLoop.stop();
         }
     }
 
+    /**
+     * Method that checks if there is any enemy remaining within the screen.
+     * @return boolean value.
+     */
     private boolean areEnemiesRemaining() {
         for (Sprite sprite : getSprites()) {
             if (sprite.getType().equals("enemy")) {
@@ -617,6 +729,10 @@ public class SpaceShooterAppController {
         return false;
     }
 
+    /**
+     * Method that sets a stage to the current stage.
+     * @param stage the entered stage.
+     */
     public void setStage(Stage stage) {
         stageActual = stage;
         stageActual.setOnCloseRequest(event -> {
@@ -626,15 +742,30 @@ public class SpaceShooterAppController {
         });
     }
 
+    /**
+     * Method that binds the scene width to that of the stage.
+     * @param stage the entered stage.
+     */
     public void bindSceneWidth(Stage stage) {
         stage.minWidthProperty().bind(stageActual.widthProperty());
 
     }
 
+    /**
+     * Method that binds the scene height to that of the stage.
+     * @param stage the entered stage.
+     */
     public void bindSceneHeight(Stage stage) {
         stage.minHeightProperty().bind(stageActual.heightProperty());
     }
 
+    /**
+     * Method that generates enemies.
+     * @param small the number of small enemies.
+     * @param medium the number of medium enemies.
+     * @param big the number of big enemies.
+     * @param boss the number of boss enemies.
+     */
     public void generateEnemy(int small, int medium, int big, int boss) {
         double animationPanelWidth = animationPanel.getPrefWidth();
 
@@ -674,6 +805,10 @@ public class SpaceShooterAppController {
         }
     }
 
+    /**
+     * Method that resets the scene to prepare it for the next stage.
+     * Removes all sprite instances.
+     */
     public void resetScene() {
         animationPanel.getChildren().removeIf(n -> n instanceof Sprite);
     }
