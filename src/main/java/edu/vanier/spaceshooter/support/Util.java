@@ -104,4 +104,5 @@ public class Util extends ImageView {
             System.out.println("No health points to remove!");
         }
     }
+
 }

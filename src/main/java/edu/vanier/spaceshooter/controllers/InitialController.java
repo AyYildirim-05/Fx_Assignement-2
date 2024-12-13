@@ -13,9 +13,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Objects;
+
+/**
+ * Class that controls the actions defined in the main page of the game.
+ * Starts the game loop.
+ */
 
 public class InitialController {
     private final static Logger logger = LoggerFactory.getLogger(SpaceShooterApp.class);
@@ -78,6 +82,7 @@ public class InitialController {
                 logger.error(ex.getMessage(), ex);
             }
         });
+
         howTo.setOnAction(event -> {
             Stage helpStage = new Stage();
             helpStage.initModality(Modality.APPLICATION_MODAL);

@@ -19,10 +19,15 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+/**
+ * Class the implements the game logic.
+ */
 
 public class SpaceShooterAppController {
     private final static String endApp = "/fxml/endGame_layout.fxml";

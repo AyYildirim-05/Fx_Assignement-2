@@ -5,6 +5,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
 
+/**
+ * Class that handles the end game screen.
+ */
 
 public class endGameController {
     @FXML
@@ -26,7 +29,12 @@ public class endGameController {
         finalScore.setText("Final Score:" + lastScore);
     }
 
+    /**
+     * Method that gets the user's final score at the end of the game.
+     * @param score the final user score
+     */
     public void getScore(int score) {
         this.lastScore = score;
     }
+
 }

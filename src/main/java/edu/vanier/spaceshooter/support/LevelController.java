@@ -67,6 +67,10 @@ public class LevelController {
         this.lastShot = lastShot;
     }
 
+    public long getLastShot() {
+        return lastShot;
+    }
+
     public void setSpeedSpaceShip(double speedSpaceShip) {
         this.speedSpaceShip += speedSpaceShip;
     }
@@ -226,6 +230,7 @@ public class LevelController {
         }
         soundClass.playSound(next, nextLevel, 0.8);
     }
+
 }
 
 

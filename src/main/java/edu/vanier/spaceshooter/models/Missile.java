@@ -15,5 +15,6 @@ public class Missile extends Sprite {
         super(imagePath, width, height, health, type, x, y, dx, dy);
         soundClass.playSound(soundClass.getShooting(), soundClass.getFiringSound(), 0.3);
     }
+
 }
 

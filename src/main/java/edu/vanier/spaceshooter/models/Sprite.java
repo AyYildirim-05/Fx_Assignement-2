@@ -208,4 +208,5 @@ public abstract class Sprite extends ImageView {
     public void setDead(boolean dead) {
         this.dead = dead;
     }
+
 }
