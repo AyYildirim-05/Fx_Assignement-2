@@ -129,13 +129,11 @@ public class SpaceShooterAppController {
     }
 
     // todo implement a gif for explosion
-    // todo transition mechanism
     // todo explosion effect when collision
-    // todo player get damage sound effect
     // todo css in the game scene not effective
 
 
-    // todo not all enemies are shooting & sound is causing problems
+    // todo not all enemies are shooting
     private static Image explosionGif;
 
     private void endGameScene() {

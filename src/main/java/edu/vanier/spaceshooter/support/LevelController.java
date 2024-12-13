@@ -294,17 +294,19 @@ public class LevelController {
     Visual Effects
      */
 
+
+
+
+
     public String nextLevel = "/sound_effects/next_level.mp3";
 
-
-    public String getNextLevel() {
-        return nextLevel;
-    }
-
-
-    private static MediaView next;
+    private MediaView next;
+    private PlayingSound soundClass;
     public void nextLevel(SpaceShip spaceShip) {
-        spaceShip.playSound(next, nextLevel);
+        if (soundClass == null) {
+            soundClass = new PlayingSound();
+        }
+        soundClass.playSound(next, nextLevel, 0.8);
     }
 }
 

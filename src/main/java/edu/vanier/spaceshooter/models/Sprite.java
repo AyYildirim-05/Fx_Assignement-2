@@ -1,5 +1,6 @@
 package edu.vanier.spaceshooter.models;
 
+import edu.vanier.spaceshooter.support.PlayingSound;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +28,8 @@ public abstract class Sprite extends ImageView {
     private MediaView hit;
 
     public String imagePath;
+
+    final PlayingSound soundClass = new PlayingSound();
 
 
     public Sprite(String imagePath, double width, double height, int health, String type, double x, double y, double dx, double dy) {
@@ -112,8 +115,8 @@ public abstract class Sprite extends ImageView {
         if (this.health > 0) {
             this.setHealth(this.getHealth() - 1);
         }
-        playSound(hit, "/sound_effects/explosion.mp3");
-    }
+        soundClass.playSound(soundClass.getHit(), soundClass.getHitSound(), 0.3);
+     }
 
     public void gain_health() {
         this.health++;
@@ -141,26 +144,6 @@ public abstract class Sprite extends ImageView {
     }
     public static boolean isCollision(Node sprite1, Node sprite2) {
         return sprite1.getBoundsInParent().intersects(sprite2.getBoundsInParent());
-    }
-
-    public void playSound(MediaView mediaView, String sound) {
-        if (mediaView == null) {
-            mediaView = new MediaView();
-        }
-
-        if (mediaView.getMediaPlayer() == null) {
-            URL resourceUrl = getClass().getResource(sound);
-            if (resourceUrl == null) {
-                System.err.println("Sound file not found: " + sound);
-                return;
-            }
-            Media media = new Media(resourceUrl.toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaView.setMediaPlayer(mediaPlayer);
-        }
-
-        mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStartTime());
-        mediaView.getMediaPlayer().play();
     }
 
     public boolean isDead() {
