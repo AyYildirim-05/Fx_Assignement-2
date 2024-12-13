@@ -7,6 +7,10 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is my HUD class.
+ * It Contains UI elements within the screen.
+ */
 public class Util extends ImageView {
     public final String BACKGROUND_IMAGE_1 = "/background/blue.png";
     public final String BACKGROUND_IMAGE_2 = "/background/purple.png";
@@ -24,7 +28,6 @@ public class Util extends ImageView {
     public Image image;
 
     public HBox enteredBox;
-
 
     public Util(HBox hBox) {
         image = new Image(getClass().getResource("/player/playerLife1_red.png").toExternalForm());
