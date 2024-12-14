@@ -56,19 +56,10 @@ public class LevelController {
     public void setSpeedInvader(double speedInvader) {
         this.speedInvader += speedInvader;
     }
-    public long lastShot = 0;
     public int animationDuration = 500;
 
     public double getSpeedSpaceShip() {
         return speedSpaceShip;
-    }
-
-    public void setLastShot(long lastShot) {
-        this.lastShot = lastShot;
-    }
-
-    public long getLastShot() {
-        return lastShot;
     }
 
     public void setSpeedSpaceShip(double speedSpaceShip) {

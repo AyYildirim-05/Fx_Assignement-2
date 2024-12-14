@@ -6,7 +6,6 @@ import java.util.Random;
  * Class that defines the invader class.
  */
 public class Invader extends FiringSprites {
-
     Random random = new Random();
     int randomNumber;
 

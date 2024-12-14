@@ -21,6 +21,8 @@ public abstract class Sprite extends ImageView {
     public String imagePath;
     final PlayingSound soundClass = new PlayingSound();
 
+    public long lastFiredTime = 0;
+
     /**
      * Method that creates a sprite instance.
      * @param imagePath the string of the sprite the instance uses.
@@ -207,6 +209,14 @@ public abstract class Sprite extends ImageView {
      */
     public void setDead(boolean dead) {
         this.dead = dead;
+    }
+
+    public long getLastFiredTime() {
+        return lastFiredTime;
+    }
+
+    public void setLastFiredTime(long lastFiredTime) {
+        this.lastFiredTime = lastFiredTime;
     }
 
 }
