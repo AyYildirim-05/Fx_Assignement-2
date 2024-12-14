@@ -22,25 +22,25 @@ public class LevelController {
 
     public void setSmallInvaderShooting() {
         if (this.smallInvaderShooting <= 1) {
-            this.smallInvaderShooting += 0.05;
+            this.smallInvaderShooting += 0.2;
         }
     }
 
     public void setMediumShooting() {
         if (this.mediumShooting <= 1) {
-            this.mediumShooting += 0.05;
+            this.mediumShooting += 0.2;
         }
     }
 
     public void setBigInvaderShooting() {
         if (this.bigInvaderShooting <= 1) {
-            this.bigInvaderShooting += 0.05;
+            this.bigInvaderShooting += 0.2;
         }
     }
 
     public void setBossInvaderShooting() {
         if (this.bossInvaderShooting <= 1) {
-            this.bossInvaderShooting += 0.05;
+            this.bossInvaderShooting += 0.2;
         }
     }
 

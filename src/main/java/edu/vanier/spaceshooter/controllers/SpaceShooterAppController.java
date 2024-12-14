@@ -150,7 +150,7 @@ public class SpaceShooterAppController {
      */
     private void generateInvaders() {
         switch (stageNumber) {
-            case 1 -> generateEnemy(1, 0, 0, 0);
+            case 1 -> generateEnemy(15, 0, 0, 0);
             case 2 -> generateEnemy(12, 2, 1, 0);
             case 3 -> generateEnemy(10, 4, 3, 1);
             default -> {
@@ -374,8 +374,8 @@ public class SpaceShooterAppController {
             }
 
 
-            levelController.setSpeedInvader(0.2);
-            levelController.setSpeedSpaceShip(0.2);
+            levelController.setSpeedInvader(0.5);
+            levelController.setSpeedSpaceShip(0.5);
         }
     }
 

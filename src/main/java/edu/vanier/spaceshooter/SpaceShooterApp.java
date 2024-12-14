@@ -22,7 +22,6 @@ public class SpaceShooterApp extends Application {
      * the application scene can be set.
      * Applications may create other stages, if needed, but they will not be
      * primary stages.
-     * @throws IOException
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
